@@ -6,3 +6,4 @@ The repo is SNS Max **Feature**, **Bugs**, TODO work.
 
 - [ ] Block Feed
 - [ ] Block User
+- [ ] refactor Report
