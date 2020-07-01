@@ -1,0 +1,6 @@
+package com.bytegem.snsmax
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
