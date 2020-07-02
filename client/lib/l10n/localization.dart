@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'generated/messages_all.dart';
 
 part 'message/app.dart';
+part 'message/navigation-bar.dart';
 
 class AppLocalizations {
   /// Create l10n instance
@@ -67,6 +68,9 @@ class AppLocalizations {
 
   /// app.* messages
   AppIntlMessages get app => const AppIntlMessages();
+
+  /// navigationBar.* messages
+  NavigationBarMessage get navigationBar => const NavigationBarMessage();
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

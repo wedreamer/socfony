@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart' hide BottomNavigationBar;
 import 'package:snsmax/widgets/bottom-navigation-bar/bottom-navigation-bar.dart';
+import 'package:snsmax/widgets/explore/layout.dart';
+import 'package:snsmax/widgets/home/layout.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -18,7 +20,14 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('222'),
+      extendBody: true,
+      body: PageView(
+        controller: controller,
+        children: <Widget>[
+          const MainHomeLayout(),
+          const MainExploreLayout(),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         controller: controller,
       ),

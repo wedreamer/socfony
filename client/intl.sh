@@ -3,7 +3,9 @@
 ## Create default l10n.messages arb file.
 flutter pub run intl_translation:extract_to_arb \
     --output-dir=l10n-arb \
-    --locale=zh-Hans \
+    --locale=zh_CN \
+    --output-file=intl_zh_CN.arb \
+    --suppress-meta-data \
     lib/l10n/message/*.dart;
 
 ## Using all arb files generate language dart.

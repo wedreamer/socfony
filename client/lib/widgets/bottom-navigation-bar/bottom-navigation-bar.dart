@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide BottomNavigationBar;
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:snsmax/l10n/localization.dart';
 
 class BottomNavigationBar extends StatefulWidget {
   final PageController controller;
@@ -19,9 +20,15 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
     widget.controller.addListener(indexListener);
   }
 
+  @override
+  void dispose() {
+    widget.controller.removeListener(indexListener);
+    super.dispose();
+  }
+
   void indexListener() {
     setState(() {
-      index = widget.controller.page as int;
+      index = widget.controller.page.toInt();
     });
   }
 
@@ -50,66 +57,37 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
                 activeColor: Theme.of(context).primaryColor,
                 tabBackgroundColor: Theme.of(context).primaryColor.withOpacity(.2),
                 tabs: tabsBuilder(context),
-                onTabChange: (int index) {
-                  setState(() {
-                    this.index = index;
-                  });
-//              widget.controller.jumpToPage(index);
-                },
+                onTabChange: onTabChange,
               )
             ),
           ),
         ),
       ),
     );
-//    print(horizontal);
-    return SafeArea(child: Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-//        color: Theme.of(context).bottomAppBarColor,
-        borderRadius: const BorderRadius.all(const Radius.circular(100)),
-      ),
-      child: Container(
-        width: 300,
-          color: Theme.of(context).bottomAppBarColor,
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          child: GNav(
-            selectedIndex: index,
-            gap: 10,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            iconSize: 24,
-            activeColor: Theme.of(context).primaryColor,
-            tabBackgroundColor: Theme.of(context).primaryColor.withOpacity(.2),
-            tabs: tabsBuilder(context),
-            onTabChange: (int index) {
-              setState(() {
-                this.index = index;
-              });
-//              widget.controller.jumpToPage(index);
-            },
-          )
-      ),
-    ));
   }
 
   List<GButton> tabsBuilder(BuildContext context) {
     return [
       GButton(
-        icon: Icons.home,
-        text: '首页',
+        icon: Icons.camera,
+        text: AppLocalizations.of(context).navigationBar.moment,
       ),
       GButton(
         icon: Icons.explore,
-        text: '发现',
+        text: AppLocalizations.of(context).navigationBar.explore,
       ),
       GButton(
         icon: Icons.notifications,
-        text: '消息',
+        text: AppLocalizations.of(context).navigationBar.notification,
       ),
       GButton(
         icon: Icons.person,
-        text: '我的',
+        text: AppLocalizations.of(context).navigationBar.me,
       )
     ];
+  }
+
+  void onTabChange(int page) {
+    widget.controller.jumpToPage(page);
   }
 }

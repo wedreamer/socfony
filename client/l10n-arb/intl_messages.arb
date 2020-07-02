@@ -1,9 +1,0 @@
-{
-  "@@locale": "zh-Hans",
-  "@@last_modified": "2020-07-01T18:25:08.672088",
-  "name": "SNS Max",
-  "@name": {
-    "type": "text",
-    "placeholders": {}
-  }
-}
