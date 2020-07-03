@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snsmax/widgets/home/new-moments.dart';
 
 class MainHomeLayout extends StatefulWidget {
   const MainHomeLayout({Key key}): super(key: key);
@@ -7,8 +8,11 @@ class MainHomeLayout extends StatefulWidget {
   _MainHomeLayoutState createState() => _MainHomeLayoutState();
 }
 
-class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProviderStateMixin<MainHomeLayout> {
+class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProviderStateMixin<MainHomeLayout>, AutomaticKeepAliveClientMixin<MainHomeLayout> {
   TabController controller;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -18,6 +22,7 @@ class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: TabBar(
@@ -25,15 +30,19 @@ class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProvid
           tabs: tabBarBuilder(context),
           indicatorSize: TabBarIndicatorSize.label,
           isScrollable: true,
+          indicator: const UnderlineTabIndicator(borderSide: BorderSide.none),
+          unselectedLabelStyle: Theme.of(context).textTheme.subtitle1,
+          unselectedLabelColor: Theme.of(context).textTheme.subtitle1.color,
+          labelStyle: Theme.of(context).textTheme.headline6,
+          labelColor: Theme.of(context).primaryColor,
         ),
-        centerTitle: true,
-        leading: leadingBuilder(context),
+        centerTitle: false,
         actions: actionsBuilder(context),
       ),
       body: TabBarView(
         controller: controller,
         children: <Widget>[
-          Text('1'),
+          const HomeNewMoments(),
           Text('2')
         ],
       ),
@@ -42,8 +51,8 @@ class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProvid
 
   List<Widget> tabBarBuilder(BuildContext context) {
     return [
-      Text('最新'),
-      Text('推荐'),
+      Tab(text: '最新',),
+      Tab(text: '推荐',)
     ];
   }
   
@@ -53,7 +62,8 @@ class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProvid
 
   List<Widget> actionsBuilder(BuildContext context) {
     return [
-      sendMomentActionBuilder(context)
+      leadingBuilder(context),
+      sendMomentActionBuilder(context),
     ];
   }
 

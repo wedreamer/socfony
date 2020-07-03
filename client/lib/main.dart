@@ -65,8 +65,12 @@ class _AppState extends State<App> {
       await CloudBase().auth.refreshAccessToken();
     }
 
+    await Future.delayed(Duration(seconds: 1));
+
     // set the widget is initialized
-    initialized = true;
+    setState(() {
+      initialized = true;
+    });
   }
 
   /// Build the widget
@@ -75,6 +79,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       onGenerateTitle: generateTitle,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

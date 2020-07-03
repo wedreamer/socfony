@@ -22,6 +22,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       extendBody: true,
       body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: controller,
         children: <Widget>[
           const MainHomeLayout(),

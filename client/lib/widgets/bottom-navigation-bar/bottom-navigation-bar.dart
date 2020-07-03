@@ -34,32 +34,27 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: 400
+    final EdgeInsets padding = MediaQuery.of(context).padding;
+    return BottomAppBar(
+      color: Colors.transparent,
+      elevation: 0.0,
+      child: UnconstrainedBox(
+        child: Container(
+          padding: EdgeInsets.all(5),
+          margin: const EdgeInsets.symmetric(horizontal: 10).copyWith(bottom: padding.bottom > 0 ? 0 : 20, top: 20),
+          decoration: BoxDecoration(
+            color: Theme.of(context).bottomAppBarColor,
+            borderRadius: const BorderRadius.all(const Radius.circular(100)),
           ),
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: Theme.of(context).bottomAppBarColor,
-              borderRadius: const BorderRadius.all(const Radius.circular(100)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-              child: GNav(
-                selectedIndex: index,
-                gap: 10,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                iconSize: 24,
-                activeColor: Theme.of(context).primaryColor,
-                tabBackgroundColor: Theme.of(context).primaryColor.withOpacity(.2),
-                tabs: tabsBuilder(context),
-                onTabChange: onTabChange,
-              )
-            ),
+          child: GNav(
+            selectedIndex: index,
+            gap: 10,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            iconSize: 24,
+            activeColor: Theme.of(context).primaryColor,
+            tabBackgroundColor: Theme.of(context).primaryColor.withOpacity(.2),
+            tabs: tabsBuilder(context),
+            onTabChange: onTabChange,
           ),
         ),
       ),
