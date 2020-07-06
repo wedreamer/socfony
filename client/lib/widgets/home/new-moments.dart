@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -51,9 +52,11 @@ class _HomeNewMomentsState extends State<HomeNewMoments> with AutomaticKeepAlive
   }
 
   Future<void> onRefreshMomentCount() async {
+    CancelFunc onClose = BotToast.showLoading();
     final DbQueryResponse response = await CloudBase().database.collection('moments').count();
     setState(() {
       momentsCount = response.total;
+      onClose();
     });
   }
 
@@ -98,9 +101,10 @@ class _HomeNewMomentsState extends State<HomeNewMoments> with AutomaticKeepAlive
 
   FetchMomentCallback onFetchMoment(int offset) {
     return () async {
-      DbQueryResponse response = await CloudBase().database.collection('moments').limit(1).skip(offset).get();
-      if (response.limit > 0) {
-        return Moment.fromJson((response.data as List).single);
+      final DbQueryResponse response = await CloudBase().database.collection('moments').limit(1).skip(offset).get();
+      final List data = (response.data as List);
+      if (data.isNotEmpty) {
+        return Moment.fromJson(data.single);
       }
 
       return null;

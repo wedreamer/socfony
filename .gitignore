@@ -1,4 +1,7 @@
 node_modules
 **/*/node_modules
 
-.snsmax.yaml
+custom-login-key.json
+custom-login-key.js
+snsmaxrc.js
+snsmaxrc.json

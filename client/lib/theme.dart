@@ -21,8 +21,10 @@ class AppTheme {
         tabBarTheme: _tabBarTheme,
       );
 
-  static ThemeData dark() => ThemeData.dark().copyWith(
-        primaryColor: const Color(0xFF5E6CE7),
+  static ThemeData dark() => ThemeData
+      .dark()
+      .copyWith(
+        primaryColor: primaryColor,
         appBarTheme: const AppBarTheme(color: Colors.black, elevation: 0),
         tabBarTheme: _tabBarTheme,
       );

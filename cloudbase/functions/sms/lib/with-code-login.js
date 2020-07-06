@@ -1,7 +1,7 @@
 const { verifyCode } = require("./verify-code");
 const config = require("../config");
 
-async function resolveUser(app, phone, throwError = false) {
+async function resolveUser(app, phone) {
     const database = app.database();
     const command = database.command;
 

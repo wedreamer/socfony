@@ -1,8 +1,0 @@
-# 腾讯云凭证 SecretId，👉 https://console.cloud.tencent.com/cam/capi
-secretId: 
-
-# 腾讯云凭证 SecretKey, 👉 https://console.cloud.tencent.com/cam/capi
-secretKey:
-
-# 云开发环境ID，可在腾讯云云开发控制台获取
-envId:

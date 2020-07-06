@@ -1,10 +1,19 @@
+const {
+    smsAppId,
+    smsSign,
+    smsTemplate,
+    smsCodeExpiredTime,
+    customLoginKey,
+} = process.env;
+
 module.exports = {
     codeCollection: "-sms-auth-code",
     userCollection: "users",
-    app: {
-        appId: "1400394939",
-        sign: "SNSMax",
-        templateId: "617248"
+    sms: {
+        appId: smsAppId,
+        sign: smsSign,
+        templateId: smsTemplate,
+        codeExpiredTime: parseInt(smsCodeExpiredTime),
     },
-    customLoginKey: require('./custom-login-key.json'),
+    customLoginKey: JSON.parse(customLoginKey),
 };

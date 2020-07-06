@@ -14,7 +14,7 @@ async function createCode(app, payload) {
 
     const code = randomStr(6);
     const expiredAt = new Date();
-    expiredAt.setTime(Date.now() + (5 * 60 * 1000));
+    expiredAt.setTime(Date.now() + (parseInt(config.sms.codeExpiredTime) * 60 * 1000));
 
     const doc = {phone, code, expiredAt};
 
@@ -36,14 +36,14 @@ async function sendCode(app, payload) {
     const client = new Client(cred, TENCENTCLOUD_REGION);
     const request = new Models.SendSmsRequest();
     
-    request.SmsSdkAppid = config.app.appId;
-    request.Sign = config.app.sign;
-    request.TemplateID = config.app.templateId;
+    request.SmsSdkAppid = config.sms.appId;
+    request.Sign = config.sms.sign;
+    request.TemplateID = config.sms.templateId;
 
     const { phone } = payload;
 
     request.PhoneNumberSet = [`+86${phone}`];
-    request.TemplateParamSet = [code, "5"];
+    request.TemplateParamSet = [code, config.sms.codeExpiredTime];
 
     return new Promise((resolve, reject) => {
         client.SendSms(request, (error, response) => {
