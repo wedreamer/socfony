@@ -84,6 +84,7 @@ class _AppState extends State<App> {
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
         AppLocalizations.delegate
       ],
       supportedLocales: AppLocalizations.locales,

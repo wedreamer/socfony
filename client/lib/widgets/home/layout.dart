@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snsmax/pages/login.dart';
 import 'package:snsmax/widgets/home/new-moments.dart';
 
 class MainHomeLayout extends StatefulWidget {
@@ -51,8 +52,12 @@ class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProvid
 
   List<Widget> tabBarBuilder(BuildContext context) {
     return [
-      Tab(text: '最新',),
-      Tab(text: '推荐',)
+      Tab(
+        text: '最新',
+      ),
+      Tab(
+        text: '推荐',
+      )
     ];
   }
   
@@ -69,10 +74,14 @@ class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProvid
 
   Widget sendMomentActionBuilder(BuildContext context) {
     return FlatButton.icon(
-      onPressed: () {},
+      onPressed: onSendMoment,
       textColor: Theme.of(context).primaryColor,
       icon: Icon(Icons.camera_alt),
       label: Text("发动态"),
     );
+  }
+
+  onSendMoment() {
+    LoginPage.route(context);
   }
 }

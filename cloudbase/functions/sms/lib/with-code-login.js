@@ -38,7 +38,7 @@ async function withCodeLogin(app, payload) {
     }
 
     const user = await resolveUser(app, phone);
-
+    
     return app.auth().createTicket(user._id);
 }
 
