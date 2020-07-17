@@ -13,8 +13,8 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 
   static Future<bool> route(BuildContext context) async {
-    CloudBaseUserInfo user = await CloudBase().auth.getUserInfo();
-    if (user.loginType == "ANONYMOUS") {
+    CloudBaseAuthState state = await CloudBase().auth.getAuthState();
+    if (state.authType == CloudBaseAuthType.ANONYMOUS) {
       return showDialog<bool>(
         context: context,
         barrierDismissible: false,
@@ -46,9 +46,16 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  bool get isPhone {
+    return MediaQuery.of(context).size.shortestSide < 600;
+  }
+
+  bool get isPortrait {
+    return MediaQuery.of(context).orientation == Orientation.portrait;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double aspectRatio = MediaQuery.of(context).size.aspectRatio;
     List<Widget> children = [
       buildAccount(context),
       buildCode(context),
@@ -58,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     ];
 
-    if (aspectRatio > .5) {
+    if (!isPortrait && isPhone) {
       children = [
         Expanded(
           child: ListView(
@@ -71,7 +78,8 @@ class _LoginPageState extends State<LoginPage> {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 400),
       child: Column(
-        mainAxisSize: aspectRatio > .5 ? MainAxisSize.max : MainAxisSize.min,
+        mainAxisSize:
+            (isPhone && !isPortrait) ? MainAxisSize.max : MainAxisSize.min,
         children: <Widget>[
           AppBar(
             backgroundColor: Colors.transparent,
@@ -163,10 +171,15 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: EdgeInsets.only(right: 12),
               child: GestureDetector(
-                child: Text(sentCodeCountdown <= 0 ? '获取验证码' : (sentCodeCountdown.toString() + 's'),
+                child: Text(
+                  sentCodeCountdown <= 0
+                      ? '获取验证码'
+                      : (sentCodeCountdown.toString() + 's'),
                   style: Theme.of(context).textTheme.caption.copyWith(
-                    color: Theme.of(context).primaryColor.withOpacity(allowSendCode ? 1 : .4),
-                  ),
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withOpacity(allowSendCode ? 1 : .4),
+                      ),
                 ),
                 onTap: onSendCode,
               ),
@@ -215,7 +228,8 @@ class _LoginPageState extends State<LoginPage> {
         "phone": phone,
         "code": code,
       });
-      CloudBaseAuthState state = await CloudBase().auth.signInWithTicket(result.data.toString());
+      CloudBaseAuthState state =
+          await CloudBase().auth.signInWithTicket(result.data.toString());
       if (state is! CloudBaseAuthState) {
         throw FormatException();
       }
@@ -244,28 +258,29 @@ class _LoginPageState extends State<LoginPage> {
     if (!hasPhone || sentCodeCountdown > 0) {
       return;
     }
-    final String functionName =  'sms';
+    final String functionName = 'sms';
     final Map<String, Object> params = {
       "action": "send-code",
       "phone": phone,
     };
     CancelFunc cancel = BotToast.showLoading();
-    CloudBase().fun(functionName, params)
-      .whenComplete(() => cancel())
-      .then((_) {
-        BotToast.showText(text: '获取成功！');
-        createTimer();
-      })
-      .catchError((_) {
-        BotToast.showText(text: '获取验证码失败');
-      });
+    CloudBase()
+        .fun(functionName, params)
+        .whenComplete(() => cancel())
+        .then((_) {
+      BotToast.showText(text: '获取成功！');
+      createTimer();
+    }).catchError((_) {
+      BotToast.showText(text: '获取验证码失败');
+    });
   }
 
   void createTimer() {
     sentCodeTimer?.cancel();
     setState(() {
       sentCodeCountdown = 60;
-      sentCodeTimer = Timer.periodic(const Duration(seconds: 1), onTimerCallback);
+      sentCodeTimer =
+          Timer.periodic(const Duration(seconds: 1), onTimerCallback);
     });
   }
 

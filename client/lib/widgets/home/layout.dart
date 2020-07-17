@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:snsmax/pages/login.dart';
+import 'package:snsmax/pages/publish.dart';
 import 'package:snsmax/widgets/home/new-moments.dart';
 
 class MainHomeLayout extends StatefulWidget {
-  const MainHomeLayout({Key key}): super(key: key);
+  const MainHomeLayout({Key key}) : super(key: key);
 
   @override
   _MainHomeLayoutState createState() => _MainHomeLayoutState();
 }
 
-class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProviderStateMixin<MainHomeLayout>, AutomaticKeepAliveClientMixin<MainHomeLayout> {
+class _MainHomeLayoutState extends State<MainHomeLayout>
+    with
+        SingleTickerProviderStateMixin<MainHomeLayout>,
+        AutomaticKeepAliveClientMixin<MainHomeLayout> {
   TabController controller;
 
   @override
@@ -42,10 +45,7 @@ class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProvid
       ),
       body: TabBarView(
         controller: controller,
-        children: <Widget>[
-          const HomeNewMoments(),
-          Text('2')
-        ],
+        children: <Widget>[const HomeNewMoments(), Text('2')],
       ),
     );
   }
@@ -60,7 +60,7 @@ class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProvid
       )
     ];
   }
-  
+
   Widget leadingBuilder(BuildContext context) {
     return IconButton(icon: Icon(Icons.search), onPressed: () {});
   }
@@ -82,6 +82,6 @@ class _MainHomeLayoutState extends State<MainHomeLayout> with SingleTickerProvid
   }
 
   onSendMoment() {
-    LoginPage.route(context);
+    PublishPage.route(context);
   }
 }

@@ -8,29 +8,19 @@ import 'package:snsmax/widgets/moment-list-item/moment-list-item.dart';
 import 'package:snsmax/widgets/scroll-back-top-button.dart';
 
 class HomeNewMoments extends StatefulWidget {
-  const HomeNewMoments({Key key}): super(key: key);
+  const HomeNewMoments({Key key}) : super(key: key);
 
   @override
   _HomeNewMomentsState createState() => _HomeNewMomentsState();
 }
 
-class _HomeNewMomentsState extends State<HomeNewMoments> with AutomaticKeepAliveClientMixin<HomeNewMoments> {
+class _HomeNewMomentsState extends State<HomeNewMoments>
+    with AutomaticKeepAliveClientMixin<HomeNewMoments> {
   @override
   bool get wantKeepAlive => true;
 
   ScrollController scrollController;
   int momentsCount = 0;
-
-  StaggeredTile get staggeredTile {
-    final double aspectRatio = MediaQuery.of(context).size.aspectRatio;
-    if ((aspectRatio >= 0.5 && aspectRatio < 1) || aspectRatio > 2) {
-      return const StaggeredTile.fit(3);
-    } else if (aspectRatio > 1) {
-      return const StaggeredTile.fit(2);
-    }
-
-    return const StaggeredTile.fit(6);
-  }
 
   @override
   void initState() {
@@ -52,12 +42,35 @@ class _HomeNewMomentsState extends State<HomeNewMoments> with AutomaticKeepAlive
   }
 
   Future<void> onRefreshMomentCount() async {
-    CancelFunc onClose = BotToast.showLoading();
-    final DbQueryResponse response = await CloudBase().database.collection('moments').count();
-    setState(() {
-      momentsCount = response.total;
-      onClose();
-    });
+    try {
+      CancelFunc onClose = BotToast.showLoading();
+      final DbQueryResponse response =
+          await CloudBase().database.collection('moments').count();
+      setState(() {
+        momentsCount = response.total;
+        onClose();
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  bool get isPhone {
+    return MediaQuery.of(context).size.shortestSide < 600;
+  }
+
+  bool get isPortrait {
+    return MediaQuery.of(context).orientation == Orientation.portrait;
+  }
+
+  StaggeredTile get staggeredTile {
+    if (isPhone && isPortrait) {
+      return const StaggeredTile.fit(6);
+    } else if (isPhone && !isPortrait) {
+      return const StaggeredTile.fit(2);
+    }
+
+    return const StaggeredTile.fit(3);
   }
 
   @override
@@ -79,7 +92,8 @@ class _HomeNewMomentsState extends State<HomeNewMoments> with AutomaticKeepAlive
                   itemBuilder: childBuilder,
                   crossAxisCount: 6,
                   crossAxisSpacing: 12,
-                  mainAxisSpacing: staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
+                  mainAxisSpacing:
+                      staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
                   staggeredTileBuilder: (int index) => staggeredTile,
                 ),
               ),
@@ -101,7 +115,12 @@ class _HomeNewMomentsState extends State<HomeNewMoments> with AutomaticKeepAlive
 
   FetchMomentCallback onFetchMoment(int offset) {
     return () async {
-      final DbQueryResponse response = await CloudBase().database.collection('moments').limit(1).skip(offset).get();
+      final DbQueryResponse response = await CloudBase()
+          .database
+          .collection('moments')
+          .limit(1)
+          .skip(offset)
+          .get();
       final List data = (response.data as List);
       if (data.isNotEmpty) {
         return Moment.fromJson(data.single);

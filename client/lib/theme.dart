@@ -12,9 +12,10 @@ const TabBarTheme _tabBarTheme = const TabBarTheme(
 class AppTheme {
   const AppTheme._();
 
-  static ThemeData light() =>  ThemeData(
+  static ThemeData light() => ThemeData(
         visualDensity: ThemeData.light().visualDensity,
         brightness: Brightness.light,
+        primarySwatch: Colors.indigo,
         primaryColor: primaryColor,
         primaryColorBrightness: Brightness.light,
         appBarTheme: const AppBarTheme(color: Colors.white, elevation: 0),
@@ -22,9 +23,9 @@ class AppTheme {
       );
 
   static ThemeData dark() => ThemeData.dark().copyWith(
-    primaryColor: primaryColor,
-    appBarTheme: const AppBarTheme(color: Colors.black, elevation: 0),
-    tabBarTheme: _tabBarTheme,
-    accentColor: primaryColor,
-  );
+        primaryColor: primaryColor,
+        appBarTheme: const AppBarTheme(color: Colors.black, elevation: 0),
+        tabBarTheme: _tabBarTheme,
+        accentColor: primaryColor,
+      );
 }

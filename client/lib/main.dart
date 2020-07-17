@@ -50,27 +50,31 @@ class _AppState extends State<App> {
   ///
   /// [timeSramp] is rending wait time
   void postFrameCallback(Duration timeSramp) async {
-    // wait rending
-    await Future.delayed(timeSramp);
+    try {
+      // wait rending
+      await Future.delayed(timeSramp);
 
-    // get CloudBase auth state
-    CloudBaseAuthState authState = await CloudBase().auth.getAuthState();
+      // get CloudBase auth state
+      CloudBaseAuthState authState = await CloudBase().auth.getAuthState();
 
-    // If auth state is null, using anonymously login
-    if (authState == null) {
-      await CloudBase().auth.signInAnonymously();
+      // If auth state is null, using anonymously login
+      if (authState == null) {
+        await CloudBase().auth.signInAnonymously();
 
-      // If login user has expired, refresh access token
-    } else if (await CloudBase().auth.hasExpiredAuthState()) {
-      await CloudBase().auth.refreshAccessToken();
+        // If login user has expired, refresh access token
+      } else if (await CloudBase().auth.hasExpiredAuthState()) {
+        await CloudBase().auth.refreshAccessToken();
+      }
+//
+//    await Future.delayed(Duration(seconds: 1));
+
+      // set the widget is initialized
+      setState(() {
+        initialized = true;
+      });
+    } catch (e) {
+      print(e);
     }
-
-    await Future.delayed(Duration(seconds: 1));
-
-    // set the widget is initialized
-    setState(() {
-      initialized = true;
-    });
   }
 
   /// Build the widget

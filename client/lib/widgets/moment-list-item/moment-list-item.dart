@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:snsmax/models/moment.dart';
 
 typedef FetchMomentCallback = Future<Moment> Function();
@@ -7,7 +8,7 @@ class MomentListItem extends StatefulWidget {
   const MomentListItem({
     Key key,
     @required this.onFetch,
-  }): super(key: key);
+  }) : super(key: key);
 
   final FetchMomentCallback onFetch;
 
@@ -39,10 +40,21 @@ class _MomentListItemState extends State<MomentListItem> {
     }
 
     return Card(
-      child: Text(moment.id),
       elevation: 0,
       margin: const EdgeInsets.all(0),
       shape: const RoundedRectangleBorder(),
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            leading: GFAvatar(
+              size: GFSize.SMALL,
+            ),
+            title: Text('Seven'),
+            subtitle: Text('九分钟前'),
+            trailing: IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+          ),
+        ],
+      ),
     );
   }
 }
