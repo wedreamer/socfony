@@ -469,6 +469,7 @@ class _PublishState extends State<PublishPage> {
   }
 
   Future<void> onSelectVideo() async {
+    FocusScope.of(context).unfocus();
     try {
       // 获取视频资源
       List<AssetEntity> entitys = await AssetPicker.pickAssets(
@@ -530,6 +531,7 @@ class _PublishState extends State<PublishPage> {
     } catch (e) {
       print(e);
     }
+    FocusScope.of(context).requestFocus();
   }
 
   Future<void> onRemoveSelectedVideo() async {
