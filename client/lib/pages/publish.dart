@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:getwidget/shape/gf_icon_button_shape.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -107,12 +108,69 @@ class _PublishState extends State<PublishPage> {
                   ),
                   buildImagesGridView(),
                   buildVideoGridView(),
+                  buildAudioCard(context),
                 ],
               ),
             ),
             buildBottomAppBar(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildAudioCard(BuildContext context) {
+    if (audio == null) {
+      return SizedBox.shrink();
+    }
+    bool hasCover = audio.containsKey(AudioMapKeys.cover);
+    File cover;
+    if (hasCover) {
+      cover = File(audio[AudioMapKeys.cover]);
+    }
+    return GFCard(
+      boxFit: BoxFit.cover,
+      imageOverlay:
+          hasCover ? FileImage(cover) : AssetImage('assets/audio-bg.jpg'),
+      margin: EdgeInsets.zero,
+      borderRadius: BorderRadius.circular(12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide.none,
+      ),
+      colorFilter: new ColorFilter.mode(
+        Colors.black45,
+        BlendMode.darken,
+      ),
+      content: Row(
+        children: <Widget>[
+          GFAvatar(
+            backgroundImage: hasCover ? FileImage(cover) : null,
+            child: Icon(
+              hasCover ? Icons.play_circle_filled : Icons.album,
+              size: hasCover ? GFSize.SMALL : GFSize.LARGE,
+            ),
+            size: GFSize.LARGE,
+          ),
+          Expanded(
+            child: Center(
+              child: GFButton(
+                onPressed: onSelectAudioCover,
+                text: '更换封面',
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+          GFIconButton(
+            icon: Icon(Icons.clear),
+            iconSize: 24,
+            onPressed: onRemoveAudio,
+            shape: GFIconButtonShape.circle,
+            color: Colors.red,
+            size: GFSize.SMALL,
+            padding: EdgeInsets.zero,
+          ),
+        ],
       ),
     );
   }
@@ -505,5 +563,67 @@ class _PublishState extends State<PublishPage> {
     setState(() {
       this.audio = {AudioMapKeys.src: audio.path};
     });
+  }
+
+  onSelectAudioCover() async {
+    List<AssetEntity> selected = await AssetPicker.pickAssets(
+      context,
+      requestType: RequestType.image,
+      themeColor: Theme.of(context).primaryColor,
+      maxAssets: 1,
+      filterOptions: imageFilterOptions,
+    );
+    if (selected == null || selected.isEmpty) {
+      return;
+    }
+
+    AssetEntity cover = selected.last;
+    File coverFile = await cover.file;
+
+    setState(() {
+      audio = {
+        ...audio,
+        AudioMapKeys.cover: coverFile.path,
+      };
+    });
+  }
+
+  onRemoveAudio() async {
+    bool hasCover = audio.containsKey(AudioMapKeys.cover);
+    AudioMapKeys key = await showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        message: Text(hasCover ? '你需要删除音频的什么？' : '确认要删除音频吗？'),
+        actions: <Widget>[
+          if (hasCover)
+            CupertinoActionSheetAction(
+              onPressed: () => Navigator.of(context).pop(AudioMapKeys.cover),
+              child: Text('封面'),
+            ),
+          CupertinoActionSheetAction(
+            onPressed: () => Navigator.of(context).pop(AudioMapKeys.src),
+            child: Text(hasCover ? '全部' : '删除'),
+            isDestructiveAction: hasCover ? false : true,
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text('取消'),
+          isDestructiveAction: true,
+        ),
+      ),
+    );
+    switch (key) {
+      case AudioMapKeys.cover:
+        setState(() {
+          audio = {AudioMapKeys.src: audio[AudioMapKeys.src]};
+        });
+        break;
+      case AudioMapKeys.src:
+        setState(() {
+          audio = null;
+        });
+        break;
+    }
   }
 }
