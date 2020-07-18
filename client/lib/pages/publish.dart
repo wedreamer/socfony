@@ -1,11 +1,16 @@
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:snsmax/pages/audio-recorder.dart';
 import 'package:snsmax/pages/login.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 class PublishPage extends StatefulWidget {
@@ -14,6 +19,7 @@ class PublishPage extends StatefulWidget {
   @override
   _PublishState createState() => _PublishState();
 
+  /// 创建发布页面路由
   static Future<bool> route(BuildContext context) async {
     bool login = await LoginPage.route(context);
     if (login == true) {
@@ -31,8 +37,24 @@ class PublishPage extends StatefulWidget {
   }
 }
 
+enum VideoMapKeys {
+  cover,
+  src,
+}
+
+enum AudioMapKeys {
+  cover,
+  src,
+}
+
 class _PublishState extends State<PublishPage> {
   List<AssetEntity> images = const <AssetEntity>[];
+  Map<VideoMapKeys, String> video;
+  Map<AudioMapKeys, String> audio;
+
+  bool get allowPhoto => video == null && audio == null;
+  bool get allowVideo => images.isEmpty && audio == null;
+  bool get allowAudio => images.isEmpty && video == null;
 
   @override
   void initState() {
@@ -66,14 +88,15 @@ class _PublishState extends State<PublishPage> {
             Expanded(
               child: ListView(
                 shrinkWrap: false,
-                padding:
-                    EdgeInsets.symmetric(horizontal: 16).copyWith(bottom: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 16)
+                    .copyWith(bottom: 24),
                 children: <Widget>[
                   TextField(
                     autofocus: true,
                     minLines: 5,
                     maxLines: null,
                     keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "耳机一戴，谁都不爱！",
@@ -83,6 +106,7 @@ class _PublishState extends State<PublishPage> {
                     ),
                   ),
                   buildImagesGridView(),
+                  buildVideoGridView(),
                 ],
               ),
             ),
@@ -93,12 +117,41 @@ class _PublishState extends State<PublishPage> {
     );
   }
 
+  Widget buildVideoGridView() {
+    if (video == null) {
+      return SizedBox.shrink();
+    }
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: ClipRRect(
+        child: GFImageOverlay(
+          image: FileImage(File(video[VideoMapKeys.cover])),
+          child: UnconstrainedBox(
+            child: GFButton(
+              icon: Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+              text: "删除视频",
+              onPressed: onRemoveSelectedVideo,
+              shape: GFButtonShape.pills,
+              color: Colors.redAccent,
+              textColor: Colors.white,
+            ),
+          ),
+        ),
+        borderRadius: BorderRadius.circular(6),
+      ),
+    );
+  }
+
   Widget buildImagesGridView() {
     if (images.isEmpty) {
       return SizedBox.shrink();
     }
 
     return GridView.builder(
+      padding: const EdgeInsets.only(top: 24),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -151,7 +204,7 @@ class _PublishState extends State<PublishPage> {
 
   Widget buildAddPhotoGridViewItem(BuildContext context) {
     return GestureDetector(
-      onTap: onTapInsertPhtoto,
+      onTap: onTapInsertPhoto,
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
@@ -184,15 +237,15 @@ class _PublishState extends State<PublishPage> {
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.photo_library),
-            onPressed: onTapInsertPhtoto,
+            onPressed: allowPhoto ? onTapInsertPhoto : null,
           ),
           IconButton(
             icon: Icon(Icons.video_library),
-            onPressed: () {},
+            onPressed: allowVideo ? onSelectVideo : null,
           ),
           IconButton(
             icon: Icon(Icons.library_music),
-            onPressed: () {},
+            onPressed: allowAudio ? onAudioRecorder : null,
           ),
           IconButton(
             icon: Icon(Icons.assessment),
@@ -281,8 +334,22 @@ class _PublishState extends State<PublishPage> {
     return filterOptions;
   }
 
-  Future<void> onTapInsertPhtoto() async {
-    FocusScope.of(context).unfocus();
+  FilterOptionGroup get videoFilterOptions {
+    FilterOptionGroup filterOptions = FilterOptionGroup();
+    filterOptions.setOption(
+      AssetType.video,
+      const FilterOption(
+        durationConstraint: const DurationConstraint(
+          min: const Duration(seconds: 5), // 最短视频五秒
+          max: const Duration(minutes: 5), // 最长视频五分钟
+        ),
+      ),
+    );
+
+    return filterOptions;
+  }
+
+  Future<void> onTapInsertPhoto() async {
     final cancel = ([VoidCallback callback]) => () {
           Navigator.of(context).pop();
           if (callback is Function) {
@@ -296,7 +363,7 @@ class _PublishState extends State<PublishPage> {
         actions: <Widget>[
           CupertinoActionSheetAction(
             onPressed: cancel(onCameraPhoto),
-            child: Text('相机拍照'),
+            child: Text('拍照'),
           ),
           CupertinoActionSheetAction(
             onPressed: cancel(onSelectImage),
@@ -312,7 +379,7 @@ class _PublishState extends State<PublishPage> {
     );
   }
 
-  onCameraPhoto() async {
+  Future<void> onCameraPhoto() async {
     try {
       PickedFile pickedFile =
           await ImagePicker().getImage(source: ImageSource.camera);
@@ -326,7 +393,7 @@ class _PublishState extends State<PublishPage> {
     }
   }
 
-  onSelectImage() {
+  void onSelectImage() {
     AssetPicker.pickAssets(
       context,
       selectedAssets: images,
@@ -340,6 +407,103 @@ class _PublishState extends State<PublishPage> {
           images = value;
         });
       }
+    });
+  }
+
+  Future<void> onSelectVideo() async {
+    try {
+      // 获取视频资源
+      List<AssetEntity> entitys = await AssetPicker.pickAssets(
+        context,
+        themeColor: Theme.of(context).primaryColor,
+        requestType: RequestType.video,
+        maxAssets: 1,
+        filterOptions: videoFilterOptions,
+      );
+      if (entitys is! List<AssetEntity> || entitys == null) {
+        return;
+      }
+
+      CancelFunc cancel = BotToast.showLoading();
+      AssetEntity entity = entitys.last;
+      File video = await entity.file;
+
+      // 获取缩略图文件
+      String thumbnailPath = await VideoThumbnail.thumbnailFile(
+        video: video.path,
+        thumbnailPath: (await getTemporaryDirectory()).path,
+        imageFormat: ImageFormat.JPEG,
+        maxWidth: 1280,
+        maxHeight: 720,
+        quality: 90,
+      );
+
+      // 裁剪缩略图
+      File thumbnailFile = await ImageCropper.cropImage(
+        sourcePath: thumbnailPath,
+        aspectRatio: CropAspectRatio(ratioX: 1280, ratioY: 720),
+        compressFormat: ImageCompressFormat.jpg,
+        cropStyle: CropStyle.rectangle,
+        iosUiSettings: IOSUiSettings(
+          hidesNavigationBar: true,
+          title: "视频封面编辑",
+          showActivitySheetOnDone: false,
+          showCancelConfirmationDialog: false,
+          cancelButtonTitle: "放弃视频",
+          doneButtonTitle: "完成",
+          rotateButtonsHidden: true,
+        ),
+        androidUiSettings: AndroidUiSettings(
+          toolbarTitle: "视频封面编辑",
+        ),
+      );
+      cancel();
+
+      if (thumbnailFile is! File) {
+        return;
+      }
+
+      setState(() {
+        this.video = {
+          VideoMapKeys.src: video.path,
+          VideoMapKeys.cover: thumbnailFile.path,
+        };
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> onRemoveSelectedVideo() async {
+    bool confirm = await showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        message: Text("确认要删除已选择的视频吗?"),
+        actions: <Widget>[
+          CupertinoActionSheetAction(
+            onPressed: () => Navigator.of(context).pop<bool>(true),
+            child: Text("删除"),
+            isDestructiveAction: true,
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.of(context).pop<bool>(false),
+          child: Text('不！我点错了'),
+        ),
+      ),
+    );
+
+    if (confirm == true) {
+      setState(() {
+        video = null;
+      });
+    }
+  }
+
+  onAudioRecorder() async {
+    File audio = await AudioRecorderPage.route(context);
+    setState(() {
+      this.audio = {AudioMapKeys.src: audio.path};
     });
   }
 }
