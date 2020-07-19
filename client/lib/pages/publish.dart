@@ -52,6 +52,7 @@ class _PublishState extends State<PublishPage> {
   List<AssetEntity> images = const <AssetEntity>[];
   Map<VideoMapKeys, String> video;
   Map<AudioMapKeys, String> audio;
+  List<String> votes;
 
   bool get allowPhoto => video == null && audio == null;
   bool get allowVideo => images.isEmpty && audio == null;
@@ -109,6 +110,7 @@ class _PublishState extends State<PublishPage> {
                   buildImagesGridView(),
                   buildVideoGridView(),
                   buildAudioCard(context),
+                  buildVoteWidget(),
                 ],
               ),
             ),
@@ -116,6 +118,36 @@ class _PublishState extends State<PublishPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildVoteWidget() {
+    if (votes is! List<String> || votes.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: votes.length,
+      itemBuilder: (BuildContext context, int index) {
+        return GFListTile(
+          margin: EdgeInsets.zero.copyWith(
+            bottom: 1,
+          ),
+          title: Center(
+            child: Text(votes[index]),
+          ),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          icon: GestureDetector(
+            child: Icon(
+              Icons.remove_circle,
+              color: Colors.red,
+            ),
+            onTap: () => onRemoveVote(index),
+          ),
+        );
+      },
     );
   }
 
@@ -307,7 +339,7 @@ class _PublishState extends State<PublishPage> {
           ),
           IconButton(
             icon: Icon(Icons.assessment),
-            onPressed: () {},
+            onPressed: onVoteSetting,
           ),
           Expanded(child: SizedBox.shrink()),
           IconButton(
@@ -626,6 +658,48 @@ class _PublishState extends State<PublishPage> {
           audio = null;
         });
         break;
+    }
+  }
+
+  onVoteSetting() async {
+    var value =
+        await Navigator.of(context).pushNamed('vote-setter', arguments: votes);
+    if (value is List<String>) {
+      setState(() {
+        votes = value;
+      });
+    }
+  }
+
+  onRemoveVote(int index) async {
+    if (votes.length > 2) {
+      return setState(() {
+        votes.removeAt(index);
+      });
+    }
+
+    bool hasRemove = await showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        message: Text('投票最低两个选项，当前操作将全部移除选项，是否删除投票?'),
+        actions: <Widget>[
+          CupertinoActionSheetAction(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('删除'),
+            isDestructiveAction: true,
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text('取消'),
+          isDestructiveAction: true,
+        ),
+      ),
+    );
+    if (hasRemove) {
+      setState(() {
+        votes = null;
+      });
     }
   }
 }
