@@ -21,6 +21,9 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
 
   ScrollController scrollController;
   int momentsCount = 0;
+  List<Moment> moments;
+  DateTime refreshDate;
+  RealtimeListener momentsWatcher;
 
   @override
   void initState() {
@@ -38,17 +41,44 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
 
   void onFetchMomentCount(Duration duration) async {
     await Future.delayed(duration);
+    CancelFunc onClose = BotToast.showLoading();
     await onRefreshMomentCount();
+    onClose();
   }
 
   Future<void> onRefreshMomentCount() async {
     try {
-      CancelFunc onClose = BotToast.showLoading();
-      final DbQueryResponse response =
-          await CloudBase().database.collection('moments').count();
+      refreshDate = DateTime.now();
+      var where = {
+        "createdAt": CloudBase().database.command.lte(refreshDate),
+      };
+      final DbQueryResponse count =
+          await CloudBase().database.collection('moments').where(where).count();
+      final DbQueryResponse result = await CloudBase()
+          .database
+          .collection('moments')
+          .where(where)
+          .orderBy("createdAt", "desc")
+          .limit(20)
+          .get();
+      List<Moment> _moments =
+          (result.data as List)?.map((e) => Moment.fromJson(e))?.toList();
+      momentsWatcher?.close();
+      momentsWatcher = CloudBase().database.collection("moments").where({
+        "_id": CloudBase()
+            .database
+            .command
+            .into(_moments.map((e) => e.id).toList()),
+      }).watch(
+        onChange: (Snapshot snapshot) {
+          setState(() {
+            moments = snapshot.docs.map((e) => Moment.fromJson(e)).toList();
+          });
+        },
+      );
       setState(() {
-        momentsCount = response.total;
-        onClose();
+        momentsCount = count.total;
+        moments = _moments;
       });
     } catch (e) {
       print(e);
@@ -115,11 +145,18 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
 
   FetchMomentCallback onFetchMoment(int offset) {
     return () async {
+      if (moments[offset] is Moment) {
+        return moments[offset];
+      }
       final DbQueryResponse response = await CloudBase()
           .database
           .collection('moments')
+          .where({
+            "createdAt": CloudBase().database.command.lte(refreshDate),
+          })
           .limit(1)
           .skip(offset)
+          .orderBy("createdAt", "desc")
           .get();
       final List data = (response.data as List);
       if (data.isNotEmpty) {

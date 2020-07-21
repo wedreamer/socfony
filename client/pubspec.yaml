@@ -31,7 +31,7 @@ dependencies:
   cloudbase_auth: ^0.0.12
   cloudbase_function: ^0.0.2
   cloudbase_storage: ^0.0.3
-  cloudbase_database: ^0.0.10
+  cloudbase_database: ^0.0.11
   bot_toast: ^3.0.0
   google_nav_bar: ^2.2.0
   intl: ^0.16.1

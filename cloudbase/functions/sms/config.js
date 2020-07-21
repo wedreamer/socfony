@@ -9,6 +9,7 @@ const {
 module.exports = {
     codeCollection: "-sms-auth-code",
     userCollection: "users",
+    userPrivateCollection: "users-private",
     sms: {
         appId: smsAppId,
         sign: smsSign,

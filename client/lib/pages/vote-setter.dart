@@ -159,7 +159,7 @@ class _VoteSetterPageState extends State<VoteSetterPage> {
 
   onVoteItemChange(int index, String value) {
     setState(() {
-      votes[index] = value;
+      votes[index] = value.trimLeft();
     });
   }
 
@@ -177,6 +177,6 @@ class _VoteSetterPageState extends State<VoteSetterPage> {
   }
 
   onDoneBack() {
-    Navigator.of(context).pop(votes);
+    Navigator.of(context).pop(votes.map((e) => e.trim()).toList());
   }
 }

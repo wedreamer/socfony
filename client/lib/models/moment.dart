@@ -16,7 +16,7 @@ abstract class Moment implements Built<Moment, MomentBuilder> {
     return serializers.serializeWith(Moment.serializer, this);
   }
 
-  static Moment fromJson(dynamic json) {
+  static Moment fromJson(Object json) {
     return serializers.deserializeWith(Moment.serializer, json);
   }
 

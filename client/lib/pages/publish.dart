@@ -1,6 +1,10 @@
 import 'dart:io';
+import 'package:crypto/crypto.dart' as convert;
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +12,9 @@ import 'package:getwidget/getwidget.dart';
 import 'package:getwidget/shape/gf_icon_button_shape.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/pages/audio-recorder.dart';
 import 'package:snsmax/pages/login.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -53,10 +59,12 @@ class _PublishState extends State<PublishPage> {
   Map<VideoMapKeys, String> video;
   Map<AudioMapKeys, String> audio;
   List<String> votes;
+  String text;
 
   bool get allowPhoto => video == null && audio == null;
   bool get allowVideo => images.isEmpty && audio == null;
   bool get allowAudio => images.isEmpty && video == null;
+  bool get allowPost => text != null && text.isNotEmpty;
 
   @override
   void initState() {
@@ -106,6 +114,7 @@ class _PublishState extends State<PublishPage> {
                         bottom: 12,
                       ),
                     ),
+                    onChanged: onTextChanged,
                   ),
                   buildImagesGridView(),
                   buildVideoGridView(),
@@ -127,6 +136,7 @@ class _PublishState extends State<PublishPage> {
     }
 
     return ListView.builder(
+      padding: EdgeInsets.only(top: 24),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: votes.length,
@@ -362,7 +372,7 @@ class _PublishState extends State<PublishPage> {
       actions: <Widget>[
         UnconstrainedBox(
           child: GFButton(
-            onPressed: () {},
+            onPressed: allowPost ? onPostMoment : null,
             shape: GFButtonShape.pills,
             text: '发布',
             color: Theme.of(context).primaryColor,
@@ -701,5 +711,142 @@ class _PublishState extends State<PublishPage> {
         votes = null;
       });
     }
+  }
+
+  onTextChanged(String value) {
+    setState(() {
+      text = value.trimLeft();
+    });
+  }
+
+  Future<String> uploadFile(File file) async {
+    convert.Digest digest = convert.md5.convert(file.readAsBytesSync());
+    String ext = "." + file.path.toLowerCase().split('.').last;
+    String cloudPath = DateFormat("yyyy/MM/dd/").format(DateTime.now()) +
+        digest.toString() +
+        ext;
+    CloudBaseStorageRes<UploadRes> result =
+        await CloudBase().storage.uploadFile(
+              cloudPath: cloudPath,
+              filePath: file.path,
+            );
+
+    return result.data.fileId;
+  }
+
+  onPostMoment() async {
+    FocusScope.of(context).unfocus();
+    CancelFunc cancel = BotToast.showLoading();
+    try {
+      Map<String, dynamic> doc = {
+        "createdAt": ServerDate(),
+        "updatedAt": ServerDate(),
+      };
+      doc = await senderSetter(doc);
+      doc = await textSetter(doc);
+      doc = await uploadImages(doc);
+      doc = await uploadVideo(doc);
+      doc = await uploadAudio(doc);
+      doc = await createVote(doc);
+
+      DbCreateResponse response =
+          await CloudBase().database.collection('moments').add(doc);
+      if (response.code == null && response.id is String) {
+        Navigator.of(context).pop();
+        cancel();
+        BotToast.showText(text: "发布成功");
+        return;
+      }
+
+      throw FormatException("发布失败");
+    } catch (e) {
+      cancel();
+      print(e);
+      BotToast.showText(text: "发布失败");
+    }
+  }
+
+  Future<Map<String, dynamic>> createVote(Map<String, dynamic> doc) async {
+    if (votes is! List<String> || votes.isEmpty) {
+      return doc;
+    }
+    Map<String, dynamic> _doc = doc != null ? doc : {};
+
+    return {
+      ..._doc,
+      "vote": votes.map((e) => {
+            "name": e,
+          }),
+    };
+  }
+
+  Future<Map<String, dynamic>> uploadAudio(Map<String, dynamic> doc) async {
+    if (audio == null || !audio.containsKey(AudioMapKeys.src)) {
+      return doc;
+    }
+    Map<String, dynamic> _doc = doc != null ? doc : {};
+    Map<String, String> _audio = {
+      "src": await uploadFile(File(audio[AudioMapKeys.src])),
+    };
+
+    if (audio.containsKey(AudioMapKeys.cover)) {
+      _audio = {
+        ..._audio,
+        "cover": await uploadFile(File(audio[AudioMapKeys.cover])),
+      };
+    }
+
+    return {..._doc, "audio": _audio};
+  }
+
+  Future<Map<String, dynamic>> uploadVideo(Map<String, dynamic> doc) async {
+    if (video == null ||
+        !video.containsKey(VideoMapKeys.cover) ||
+        !video.containsKey(VideoMapKeys.src)) {
+      return doc;
+    }
+    Map<String, dynamic> _doc = doc != null ? doc : {};
+    Map<String, String> _video = {
+      "cover": await uploadFile(File(video[VideoMapKeys.cover])),
+      "src": await uploadFile(File(video[VideoMapKeys.src])),
+    };
+
+    return {..._doc, "video": _video};
+  }
+
+  Future<Map<String, dynamic>> uploadImages(Map<String, dynamic> doc) async {
+    if (images is! List<AssetEntity> || images.isEmpty) {
+      return doc;
+    }
+    Map<String, dynamic> _doc = doc != null ? doc : {};
+    List<String> paths = [];
+    for (AssetEntity image in images) {
+      File file = await image.file;
+      String fileId = await uploadFile(file);
+      paths.add(fileId);
+    }
+
+    return {
+      ..._doc,
+      "images": paths,
+    };
+  }
+
+  Future<Map<String, dynamic>> textSetter(Map<String, dynamic> doc) async {
+    Map<String, dynamic> _doc = doc != null ? doc : {};
+    return {
+      ...doc,
+      "text": text.trim(),
+    };
+  }
+
+  Future<Map<String, dynamic>> senderSetter(Map<String, dynamic> doc) async {
+    CloudBaseResponse result =
+        await CloudBase().fun('auth', {"action": "getCurrentUser"});
+    Map<String, dynamic> _doc = doc != null ? doc : {};
+    return {
+      ...doc,
+      "userId": result.data['_id'],
+    };
   }
 }
