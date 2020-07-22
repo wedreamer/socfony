@@ -3,6 +3,18 @@ import 'collection.dart';
 
 class CachedNetworkFileProvider
     extends BaseCollectionProvider<String, DownloadMetadata> {
+  static CachedNetworkFileProvider _instance;
+
+  factory CachedNetworkFileProvider() {
+    print(_instance);
+    if (_instance == null) {
+      _instance = CachedNetworkFileProvider._();
+    }
+    return _instance;
+  }
+
+  CachedNetworkFileProvider._();
+
   @override
   String get collectionName => throw UnimplementedError();
 

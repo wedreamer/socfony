@@ -11,7 +11,7 @@ class FileCacheManager extends cache.BaseCacheManager {
 
   factory FileCacheManager() {
     if (_instance == null) {
-      _instance = new FileCacheManager._();
+      _instance = FileCacheManager._();
     }
     return _instance;
   }

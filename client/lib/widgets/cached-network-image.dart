@@ -86,7 +86,7 @@ class CachedNetworkImage extends StatelessWidget {
     }
     return cache.CachedNetworkImage(
       imageUrl: rule is String && rule.isNotEmpty
-          ? meta.downloadUrl + "?" + rule
+          ? ("${meta.downloadUrl}" "?" "$rule")
           : meta.downloadUrl,
       progressIndicatorBuilder:
           (BuildContext context, _, DownloadProgress progress) =>
