@@ -1,54 +1,18 @@
-import 'package:cloudbase_database/cloudbase_database.dart';
-import 'package:flutter/foundation.dart';
-import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/models/moment.dart';
+import 'package:snsmax/provider/collection.dart';
 
-class MomentsCollection with ChangeNotifier {
-  Map<String, Moment> _moments = <String, Moment>{};
+class MomentsCollection extends BaseCollectionProvider<String, Moment> {
+  @override
+  String toCollectionId(Moment value) => value.id;
 
-  Map<String, Moment> get moments => _moments;
+  @override
+  String toDocId(Moment value) => toCollectionId(value);
 
-  void set(List<Moment> moments) {
-    if (moments is! List<Moment>) {
-      return;
-    }
+  @override
+  String get collectionName => "moments";
 
-    List<Moment> needPut = moments
-        .where((element) => !this.moments.containsKey(element.id))
-        .toList();
-
-    _moments
-        .addAll(needPut.asMap().map((_, value) => MapEntry(value.id, value)));
-
-    notifyListeners();
-    needPut.forEach((Moment element) {
-      CloudBase().database.collection('moments').doc(element.id).watch(
-        onChange: (Snapshot snapshot) {
-          snapshot.docChanges.forEach((element) {
-            Moment doc = Moment.fromJson(element.doc);
-            if (this.moments.containsKey(doc.id)) {
-              _moments.update(doc.id, (_) => doc);
-            } else {
-              _moments.addAll({doc.id: doc});
-            }
-          });
-          notifyListeners();
-        },
-      );
-    });
-  }
-
-  void remove(Moment moment) {
-    _moments.remove(moment.id);
-    notifyListeners();
-  }
-
-  void removeById(String id) {
-    _moments.remove(id);
-    notifyListeners();
-  }
-
-  Moment getById(String id) {
-    return moments[id];
+  @override
+  Moment formObject(Object value) {
+    return super.formObject(value) ?? Moment.fromJson(value);
   }
 }

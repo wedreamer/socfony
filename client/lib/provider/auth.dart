@@ -1,4 +1,3 @@
-import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ class AuthProvider with ChangeNotifier {
   static RealtimeListener _watcher;
 
   set user(User user) {
-    print(333);
     _user = user;
     notifyListeners();
     _watcher?.close();

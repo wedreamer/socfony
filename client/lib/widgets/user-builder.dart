@@ -30,15 +30,12 @@ class UserBuilder extends StatelessWidget {
       throw ErrorDescription(result.message);
     }
 
-    List<User> _value =
-        (result.data as List)?.map((e) => User.fromJson(e))?.toList();
-    if (_value is! List<User> || _value.isEmpty) {
+    List<Object> _value = result.data as List;
+    if (_value == null || _value.isEmpty) {
       throw ErrorDescription("无法查询用户信息");
     }
 
-    collection.insertOrUpdate(_value
-        .asMap()
-        .map<String, User>((_, value) => MapEntry(value.id, value)));
+    collection.insertOrUpdate(_value);
 
     return _value.last;
   }

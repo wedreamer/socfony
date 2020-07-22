@@ -59,7 +59,7 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
           .get();
       List<Moment> _moments =
           (result.data as List)?.map((e) => Moment.fromJson(e))?.toList();
-      context.read<MomentsCollection>().set(_moments);
+      context.read<MomentsCollection>().insertOrUpdate(_moments);
       setState(() {
         moments = _moments.map((e) => e.id).toList();
       });
@@ -109,7 +109,7 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
               ),
               SliverSafeArea(
                 sliver: SliverStaggeredGrid.countBuilder(
-                  itemCount: moments?.length ?? 0,
+                  itemCount: moments.length ?? 0,
                   itemBuilder: childBuilder,
                   crossAxisCount: 6,
                   crossAxisSpacing: 12,
@@ -158,10 +158,11 @@ class MomentCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: context.select<MomentsCollection, List<Widget>>((value) {
-            Moment moment = value.getById(id);
-            if (moment is! Moment) {
+            if (!value.containsKey(id)) {
               return [];
             }
+
+            Moment moment = value[id];
 
             return [
               UserBuilder(

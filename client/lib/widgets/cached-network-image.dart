@@ -8,9 +8,10 @@ import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/provider/cached-network-file.dart';
 import 'package:snsmax/utils/cache-managers/file-cache-manager.dart';
 
-typedef Widget ProgressIndicatorBuilder(
-    BuildContext context, DownloadProgress progress);
-typedef Widget LoadingErrorWidgetBuilder(BuildContext context, dynamic error);
+typedef ProgressIndicatorBuilder = Widget Function(
+    BuildContext, DownloadProgress);
+typedef LoadingErrorWidgetBuilder = Widget Function(
+    BuildContext, dynamic error);
 
 class CachedNetworkImage extends StatelessWidget {
   const CachedNetworkImage({
@@ -59,17 +60,17 @@ class CachedNetworkImage extends StatelessWidget {
 
   Widget widgetBuilder(
       BuildContext context, CachedNetworkFileProvider provider) {
-    if (provider.files.containsKey(fileId)) {
+    if (provider.containsKey(fileId)) {
       return futureWidgetBuilder(
         context,
         AsyncSnapshot<DownloadMetadata>.withData(
           ConnectionState.done,
-          provider.fetchById(fileId),
+          provider[fileId],
         ),
       );
     }
+
     return FutureBuilder<DownloadMetadata>(
-      initialData: provider.fetchById(fileId),
       future: fetchFileMeta(provider),
       builder: futureWidgetBuilder,
     );
@@ -134,13 +135,13 @@ class CachedNetworkImage extends StatelessWidget {
 
   Future<DownloadMetadata> fetchFileMeta(
       CachedNetworkFileProvider provider) async {
-    if (provider.files.containsKey(fileId)) {
-      return provider.fetchById(fileId);
+    if (provider.containsKey(fileId)) {
+      return provider[fileId];
     }
 
     CloudBaseStorageRes<List<DownloadMetadata>> result =
         await CloudBase().storage.getFileDownloadURL([fileId]);
-    provider.cache(result.data);
+    provider.insertOrUpdate(result.data);
 
     return result.data.where((element) => element.fileId == fileId).last;
   }
