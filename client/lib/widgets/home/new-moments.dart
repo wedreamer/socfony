@@ -3,9 +3,15 @@ import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:snsmax/cloudbase.dart';
+import 'package:snsmax/models/media.dart';
 import 'package:snsmax/models/moment.dart';
-import 'package:snsmax/widgets/moment-list-item/moment-list-item.dart';
+import 'package:snsmax/models/user.dart' hide UserBuilder;
+import 'package:snsmax/provider/collections/moments.dart';
+import 'package:snsmax/widgets/cached-network-image.dart';
 import 'package:snsmax/widgets/scroll-back-top-button.dart';
+import 'package:snsmax/utils/date-time-extension.dart';
+import 'package:provider/provider.dart';
+import 'package:snsmax/widgets/user-builder.dart';
 
 class HomeNewMoments extends StatefulWidget {
   const HomeNewMoments({Key key}) : super(key: key);
@@ -20,10 +26,7 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
   bool get wantKeepAlive => true;
 
   ScrollController scrollController;
-  int momentsCount = 0;
-  List<Moment> moments;
-  DateTime refreshDate;
-  RealtimeListener momentsWatcher;
+  List<String> moments = [];
 
   @override
   void initState() {
@@ -48,37 +51,17 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
 
   Future<void> onRefreshMomentCount() async {
     try {
-      refreshDate = DateTime.now();
-      var where = {
-        "createdAt": CloudBase().database.command.lte(refreshDate),
-      };
-      final DbQueryResponse count =
-          await CloudBase().database.collection('moments').where(where).count();
       final DbQueryResponse result = await CloudBase()
           .database
           .collection('moments')
-          .where(where)
           .orderBy("createdAt", "desc")
           .limit(20)
           .get();
       List<Moment> _moments =
           (result.data as List)?.map((e) => Moment.fromJson(e))?.toList();
-      momentsWatcher?.close();
-      momentsWatcher = CloudBase().database.collection("moments").where({
-        "_id": CloudBase()
-            .database
-            .command
-            .into(_moments.map((e) => e.id).toList()),
-      }).watch(
-        onChange: (Snapshot snapshot) {
-          setState(() {
-            moments = snapshot.docs.map((e) => Moment.fromJson(e)).toList();
-          });
-        },
-      );
+      context.read<MomentsCollection>().set(_moments);
       setState(() {
-        momentsCount = count.total;
-        moments = _moments;
+        moments = _moments.map((e) => e.id).toList();
       });
     } catch (e) {
       print(e);
@@ -97,15 +80,19 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
     if (isPhone && isPortrait) {
       return const StaggeredTile.fit(6);
     } else if (isPhone && !isPortrait) {
-      return const StaggeredTile.fit(2);
+      return const StaggeredTile.fit(3);
     }
 
-    return const StaggeredTile.fit(3);
+    return const StaggeredTile.fit(2);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    if (moments == null || moments.isEmpty) {
+      return SizedBox();
+    }
 
     return Scaffold(
       body: Scrollbar(
@@ -116,9 +103,13 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
+              SliverPadding(
+                padding: EdgeInsets.only(
+                    top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
+              ),
               SliverSafeArea(
                 sliver: SliverStaggeredGrid.countBuilder(
-                  itemCount: momentsCount,
+                  itemCount: moments?.length ?? 0,
                   itemBuilder: childBuilder,
                   crossAxisCount: 6,
                   crossAxisSpacing: 12,
@@ -129,6 +120,10 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
               ),
             ],
           ),
+//          child: ListView.builder(
+//            itemBuilder: childBuilder,
+//            itemCount: moments?.length ?? 0,
+//          ),
         ),
       ),
       floatingActionButton: Container(
@@ -140,30 +135,179 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
   }
 
   Widget childBuilder(BuildContext context, int index) {
-    return MomentListItem(onFetch: onFetchMoment(index));
+    return MomentCard(id: moments[index]);
+  }
+}
+
+class MomentCard extends StatelessWidget {
+  const MomentCard({
+    Key key,
+    @required this.id,
+  }) : super(key: key);
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 0,
+      shape: const RoundedRectangleBorder(),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: context.select<MomentsCollection, List<Widget>>((value) {
+            Moment moment = value.getById(id);
+            if (moment is! Moment) {
+              return [];
+            }
+
+            return [
+              UserBuilder(
+                id: moment.userId,
+                builder: (BuildContext context, User user) {
+                  return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: CircleAvatar(
+                      radius: 24,
+                    ),
+                    title: Text(
+                        user.nickName ?? "用户" + user.id.hashCode.toString()),
+                    subtitle: Text(moment.createdAt.formNow),
+                    trailing: Icon(Icons.more_vert),
+                  );
+                },
+              ),
+              buildText(moment),
+              MomentImageCard(
+                moment: moment,
+                padding: EdgeInsets.symmetric(vertical: 6),
+              ),
+              if (moment.video is MediaVideo)
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: <Widget>[
+                        Positioned.fill(
+                          child: CachedNetworkImage(
+                            fileId: moment.video.cover,
+                            fit: BoxFit.cover,
+                            rule:
+                                "imageMogr2/scrop/854x480/cut/854x480/format/yjpeg",
+                          ),
+                        ),
+                        Positioned.fill(
+                          child: UnconstrainedBox(
+                            child: FloatingActionButton(
+                              backgroundColor: Colors.black45,
+                              onPressed: () {},
+                              child: Icon(
+                                Icons.play_arrow,
+                                size: 48,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ];
+          }),
+        ),
+      ),
+    );
   }
 
-  FetchMomentCallback onFetchMoment(int offset) {
-    return () async {
-      if (moments[offset] is Moment) {
-        return moments[offset];
-      }
-      final DbQueryResponse response = await CloudBase()
-          .database
-          .collection('moments')
-          .where({
-            "createdAt": CloudBase().database.command.lte(refreshDate),
-          })
-          .limit(1)
-          .skip(offset)
-          .orderBy("createdAt", "desc")
-          .get();
-      final List data = (response.data as List);
-      if (data.isNotEmpty) {
-        return Moment.fromJson(data.single);
-      }
+  Widget buildText(Moment moment) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 6),
+      child: Text(moment.text),
+    );
+  }
+}
 
-      return null;
-    };
+class MomentImageCard extends StatelessWidget {
+  const MomentImageCard({
+    Key key,
+    @required this.moment,
+    this.padding,
+  }) : super(key: key);
+
+  final Moment moment;
+  final EdgeInsets padding;
+
+  List<String> get images => moment.images?.toList();
+
+  bool get allowRunBuild => images is List && images.isNotEmpty;
+
+  int get length => images?.length ?? 0;
+
+  double get childAspectRatio {
+    switch (length) {
+      case 1:
+        return 16 / 9;
+      case 2:
+      case 4:
+        return 1.5;
+      default:
+        return 1.0;
+    }
+  }
+
+  int get crossAxisCount {
+    if (length <= 2) {
+      return length;
+    } else if (length == 4) {
+      return 2;
+    }
+
+    return 3;
+  }
+
+  String get rule {
+    switch (length) {
+      case 1:
+        return "imageMogr2/scrop/854x480/cut/854x480/format/yjpeg";
+      case 2:
+      case 4:
+        return "imageMogr2/scrop/432x288/cut/432x288/format/yjpeg";
+      default:
+        return "imageMogr2/scrop/360x360/cut/360x360/format/yjpeg";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (allowRunBuild != true) {
+      return SizedBox();
+    }
+
+    return GridView.builder(
+      padding: padding ?? EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        crossAxisSpacing: 6,
+        mainAxisSpacing: 6,
+        childAspectRatio: childAspectRatio,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        return ClipRRect(
+          child: CachedNetworkImage(
+            fileId: images[index],
+            fit: BoxFit.cover,
+            rule: rule,
+          ),
+          borderRadius: BorderRadius.circular(6),
+        );
+      },
+      itemCount: images.length,
+    );
   }
 }

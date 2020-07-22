@@ -604,9 +604,11 @@ class _PublishState extends State<PublishPage> {
 
   onAudioRecorder() async {
     File audio = await AudioRecorderPage.route(context);
-    setState(() {
-      this.audio = {AudioMapKeys.src: audio.path};
-    });
+    if (audio is File) {
+      setState(() {
+        this.audio = {AudioMapKeys.src: audio.path};
+      });
+    }
   }
 
   onSelectAudioCover() async {
@@ -774,9 +776,11 @@ class _PublishState extends State<PublishPage> {
 
     return {
       ..._doc,
-      "vote": votes.map((e) => {
-            "name": e,
-          }),
+      "vote": votes
+          .map((e) => {
+                "name": e,
+              })
+          .toList(),
     };
   }
 
@@ -835,7 +839,7 @@ class _PublishState extends State<PublishPage> {
   Future<Map<String, dynamic>> textSetter(Map<String, dynamic> doc) async {
     Map<String, dynamic> _doc = doc != null ? doc : {};
     return {
-      ...doc,
+      ..._doc,
       "text": text.trim(),
     };
   }
@@ -845,7 +849,7 @@ class _PublishState extends State<PublishPage> {
         await CloudBase().fun('auth', {"action": "getCurrentUser"});
     Map<String, dynamic> _doc = doc != null ? doc : {};
     return {
-      ...doc,
+      ..._doc,
       "userId": result.data['_id'],
     };
   }

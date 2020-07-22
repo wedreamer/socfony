@@ -13,6 +13,9 @@ PODS:
     - Flutter
   - flutter_plugin_android_lifecycle (0.0.1):
     - Flutter
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
   - image_cropper (0.0.2):
     - Flutter
     - TOCropViewController (~> 2.5.2)
@@ -43,6 +46,9 @@ PODS:
     - Flutter
   - shared_preferences_web (0.0.1):
     - Flutter
+  - sqflite (0.0.1):
+    - Flutter
+    - FMDB (~> 2.7.2)
   - TOCropViewController (2.5.2)
   - video_player (0.0.1):
     - Flutter
@@ -70,6 +76,7 @@ DEPENDENCIES:
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
   - shared_preferences_web (from `.symlinks/plugins/shared_preferences_web/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - video_player_web (from `.symlinks/plugins/video_player_web/ios`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
@@ -77,6 +84,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Aspects
+    - FMDB
     - libwebp
     - TOCropViewController
     - WechatOpenSDK
@@ -114,6 +122,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_macos/ios"
   shared_preferences_web:
     :path: ".symlinks/plugins/shared_preferences_web/ios"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
   video_player_web:
@@ -129,6 +139,7 @@ SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_audio_recorder: eb998d4e75e59b39d9e3ca1818a5e0f3a82f5836
   flutter_plugin_android_lifecycle: dc0b544e129eebb77a6bfb1239d4d1c673a60a35
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   image_cropper: 3c16d7651730ffe85897f5a1c4e2547e6b54989a
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
@@ -140,6 +151,7 @@ SPEC CHECKSUMS:
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
+  sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   TOCropViewController: e9da34f484aedd4e5d5a8ab230ba217cfe16c729
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   video_player_web: da8cadb8274ed4f8dbee8d7171b420dedd437ce7

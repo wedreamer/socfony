@@ -1,14 +1,23 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloudbase_auth/cloudbase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/l10n/localization.dart';
 import 'package:snsmax/pages/launch.dart';
+import 'package:snsmax/provider/provider.dart';
 import 'package:snsmax/routes.dart';
 import 'package:snsmax/theme.dart';
 
 void main() {
+//  WidgetsFlutterBinding.ensureInitialized();
+//
+//  // 强制竖屏
+//  SystemChrome.setPreferredOrientations([
+//    DeviceOrientation.portraitUp,
+//    DeviceOrientation.portraitDown,
+//  ]);
   // Run app
   App.run();
 }
@@ -65,8 +74,6 @@ class _AppState extends State<App> {
       } else if (await CloudBase().auth.hasExpiredAuthState()) {
         await CloudBase().auth.refreshAccessToken();
       }
-//
-//    await Future.delayed(Duration(seconds: 1));
 
       // set the widget is initialized
       setState(() {
@@ -82,24 +89,26 @@ class _AppState extends State<App> {
   /// [context] is widget [BuildContext]
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      onGenerateTitle: generateTitle,
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        AppLocalizations.delegate
-      ],
-      supportedLocales: AppLocalizations.locales,
-      locale: AppLocalizations.defaultLocale,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.system,
-      builder: layout,
-      navigatorObservers: [BotToastNavigatorObserver()],
-      routes: routes,
-      initialRoute: 'main',
+    return RootProvider(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        onGenerateTitle: generateTitle,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          AppLocalizations.delegate
+        ],
+        supportedLocales: AppLocalizations.locales,
+        locale: AppLocalizations.defaultLocale,
+        theme: AppTheme.light(),
+        darkTheme: AppTheme.dark(),
+        themeMode: ThemeMode.system,
+        builder: layout,
+        navigatorObservers: [BotToastNavigatorObserver()],
+        routes: routes,
+        initialRoute: 'main',
+      ),
     );
   }
 

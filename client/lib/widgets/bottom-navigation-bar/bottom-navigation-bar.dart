@@ -5,7 +5,8 @@ import 'package:snsmax/l10n/localization.dart';
 class BottomNavigationBar extends StatefulWidget {
   final PageController controller;
 
-  const BottomNavigationBar({@required this.controller, Key key}): super(key: key);
+  const BottomNavigationBar({@required this.controller, Key key})
+      : super(key: key);
 
   @override
   _BottomNavigationBarState createState() => _BottomNavigationBarState();
@@ -35,16 +36,38 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     final EdgeInsets padding = MediaQuery.of(context).padding;
+
     return BottomAppBar(
       color: Colors.transparent,
-      elevation: 0.0,
+      elevation: 0,
       child: UnconstrainedBox(
         child: Container(
           padding: EdgeInsets.all(5),
-          margin: const EdgeInsets.symmetric(horizontal: 10).copyWith(bottom: padding.bottom > 0 ? 0 : 20, top: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 10)
+              .copyWith(bottom: padding.bottom > 0 ? 0 : 20, top: 20),
           decoration: BoxDecoration(
             color: Theme.of(context).bottomAppBarColor,
             borderRadius: const BorderRadius.all(const Radius.circular(100)),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).scaffoldBackgroundColor
+                    : Theme.of(context).hoverColor,
+                offset: Offset(0,
+                    Theme.of(context).brightness == Brightness.dark ? 0.5 : 2),
+                blurRadius:
+                    Theme.of(context).brightness == Brightness.dark ? 1 : 4,
+              ),
+              BoxShadow(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).scaffoldBackgroundColor
+                    : Theme.of(context).hoverColor,
+                offset: Offset(0,
+                    Theme.of(context).brightness == Brightness.dark ? 0.5 : 2),
+                blurRadius:
+                    Theme.of(context).brightness == Brightness.dark ? 0 : 4,
+              ),
+            ],
           ),
           child: GNav(
             selectedIndex: index,

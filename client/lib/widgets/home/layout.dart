@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:snsmax/pages/publish.dart';
+import 'package:snsmax/widgets/custom-underline-tab-indicator.dart';
 import 'package:snsmax/widgets/home/new-moments.dart';
 
 class MainHomeLayout extends StatefulWidget {
@@ -32,9 +34,15 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
         title: TabBar(
           controller: controller,
           tabs: tabBarBuilder(context),
-          indicatorSize: TabBarIndicatorSize.label,
+          indicator: CustomUnderlineTabIndicator(
+            borderSide: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 3.0,
+            ),
+            insets: EdgeInsets.only(bottom: 4.0),
+          ),
+          indicatorWeight: 0,
           isScrollable: true,
-          indicator: const UnderlineTabIndicator(borderSide: BorderSide.none),
           unselectedLabelStyle: Theme.of(context).textTheme.subtitle1,
           unselectedLabelColor: Theme.of(context).textTheme.subtitle1.color,
           labelStyle: Theme.of(context).textTheme.headline6,
@@ -61,13 +69,8 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
     ];
   }
 
-  Widget leadingBuilder(BuildContext context) {
-    return IconButton(icon: Icon(Icons.search), onPressed: () {});
-  }
-
   List<Widget> actionsBuilder(BuildContext context) {
     return [
-      leadingBuilder(context),
       sendMomentActionBuilder(context),
     ];
   }
@@ -76,7 +79,7 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
     return FlatButton.icon(
       onPressed: onSendMoment,
       textColor: Theme.of(context).primaryColor,
-      icon: Icon(Icons.camera_alt),
+      icon: Icon(CupertinoIcons.photo_camera_solid),
       label: Text("发动态"),
     );
   }
