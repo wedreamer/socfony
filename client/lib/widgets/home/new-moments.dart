@@ -1,7 +1,12 @@
+import 'dart:ui';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:getwidget/components/card/gf_card.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/models/media.dart';
 import 'package:snsmax/models/moment.dart';
@@ -183,40 +188,16 @@ class MomentCard extends StatelessWidget {
               buildText(moment),
               MomentImageCard(
                 moment: moment,
-                padding: EdgeInsets.symmetric(vertical: 6),
+                margin: EdgeInsets.symmetric(vertical: 6),
               ),
-              if (moment.video is MediaVideo)
-                AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: <Widget>[
-                        Positioned.fill(
-                          child: CachedNetworkImage(
-                            fileId: moment.video.cover,
-                            fit: BoxFit.cover,
-                            rule:
-                                "imageMogr2/scrop/854x480/cut/854x480/format/yjpeg",
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: UnconstrainedBox(
-                            child: FloatingActionButton(
-                              backgroundColor: Colors.black45,
-                              onPressed: () {},
-                              child: Icon(
-                                Icons.play_arrow,
-                                size: 48,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              MomentVideoCard(
+                moment: moment,
+                margin: EdgeInsets.symmetric(vertical: 6),
+              ),
+              MomentAudioCard(
+                moment: moment,
+                margin: EdgeInsets.symmetric(vertical: 6),
+              ),
             ];
           }),
         ),
@@ -225,9 +206,186 @@ class MomentCard extends StatelessWidget {
   }
 
   Widget buildText(Moment moment) {
+    if (moment.audio is MediaAudio) {
+      return SizedBox();
+    }
     return Padding(
       padding: EdgeInsets.only(bottom: 6),
       child: Text(moment.text),
+    );
+  }
+}
+
+class MomentAudioCard extends StatelessWidget {
+  const MomentAudioCard({
+    Key key,
+    @required this.moment,
+    this.margin,
+  }) : super(key: key);
+
+  final Moment moment;
+  final EdgeInsets margin;
+  MediaAudio get audio => moment.audio;
+  bool get allowBuildWidget => audio is MediaAudio;
+
+  @override
+  Widget build(BuildContext context) {
+    if (allowBuildWidget != true) {
+      return SizedBox();
+    }
+    return Padding(
+      padding: margin ?? EdgeInsets.zero,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: AspectRatio(
+          aspectRatio: 2.6,
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/audio-bg.jpg',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Row(
+                            verticalDirection: VerticalDirection.up,
+                            children: <Widget>[
+                              Expanded(
+                                  child: Text(
+                                moment.text,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    .copyWith(
+                                      color: Colors.white.withOpacity(0.7),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                              )),
+                              SizedBox(width: 12),
+                              LayoutBuilder(
+                                builder: (BuildContext context,
+                                    BoxConstraints constraints) {
+                                  return CircleAvatar(
+                                    backgroundImage:
+                                        AssetImage('assets/audio-bg.jpg'),
+                                    radius: constraints.maxHeight / 2,
+                                    child: Container(
+                                      padding: EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black45,
+                                        borderRadius: BorderRadius.circular(36),
+                                        border: Border.all(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        Icons.play_arrow,
+                                        color: Colors.white,
+                                        size: 28,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        GFProgressBar(
+                          progressBarColor: Theme.of(context).primaryColor,
+                          backgroundColor: Colors.white.withOpacity(0.4),
+                          lineHeight: 2.0,
+                          percentage: 0.02,
+                          leading: Text(
+                            "00:00",
+                            style: Theme.of(context).textTheme.caption.copyWith(
+                                  color: Colors.white.withOpacity(0.7),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                          trailing: Text(
+                            '3′5″',
+                            style: Theme.of(context).textTheme.caption.copyWith(
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MomentVideoCard extends StatelessWidget {
+  const MomentVideoCard({
+    Key key,
+    @required this.moment,
+    this.margin,
+  }) : super(key: key);
+
+  final Moment moment;
+  final EdgeInsets margin;
+
+  MediaVideo get video => moment.video;
+  bool get allowBuild => video is MediaVideo;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!allowBuild) {
+      return SizedBox();
+    }
+    return Padding(
+      padding: margin ?? EdgeInsets.zero,
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              Positioned.fill(
+                child: CachedNetworkImage(
+                  fileId: video.cover,
+                  fit: BoxFit.cover,
+                  rule: "imageMogr2/scrop/854x480/cut/854x480/format/yjpeg",
+                ),
+              ),
+              Positioned.fill(
+                child: UnconstrainedBox(
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.black45,
+                    onPressed: () {},
+                    child: Icon(
+                      Icons.play_arrow,
+                      size: 48,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -236,11 +394,11 @@ class MomentImageCard extends StatelessWidget {
   const MomentImageCard({
     Key key,
     @required this.moment,
-    this.padding,
+    this.margin,
   }) : super(key: key);
 
   final Moment moment;
-  final EdgeInsets padding;
+  final EdgeInsets margin;
 
   List<String> get images => moment.images?.toList();
 
@@ -289,7 +447,7 @@ class MomentImageCard extends StatelessWidget {
     }
 
     return GridView.builder(
-      padding: padding ?? EdgeInsets.zero,
+      padding: margin ?? EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
