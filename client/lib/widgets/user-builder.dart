@@ -9,6 +9,8 @@ typedef Widget UserChildBuilder(BuildContext context, User user);
 typedef Widget UserChildLoadingErrorBuilder(
     BuildContext context, dynamic error);
 
+Map<String, bool> _fetching = {};
+
 class UserBuilder extends StatelessWidget {
   final UserChildBuilder builder;
   final WidgetBuilder loadingBuilder;
@@ -24,8 +26,10 @@ class UserBuilder extends StatelessWidget {
   }) : super(key: key);
 
   Future<User> _fetchUser(UsersCollection collection) async {
+    _fetching[id] = true;
     DbQueryResponse result =
         await CloudBase().database.collection('users').doc(id).get();
+    _fetching.remove(id);
     if (result.code != null) {
       throw ErrorDescription(result.message);
     }
@@ -37,7 +41,7 @@ class UserBuilder extends StatelessWidget {
 
     collection.insertOrUpdate(_value);
 
-    return _value.last;
+    return collection[id];
   }
 
   @override
@@ -49,6 +53,8 @@ class UserBuilder extends StatelessWidget {
   Widget selectBuilder(BuildContext context, UsersCollection collection) {
     if (collection.containsKey(id)) {
       return builder(context, collection.collections[id]);
+    } else if (_fetching.containsKey(id) && _fetching[id] == true) {
+      return finalLoadingBuilder(context);
     }
 
     return FutureBuilder(

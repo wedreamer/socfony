@@ -2,11 +2,8 @@ import 'dart:ui';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:getwidget/components/card/gf_card.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/models/media.dart';
 import 'package:snsmax/models/moment.dart';
@@ -125,10 +122,6 @@ class _HomeNewMomentsState extends State<HomeNewMoments>
               ),
             ],
           ),
-//          child: ListView.builder(
-//            itemBuilder: childBuilder,
-//            itemCount: moments?.length ?? 0,
-//          ),
         ),
       ),
       floatingActionButton: Container(
@@ -161,48 +154,49 @@ class MomentCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: context.select<MomentsCollection, List<Widget>>((value) {
-            if (!value.containsKey(id)) {
-              return [];
-            }
-
-            Moment moment = value[id];
-
-            return [
-              UserBuilder(
-                id: moment.userId,
-                builder: (BuildContext context, User user) {
-                  return ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: CircleAvatar(
-                      radius: 24,
-                    ),
-                    title: Text(
-                        user.nickName ?? "用户" + user.id.hashCode.toString()),
-                    subtitle: Text(moment.createdAt.formNow),
-                    trailing: Icon(Icons.more_vert),
-                  );
-                },
-              ),
-              buildText(moment),
-              MomentImageCard(
-                moment: moment,
-                margin: EdgeInsets.symmetric(vertical: 6),
-              ),
-              MomentVideoCard(
-                moment: moment,
-                margin: EdgeInsets.symmetric(vertical: 6),
-              ),
-              MomentAudioCard(
-                moment: moment,
-                margin: EdgeInsets.symmetric(vertical: 6),
-              ),
-            ];
-          }),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:
+              context.select<MomentsCollection, List<Widget>>(childrenBuilder),
         ),
       ),
     );
+  }
+
+  List<Widget> childrenBuilder(MomentsCollection value) {
+    if (!value.containsKey(id)) {
+      return [];
+    }
+
+    Moment moment = value[id];
+    return [
+      UserBuilder(
+        id: moment.userId,
+        builder: (BuildContext context, User user) {
+          return ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: CircleAvatar(
+              radius: 24,
+            ),
+            title: Text(user.nickName ?? "用户" + user.id.hashCode.toString()),
+            subtitle: Text(moment.createdAt.formNow),
+            trailing: Icon(Icons.more_vert),
+          );
+        },
+      ),
+      buildText(moment),
+      MomentImageCard(
+        moment: moment,
+        margin: EdgeInsets.symmetric(vertical: 6),
+      ),
+      MomentVideoCard(
+        moment: moment,
+        margin: EdgeInsets.symmetric(vertical: 6),
+      ),
+      MomentAudioCard(
+        moment: moment,
+        margin: EdgeInsets.symmetric(vertical: 6),
+      ),
+    ];
   }
 
   Widget buildText(Moment moment) {
@@ -233,104 +227,164 @@ class MomentAudioCard extends StatelessWidget {
     if (allowBuildWidget != true) {
       return SizedBox();
     }
+
+    final ImageProvider defaultImage = AssetImage('assets/audio-bg.jpg');
+    if (audio.cover != null && audio.cover.isNotEmpty) {
+      return CachedNetworkImage(
+        fileId: audio.cover,
+        builder: builder,
+        progressIndicatorBuilder: (BuildContext context, _) =>
+            builder(context, defaultImage),
+        errorBuilder: (BuildContext context, _) =>
+            builder(context, defaultImage),
+        placeholderBuilder: (BuildContext context) =>
+            builder(context, defaultImage),
+      );
+    }
+
+    return builder(context, defaultImage);
+  }
+
+  Widget builder(BuildContext context, ImageProvider image) {
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(6),
         child: AspectRatio(
-          aspectRatio: 2.6,
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              Positioned.fill(
-                child: Image.asset(
-                  'assets/audio-bg.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned.fill(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Row(
-                            verticalDirection: VerticalDirection.up,
-                            children: <Widget>[
-                              Expanded(
-                                  child: Text(
-                                moment.text,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .caption
-                                    .copyWith(
-                                      color: Colors.white.withOpacity(0.7),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              )),
-                              SizedBox(width: 12),
-                              LayoutBuilder(
-                                builder: (BuildContext context,
-                                    BoxConstraints constraints) {
-                                  return CircleAvatar(
-                                    backgroundImage:
-                                        AssetImage('assets/audio-bg.jpg'),
-                                    radius: constraints.maxHeight / 2,
-                                    child: Container(
-                                      padding: EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black45,
-                                        borderRadius: BorderRadius.circular(36),
-                                        border: Border.all(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      child: Icon(
-                                        Icons.play_arrow,
-                                        color: Colors.white,
-                                        size: 28,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 12),
-                        GFProgressBar(
-                          progressBarColor: Theme.of(context).primaryColor,
-                          backgroundColor: Colors.white.withOpacity(0.4),
-                          lineHeight: 2.0,
-                          percentage: 0.02,
-                          leading: Text(
-                            "00:00",
-                            style: Theme.of(context).textTheme.caption.copyWith(
-                                  color: Colors.white.withOpacity(0.7),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                          ),
-                          trailing: Text(
-                            '3′5″',
-                            style: Theme.of(context).textTheme.caption.copyWith(
-                                  color: Colors.white.withOpacity(0.9),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          aspectRatio: 3,
+          child: DecoratedBox(
+            decoration: buildBackgroundBoxDecoration(image),
+            child: buildChild(context, image),
           ),
         ),
+      ),
+    );
+  }
+
+  BackdropFilter buildChild(BuildContext context, ImageProvider image) {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            buildText(context),
+            SizedBox(width: 12),
+            LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) =>
+                  playerLayoutBuilder(context, constraints, image),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget playerLayoutBuilder(
+      BuildContext context, BoxConstraints constraints, ImageProvider image) {
+    return SizedBox(
+      width: constraints.maxHeight,
+      height: constraints.maxHeight,
+      child: Stack(
+        overflow: Overflow.clip,
+        fit: StackFit.expand,
+        children: <Widget>[
+          buildProgress(context),
+          buildAudioPlayer(image, constraints, context),
+        ],
+      ),
+    );
+  }
+
+  Positioned buildAudioPlayer(
+      ImageProvider image, BoxConstraints constraints, BuildContext context) {
+    return Positioned.fill(
+      child: CircleAvatar(
+        backgroundImage: image,
+        radius: constraints.maxHeight / 2,
+        child: Stack(
+          children: <Widget>[
+            buildAudioTime(context),
+            buildAudioButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Positioned buildAudioButton() {
+    return Positioned.fill(
+      child: UnconstrainedBox(
+        child: Container(
+          padding: EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: Colors.black45,
+            borderRadius: BorderRadius.circular(36),
+            border: Border.all(
+              color: Colors.white,
+            ),
+          ),
+          child: Icon(
+            Icons.play_arrow,
+            color: Colors.white,
+            size: 28,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Positioned buildAudioTime(BuildContext context) {
+    return Positioned(
+      top: 8,
+      left: 0,
+      right: 0,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Text(
+          '50\"',
+          style: Theme.of(context)
+              .textTheme
+              .overline
+              .copyWith(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Positioned buildProgress(BuildContext context) {
+    return Positioned.fill(
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.transparent,
+        valueColor:
+            AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+        value: 0.1,
+      ),
+    );
+  }
+
+  Expanded buildText(BuildContext context) {
+    return Expanded(
+      child: Text(
+        moment.text,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+        softWrap: true,
+        style: Theme.of(context).textTheme.caption.copyWith(
+              color: Colors.white.withOpacity(0.7),
+              fontWeight: FontWeight.w500,
+            ),
+      ),
+    );
+  }
+
+  BoxDecoration buildBackgroundBoxDecoration(ImageProvider image) {
+    return BoxDecoration(
+      image: DecorationImage(
+        image: image,
+        fit: BoxFit.cover,
       ),
     );
   }

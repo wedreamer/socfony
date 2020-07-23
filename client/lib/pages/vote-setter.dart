@@ -172,7 +172,6 @@ class _VoteSetterPageState extends State<VoteSetterPage> {
   onRemoveVoteIndex(int index) {
     setState(() {
       votes.removeAt(index);
-      print(votes);
     });
   }
 

@@ -6,7 +6,6 @@ class CachedNetworkFileProvider
   static CachedNetworkFileProvider _instance;
 
   factory CachedNetworkFileProvider() {
-    print(_instance);
     if (_instance == null) {
       _instance = CachedNetworkFileProvider._();
     }

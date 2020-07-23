@@ -12,6 +12,7 @@ typedef ProgressIndicatorBuilder = Widget Function(
     BuildContext, DownloadProgress);
 typedef LoadingErrorWidgetBuilder = Widget Function(
     BuildContext, dynamic error);
+typedef PlaceholderWidgetBuilder = Widget Function(BuildContext);
 
 class CachedNetworkImage extends StatelessWidget {
   const CachedNetworkImage({
@@ -20,6 +21,8 @@ class CachedNetworkImage extends StatelessWidget {
     this.rule,
     this.progressIndicatorBuilder,
     this.errorBuilder,
+    this.placeholderBuilder,
+    this.builder,
     this.fit,
     this.width,
     this.height,
@@ -27,8 +30,10 @@ class CachedNetworkImage extends StatelessWidget {
 
   final String fileId;
   final String rule;
+  final PlaceholderWidgetBuilder placeholderBuilder;
   final ProgressIndicatorBuilder progressIndicatorBuilder;
   final LoadingErrorWidgetBuilder errorBuilder;
+  final cache.ImageWidgetBuilder builder;
 
   /// If non-null, require the image to have this width.
   ///
@@ -93,12 +98,22 @@ class CachedNetworkImage extends StatelessWidget {
               defaultProgressBuilder(context, progress),
       errorWidget: (BuildContext context, _, dynamic error) =>
           defaultErrorBuilder(context, error),
+      placeholder: (BuildContext context, _) => _placeholderBuilder(context),
+      imageBuilder: builder,
       fit: fit,
       useOldImageOnUrlChange: true,
       cacheManager: FileCacheManager(),
       width: width,
       height: height,
     );
+  }
+
+  Widget _placeholderBuilder(BuildContext context) {
+    if (placeholderBuilder is PlaceholderWidgetBuilder) {
+      return placeholderBuilder(context);
+    }
+
+    return SizedBox();
   }
 
   Widget defaultErrorBuilder(BuildContext context, dynamic error) {
