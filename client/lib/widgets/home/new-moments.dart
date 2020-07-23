@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:ui';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,10 @@ import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/models/media.dart';
 import 'package:snsmax/models/moment.dart';
 import 'package:snsmax/models/user.dart' hide UserBuilder;
+import 'package:snsmax/provider/cached-network-file.dart';
 import 'package:snsmax/provider/collections/moments.dart';
 import 'package:snsmax/widgets/cached-network-image.dart';
+import 'package:snsmax/widgets/cloudbase-file.dart';
 import 'package:snsmax/widgets/scroll-back-top-button.dart';
 import 'package:snsmax/utils/date-time-extension.dart';
 import 'package:provider/provider.dart';
@@ -210,7 +214,7 @@ class MomentCard extends StatelessWidget {
   }
 }
 
-class MomentAudioCard extends StatelessWidget {
+class MomentAudioCard extends StatefulWidget {
   const MomentAudioCard({
     Key key,
     @required this.moment,
@@ -219,8 +223,61 @@ class MomentAudioCard extends StatelessWidget {
 
   final Moment moment;
   final EdgeInsets margin;
-  MediaAudio get audio => moment.audio;
+
+  @override
+  _MomentAudioCardState createState() => _MomentAudioCardState();
+}
+
+class _MomentAudioCardState extends State<MomentAudioCard> {
+  MediaAudio get audio => widget.moment.audio;
+
   bool get allowBuildWidget => audio is MediaAudio;
+
+  AssetsAudioPlayer _player;
+
+  @override
+  void deactivate() {
+    _player?.stop();
+    super.deactivate();
+  }
+
+  @override
+  void didUpdateWidget(MomentAudioCard oldWidget) {
+    if (oldWidget.moment != widget.moment) {
+      _player?.stop();
+      _player?.dispose();
+      _player = null;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _player?.stop();
+    _player?.dispose();
+    super.dispose();
+  }
+
+  _createAudioPlayer([bool autoStart = false]) async {
+    AssetsAudioPlayer.allPlayers().values.forEach((element) => element.stop());
+    final provider = context.read<CachedNetworkFileProvider>();
+    DownloadMetadata meta = provider[audio.src];
+    if (meta == null || !provider.containsKey(audio.src)) {
+      CloudBaseStorageRes<List<DownloadMetadata>> result =
+          await CloudBase().storage.getFileDownloadURL([audio.src]);
+      provider.originInsertOrUpdate(result.data);
+
+      meta = provider[audio.src];
+    }
+    setState(() {
+      _player = AssetsAudioPlayer.withId(audio.src)
+        ..open(
+          Audio.network(meta.downloadUrl),
+          autoStart: autoStart,
+          loopMode: LoopMode.none,
+        );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +304,7 @@ class MomentAudioCard extends StatelessWidget {
 
   Widget builder(BuildContext context, ImageProvider image) {
     return Padding(
-      padding: margin ?? EdgeInsets.zero,
+      padding: widget.margin ?? EdgeInsets.zero,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(6),
         child: AspectRatio(
@@ -261,7 +318,7 @@ class MomentAudioCard extends StatelessWidget {
     );
   }
 
-  BackdropFilter buildChild(BuildContext context, ImageProvider image) {
+  Widget buildChild(BuildContext context, ImageProvider image) {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
       child: Padding(
@@ -326,14 +383,44 @@ class MomentAudioCard extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          child: Icon(
-            Icons.play_arrow,
-            color: Colors.white,
-            size: 28,
-          ),
+          child: buildAudioPlayOrSuspendButton(),
         ),
       ),
     );
+  }
+
+  Widget buildAudioPlayOrSuspendButton() {
+    if (_player == null) {
+      return GestureDetector(
+        child: Icon(
+          Icons.play_arrow,
+          color: Colors.white,
+          size: 28,
+        ),
+        onTap: () => _createAudioPlayer(true),
+      );
+    }
+
+    return _player.builderIsPlaying(
+        builder: (BuildContext context, bool isPlaying) {
+      return GestureDetector(
+        child: Icon(
+          isPlaying ? Icons.pause : Icons.play_arrow,
+          color: Colors.white,
+          size: 28,
+        ),
+        onTap: () {
+          if (isPlaying) {
+            _player.stop();
+          } else {
+            AssetsAudioPlayer.allPlayers()
+                .values
+                .forEach((element) => element.stop());
+            _player.play();
+          }
+        },
+      );
+    });
   }
 
   Positioned buildAudioTime(BuildContext context) {
@@ -354,21 +441,46 @@ class MomentAudioCard extends StatelessWidget {
     );
   }
 
-  Positioned buildProgress(BuildContext context) {
-    return Positioned.fill(
-      child: CircularProgressIndicator(
-        backgroundColor: Colors.transparent,
-        valueColor:
-            AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-        value: 0.1,
-      ),
+  Widget buildProgress(BuildContext context) {
+    if (_player == null) {
+      return SizedBox();
+    }
+
+    return _player.builderCurrent(
+      builder: (BuildContext context, Playing playing) {
+        if (playing == null) {
+          return SizedBox();
+        }
+
+        return _player.builderIsPlaying(
+            builder: (BuildContext context, bool isPlaying) {
+          if (isPlaying != true) {
+            return SizedBox();
+          }
+          return _player.builderCurrentPosition(
+              builder: (BuildContext context, Duration duration) {
+            if ((playing.audio.duration.inSeconds - duration.inSeconds) <= 1) {
+              return SizedBox();
+            }
+            return Positioned.fill(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.transparent,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor),
+                value: duration.inMilliseconds /
+                    playing.audio.duration.inMilliseconds,
+              ),
+            );
+          });
+        });
+      },
     );
   }
 
   Expanded buildText(BuildContext context) {
     return Expanded(
       child: Text(
-        moment.text,
+        widget.moment.text,
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
         softWrap: true,

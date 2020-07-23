@@ -4,6 +4,12 @@ import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:cloudbase_function/cloudbase_function.dart';
 import 'package:cloudbase_storage/cloudbase_storage.dart';
 
+export 'package:cloudbase_auth/cloudbase_auth.dart';
+export 'package:cloudbase_core/cloudbase_core.dart';
+export 'package:cloudbase_database/cloudbase_database.dart';
+export 'package:cloudbase_function/cloudbase_function.dart';
+export 'package:cloudbase_storage/cloudbase_storage.dart';
+
 class _CloudBaseInstance {
   const _CloudBaseInstance._();
 

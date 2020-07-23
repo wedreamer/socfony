@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:cloudbase_auth/cloudbase_auth.dart';
-import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:snsmax/cloudbase.dart';
+import 'package:snsmax/cloudbase.dart' hide RegExp;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
