@@ -32,6 +32,9 @@ abstract class Moment implements Built<Moment, MomentBuilder> {
   @nullable
   BuiltList<Vote> get vote;
 
+  @nullable
+  MomentCount get count;
+
   Moment._();
   factory Moment([void Function(MomentBuilder) updates]) = _$Moment;
 
@@ -44,4 +47,26 @@ abstract class Moment implements Built<Moment, MomentBuilder> {
   }
 
   static Serializer<Moment> get serializer => _$momentSerializer;
+}
+
+abstract class MomentCount implements Built<MomentCount, MomentCountBuilder> {
+  @nullable
+  int get like;
+
+  @nullable
+  int get comment;
+
+  MomentCount._();
+  factory MomentCount([void Function(MomentCountBuilder) updates]) =
+      _$MomentCount;
+
+  Map<String, dynamic> toJson() {
+    return serializers.serializeWith(MomentCount.serializer, this);
+  }
+
+  static MomentCount fromJson(Map json) {
+    return serializers.deserializeWith(MomentCount.serializer, json);
+  }
+
+  static Serializer<MomentCount> get serializer => _$momentCountSerializer;
 }

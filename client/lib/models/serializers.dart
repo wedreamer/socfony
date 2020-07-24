@@ -37,6 +37,7 @@ class DateTimeSerializer extends Iso8601DateTimeSerializer {
 
 @SerializersFor([
   Moment,
+  MomentCount,
   MediaAudio,
   MediaVideo,
   User,

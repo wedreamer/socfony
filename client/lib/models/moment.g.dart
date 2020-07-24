@@ -7,6 +7,7 @@ part of 'moment.dart';
 // **************************************************************************
 
 Serializer<Moment> _$momentSerializer = new _$MomentSerializer();
+Serializer<MomentCount> _$momentCountSerializer = new _$MomentCountSerializer();
 
 class _$MomentSerializer implements StructuredSerializer<Moment> {
   @override
@@ -59,6 +60,12 @@ class _$MomentSerializer implements StructuredSerializer<Moment> {
             specifiedType:
                 const FullType(BuiltList, const [const FullType(Vote)])));
     }
+    if (object.count != null) {
+      result
+        ..add('count')
+        ..add(serializers.serialize(object.count,
+            specifiedType: const FullType(MomentCount)));
+    }
     return result;
   }
 
@@ -109,6 +116,61 @@ class _$MomentSerializer implements StructuredSerializer<Moment> {
                       const FullType(BuiltList, const [const FullType(Vote)]))
               as BuiltList<Object>);
           break;
+        case 'count':
+          result.count.replace(serializers.deserialize(value,
+              specifiedType: const FullType(MomentCount)) as MomentCount);
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
+class _$MomentCountSerializer implements StructuredSerializer<MomentCount> {
+  @override
+  final Iterable<Type> types = const [MomentCount, _$MomentCount];
+  @override
+  final String wireName = 'MomentCount';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, MomentCount object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object>[];
+    if (object.like != null) {
+      result
+        ..add('like')
+        ..add(serializers.serialize(object.like,
+            specifiedType: const FullType(int)));
+    }
+    if (object.comment != null) {
+      result
+        ..add('comment')
+        ..add(serializers.serialize(object.comment,
+            specifiedType: const FullType(int)));
+    }
+    return result;
+  }
+
+  @override
+  MomentCount deserialize(Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new MomentCountBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value = iterator.current;
+      switch (key) {
+        case 'like':
+          result.like = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'comment':
+          result.comment = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
       }
     }
 
@@ -133,6 +195,8 @@ class _$Moment extends Moment {
   final MediaAudio audio;
   @override
   final BuiltList<Vote> vote;
+  @override
+  final MomentCount count;
 
   factory _$Moment([void Function(MomentBuilder) updates]) =>
       (new MomentBuilder()..update(updates)).build();
@@ -145,7 +209,8 @@ class _$Moment extends Moment {
       this.images,
       this.video,
       this.audio,
-      this.vote})
+      this.vote,
+      this.count})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Moment', 'id');
@@ -186,7 +251,8 @@ class _$Moment extends Moment {
           ..add('images', images)
           ..add('video', video)
           ..add('audio', audio)
-          ..add('vote', vote))
+          ..add('vote', vote)
+          ..add('count', count))
         .toString();
   }
 }
@@ -227,6 +293,10 @@ class MomentBuilder implements Builder<Moment, MomentBuilder> {
   ListBuilder<Vote> get vote => _$this._vote ??= new ListBuilder<Vote>();
   set vote(ListBuilder<Vote> vote) => _$this._vote = vote;
 
+  MomentCountBuilder _count;
+  MomentCountBuilder get count => _$this._count ??= new MomentCountBuilder();
+  set count(MomentCountBuilder count) => _$this._count = count;
+
   MomentBuilder();
 
   MomentBuilder get _$this {
@@ -239,6 +309,7 @@ class MomentBuilder implements Builder<Moment, MomentBuilder> {
       _video = _$v.video?.toBuilder();
       _audio = _$v.audio?.toBuilder();
       _vote = _$v.vote?.toBuilder();
+      _count = _$v.count?.toBuilder();
       _$v = null;
     }
     return this;
@@ -270,7 +341,8 @@ class MomentBuilder implements Builder<Moment, MomentBuilder> {
               images: _images?.build(),
               video: _video?.build(),
               audio: _audio?.build(),
-              vote: _vote?.build());
+              vote: _vote?.build(),
+              count: _count?.build());
     } catch (_) {
       String _$failedField;
       try {
@@ -282,12 +354,97 @@ class MomentBuilder implements Builder<Moment, MomentBuilder> {
         _audio?.build();
         _$failedField = 'vote';
         _vote?.build();
+        _$failedField = 'count';
+        _count?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Moment', _$failedField, e.toString());
       }
       rethrow;
     }
+    replace(_$result);
+    return _$result;
+  }
+}
+
+class _$MomentCount extends MomentCount {
+  @override
+  final int like;
+  @override
+  final int comment;
+
+  factory _$MomentCount([void Function(MomentCountBuilder) updates]) =>
+      (new MomentCountBuilder()..update(updates)).build();
+
+  _$MomentCount._({this.like, this.comment}) : super._();
+
+  @override
+  MomentCount rebuild(void Function(MomentCountBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  MomentCountBuilder toBuilder() => new MomentCountBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is MomentCount &&
+        like == other.like &&
+        comment == other.comment;
+  }
+
+  @override
+  int get hashCode {
+    return $jf($jc($jc(0, like.hashCode), comment.hashCode));
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper('MomentCount')
+          ..add('like', like)
+          ..add('comment', comment))
+        .toString();
+  }
+}
+
+class MomentCountBuilder implements Builder<MomentCount, MomentCountBuilder> {
+  _$MomentCount _$v;
+
+  int _like;
+  int get like => _$this._like;
+  set like(int like) => _$this._like = like;
+
+  int _comment;
+  int get comment => _$this._comment;
+  set comment(int comment) => _$this._comment = comment;
+
+  MomentCountBuilder();
+
+  MomentCountBuilder get _$this {
+    if (_$v != null) {
+      _like = _$v.like;
+      _comment = _$v.comment;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(MomentCount other) {
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
+    _$v = other as _$MomentCount;
+  }
+
+  @override
+  void update(void Function(MomentCountBuilder) updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  _$MomentCount build() {
+    final _$result = _$v ?? new _$MomentCount._(like: like, comment: comment);
     replace(_$result);
     return _$result;
   }

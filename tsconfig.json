@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "target": "ESNext",
+        "module": "ES6",
+        "strict": true,
+        "types": ["node"],
+        "outDir": "dist",
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "declaration": false,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "cloudbase/functions/*/src"
+    ]
+}

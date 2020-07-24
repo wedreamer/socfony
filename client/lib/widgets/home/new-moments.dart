@@ -4,14 +4,18 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/models/media.dart';
 import 'package:snsmax/models/moment.dart';
 import 'package:snsmax/models/user.dart' hide UserBuilder;
+import 'package:snsmax/models/vote.dart';
 import 'package:snsmax/provider/cached-network-file.dart';
 import 'package:snsmax/provider/collections/moments.dart';
+import 'package:snsmax/utils/number-extension.dart';
 import 'package:snsmax/widgets/cached-network-image.dart';
 import 'package:snsmax/widgets/cloudbase-file.dart';
 import 'package:snsmax/widgets/scroll-back-top-button.dart';
@@ -159,19 +163,21 @@ class MomentCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children:
-              context.select<MomentsCollection, List<Widget>>(childrenBuilder),
+          children: context.select<MomentsCollection, List<Widget>>(
+            (MomentsCollection provider) => childrenBuilder(context, provider),
+          ),
         ),
       ),
     );
   }
 
-  List<Widget> childrenBuilder(MomentsCollection value) {
-    if (!value.containsKey(id)) {
+  List<Widget> childrenBuilder(
+      BuildContext context, MomentsCollection provider) {
+    if (!provider.containsKey(id)) {
       return [];
     }
 
-    Moment moment = value[id];
+    Moment moment = provider[id];
     return [
       UserBuilder(
         id: moment.userId,
@@ -200,6 +206,11 @@ class MomentCard extends StatelessWidget {
         moment: moment,
         margin: EdgeInsets.symmetric(vertical: 6),
       ),
+      MomentVoteCard(
+        moment: moment,
+        margin: EdgeInsets.symmetric(vertical: 6),
+      ),
+      _MomentCardToolBar(moment: moment),
     ];
   }
 
@@ -210,6 +221,178 @@ class MomentCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 6),
       child: Text(moment.text),
+    );
+  }
+}
+
+class _MomentCardToolBar extends StatelessWidget {
+  const _MomentCardToolBar({
+    Key key,
+    @required this.moment,
+  }) : super(key: key);
+
+  final Moment moment;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: SizedBox(
+            height: Theme.of(context).buttonTheme.height,
+            child: Stack(
+              children: <Widget>[
+                ...buildUsersList(context),
+                buildTextPositioned(context),
+              ],
+            ),
+          ),
+        ),
+        IconButton(icon: Icon(Icons.favorite_border), onPressed: () {}),
+        IconButton(icon: Icon(Icons.forum), onPressed: () {}),
+        IconButton(icon: Icon(Icons.share), onPressed: () {}),
+      ],
+    );
+  }
+
+  List<Widget> buildUsersList(BuildContext context) {
+    int count = 3;
+    if (moment.count is MomentCount &&
+        moment.count.like is int &&
+        moment.count.like > 0) {
+      count = moment.count.like >= 3 ? 3 : moment.count.like;
+    }
+    return List.generate(
+      count,
+      (int index) => Positioned(
+        child: GFAvatar(
+          radius: 12,
+          backgroundColor: index == 1
+              ? Colors.pinkAccent
+              : index == 2 ? Colors.black : Colors.tealAccent,
+        ),
+        left: 12 * index.toDouble(),
+        top: Theme.of(context).buttonTheme.height / 2 -
+            Theme.of(context).textTheme.button.fontSize +
+            2,
+      ),
+    );
+  }
+
+  Positioned buildTextPositioned(BuildContext context) {
+    double left = 12.0 * 3 + 12 + 6;
+    String text = "还没有人喜欢～";
+    if (moment.count?.like != null && moment.count.like > 0) {
+      left = 12.0 * (moment.count.like >= 3 ? 3 : moment.count.like) + 12 + 6;
+      text = "等 ${moment.count.like} 人喜欢";
+    }
+    return Positioned(
+      top: Theme.of(context).buttonTheme.height / 2 -
+          Theme.of(context).textTheme.button.fontSize +
+          4,
+      left: left,
+      child: Center(
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.button,
+        ),
+      ),
+    );
+  }
+}
+
+class MomentVoteCard extends StatelessWidget {
+  const MomentVoteCard({
+    Key key,
+    @required this.moment,
+    this.margin,
+  }) : super(key: key);
+
+  final Moment moment;
+  final EdgeInsets margin;
+
+  List<Vote> get vote => moment.vote?.toList();
+  int get voteCount =>
+      vote?.fold<int>(0,
+          (previousValue, element) => previousValue + (element.count ?? 0)) ??
+      0;
+
+  @override
+  Widget build(BuildContext context) {
+    if (vote == null || vote.isEmpty) {
+      return SizedBox();
+    }
+
+    return ListView.builder(
+      padding: margin,
+      itemBuilder: itemBuilder,
+      itemCount: vote.length,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+    );
+  }
+
+  Widget itemBuilder(BuildContext context, int index) {
+    Vote item = vote[index];
+    double value = (item.count ?? 0) / voteCount;
+    if (value.isNaN) {
+      value = 0;
+    }
+
+    return Container(
+      height: 32.0,
+      margin: EdgeInsets.only(top: index == 0 ? 0 : 6),
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          ClipRRect(
+            child: LinearProgressIndicator(
+              value: value,
+              backgroundColor: Colors.black.withOpacity(0.1),
+//                  valueColor: AlwaysStoppedAnimation<Color>(
+//                      Theme.of(context).primaryColor),
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(Colors.black.withOpacity(0.12)),
+            ),
+            borderRadius: BorderRadius.circular(32.0),
+          ),
+          Positioned(
+            child: Align(
+              alignment:
+                  voteCount == 0 ? Alignment.center : Alignment.centerLeft,
+              child: Text(
+                item.name,
+                style: Theme.of(context).textTheme.bodyText2,
+              ),
+            ),
+            left: 12,
+            top: 0,
+            bottom: 0,
+            right: voteCount == 0 ? 0 : null,
+          ),
+          buildPercentage(value, context),
+        ],
+      ),
+    );
+  }
+
+  Widget buildPercentage(double value, BuildContext context) {
+    if (voteCount == 0) {
+      return SizedBox();
+    }
+    return Positioned(
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Text(
+          value.format("##.##%"),
+          style: Theme.of(context).textTheme.caption,
+        ),
+      ),
+      right: 12,
+      top: 0,
+      bottom: 0,
     );
   }
 }
@@ -363,7 +546,7 @@ class _MomentAudioCardState extends State<MomentAudioCard> {
         radius: constraints.maxHeight / 2,
         child: Stack(
           children: <Widget>[
-            buildAudioTime(context),
+//            buildAudioTime(context),
             buildAudioButton(),
           ],
         ),
@@ -423,23 +606,24 @@ class _MomentAudioCardState extends State<MomentAudioCard> {
     });
   }
 
-  Positioned buildAudioTime(BuildContext context) {
-    return Positioned(
-      top: 8,
-      left: 0,
-      right: 0,
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: Text(
-          '50\"',
-          style: Theme.of(context)
-              .textTheme
-              .overline
-              .copyWith(color: Colors.white),
-        ),
-      ),
-    );
-  }
+//  Widget buildAudioTime(BuildContext context) {
+//    return SizedBox();
+////    return Positioned(
+////      top: 8,
+////      left: 0,
+////      right: 0,
+////      child: Align(
+////        alignment: Alignment.topCenter,
+////        child: Text(
+////          '50\"',
+////          style: Theme.of(context)
+////              .textTheme
+////              .overline
+////              .copyWith(color: Colors.white),
+////        ),
+////      ),
+////    );
+//  }
 
   Widget buildProgress(BuildContext context) {
     if (_player == null) {
