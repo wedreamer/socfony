@@ -846,7 +846,7 @@ class _PublishState extends State<PublishPage> {
 
   Future<Map<String, dynamic>> senderSetter(Map<String, dynamic> doc) async {
     CloudBaseResponse result =
-        await CloudBase().fun('auth', {"action": "getCurrentUser"});
+        await CloudBase().callFunction('auth', {"action": "getCurrentUser"});
     Map<String, dynamic> _doc = doc != null ? doc : {};
     return {
       ..._doc,

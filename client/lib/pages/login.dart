@@ -221,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
     FocusScope.of(context).unfocus();
     CancelFunc cancel = BotToast.showLoading();
     try {
-      CloudBaseResponse result = await CloudBase().fun('sms', {
+      CloudBaseResponse result = await CloudBase().callFunction('sms', {
         "action": "with-code-login",
         "phone": phone,
         "code": code,
@@ -263,7 +263,7 @@ class _LoginPageState extends State<LoginPage> {
     };
     CancelFunc cancel = BotToast.showLoading();
     CloudBase()
-        .fun(functionName, params)
+        .callFunction(functionName, params)
         .whenComplete(() => cancel())
         .then((_) {
       BotToast.showText(text: '获取成功！');

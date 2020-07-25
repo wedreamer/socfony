@@ -1,92 +1,27 @@
-import 'package:cloudbase_auth/cloudbase_auth.dart';
-import 'package:cloudbase_core/cloudbase_core.dart';
-import 'package:cloudbase_database/cloudbase_database.dart';
-import 'package:cloudbase_function/cloudbase_function.dart';
-import 'package:cloudbase_storage/cloudbase_storage.dart';
+import 'package:cloudbase/cloudbase.dart' as cloudbase
+    show CloudBase, CloudBaseCoreCredentials, CloudBaseCoreSecurityCredentials;
+import 'package:snsmax/config.dart';
 
-export 'package:cloudbase_auth/cloudbase_auth.dart';
-export 'package:cloudbase_core/cloudbase_core.dart';
-export 'package:cloudbase_database/cloudbase_database.dart';
-export 'package:cloudbase_function/cloudbase_function.dart';
-export 'package:cloudbase_storage/cloudbase_storage.dart';
+export 'package:cloudbase/cloudbase.dart' hide CloudBase;
 
-class _CloudBaseInstance {
-  const _CloudBaseInstance._();
+class CloudBase extends cloudbase.CloudBase {
+  static CloudBase _instance;
 
-  // Cloud base initialized.
-  static bool initialized = false;
+  CloudBase._(cloudbase.CloudBaseCoreCredentials credentials)
+      : super(credentials);
 
-  // Storage cloud base core instance.
-  static CloudBaseCore core;
-
-  // Storage Cloud base auth instance.
-  static CloudBaseAuth auth;
-
-  // Storage function instance
-  static CloudBaseFunction function;
-
-  // Cache storage instance.
-  static CloudBaseStorage storage;
-
-  // Cache CloudBase Database instance
-  static CloudBaseDatabase database;
-
-  // Init Cloud Base.
-  static void init() {
-    if (initialized == true) {
-      return;
+  factory CloudBase() {
+    if (_instance is! CloudBase) {
+      final security = cloudbase.CloudBaseCoreSecurityCredentials(
+          C__CLOUDBASE_SECURITY_KEY, C__CLOUDBASE_SECURITY_VERSION);
+      final credentials = cloudbase.CloudBaseCoreCredentials(
+          C__CLOUDBASE_ENV_ID,
+          security: security);
+      _instance = CloudBase._(credentials);
     }
 
-    // Init Cloud base core.
-    core = CloudBaseCore.init({
-      "env": "snsmax-1e572d",
-      "appAccess": {"key": "1a5384f2f5bbd9bb2aaf0891309fb45a", "version": "1"},
-    });
-
-    // Init Cloud base auth.
-    auth = CloudBaseAuth(core);
-
-    // Create function instance
-    function = CloudBaseFunction(core);
-
-    // Create Storage instance
-    storage = CloudBaseStorage(core);
-
-    // Create CloudBase database instance
-    database = CloudBaseDatabase(core);
-
-    // Set init value
-    initialized = true;
-  }
-}
-
-class CloudBase {
-  CloudBase() {
-    if (_CloudBaseInstance.initialized != true) {
-      _CloudBaseInstance.init();
-    }
+    return _instance;
   }
 
-  /// Get cloud base instance status.
-  bool get initialized => _CloudBaseInstance.initialized;
-
-  /// Get cloud base core instance.
-  CloudBaseCore get core => _CloudBaseInstance.core;
-
-  /// Get cloud base auth instance.
-  CloudBaseAuth get auth => _CloudBaseInstance.auth;
-
-  /// Get CloudBase storage instance.
-  CloudBaseStorage get storage => _CloudBaseInstance.storage;
-
-  /// Get CloudBase database instance
-  CloudBaseDatabase get database => _CloudBaseInstance.database;
-
-  /// Run CloudBase function
-  /// [name] is CloudBase function name.
-  /// [params] is [Map] type
-  Future<CloudBaseResponse> fun(String name,
-      [Map<String, dynamic> params]) async {
-    return await _CloudBaseInstance.function.callFunction(name, params);
-  }
+  static CloudBase get instance => CloudBase();
 }

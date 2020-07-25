@@ -162,36 +162,43 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  cloudbase_auth:
+  cloudbase:
     dependency: "direct main"
+    description:
+      name: cloudbase
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
+  cloudbase_auth:
+    dependency: transitive
     description:
       name: cloudbase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.12"
+    version: "0.0.13"
   cloudbase_core:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cloudbase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.9"
+    version: "0.0.10"
   cloudbase_database:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cloudbase_database
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.11"
   cloudbase_function:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cloudbase_function
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.2"
   cloudbase_storage:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cloudbase_storage
       url: "https://pub.dartlang.org"
