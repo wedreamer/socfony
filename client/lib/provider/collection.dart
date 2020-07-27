@@ -168,6 +168,18 @@ abstract class BaseCollectionProvider<K, V> with ChangeNotifier {
     return null;
   }
 
+  void clear() {
+    _collections.clear();
+    notifyListeners();
+  }
+
+  V remove(String key) {
+    final result = _collections.remove(key);
+    notifyListeners();
+
+    return result;
+  }
+
   /// 便捷从集合中使用 [key] 获取文档
   V operator [](K key) => collections[key];
 

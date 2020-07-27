@@ -4,20 +4,21 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:snsmax/cloudbase.dart';
+import 'package:snsmax/cloudbase/commands/moment-like-toggle-command.dart';
 import 'package:snsmax/models/media.dart';
 import 'package:snsmax/models/moment.dart';
 import 'package:snsmax/models/user.dart' hide UserBuilder;
 import 'package:snsmax/models/vote.dart';
+import 'package:snsmax/pages/login.dart';
 import 'package:snsmax/provider/cached-network-file.dart';
 import 'package:snsmax/provider/collections/moments.dart';
+import 'package:snsmax/provider/moment-like-histories-provider.dart';
 import 'package:snsmax/utils/number-extension.dart';
 import 'package:snsmax/widgets/cached-network-image.dart';
-import 'package:snsmax/widgets/cloudbase-file.dart';
 import 'package:snsmax/widgets/scroll-back-top-button.dart';
 import 'package:snsmax/utils/date-time-extension.dart';
 import 'package:provider/provider.dart';
@@ -237,69 +238,46 @@ class _MomentCardToolBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Expanded(
-          child: SizedBox(
-            height: Theme.of(context).buttonTheme.height,
-            child: Stack(
-              children: <Widget>[
-                ...buildUsersList(context),
-                buildTextPositioned(context),
-              ],
-            ),
-          ),
+        FlatButton.icon(
+          onPressed: () {},
+          icon: Icon(Icons.share),
+          label: Text('分享'),
         ),
-        IconButton(icon: Icon(Icons.favorite_border), onPressed: () {}),
-        IconButton(icon: Icon(Icons.forum), onPressed: () {}),
-        IconButton(icon: Icon(Icons.share), onPressed: () {}),
+        FlatButton.icon(
+          onPressed: () {},
+          icon: Icon(Icons.forum),
+          label: Text((moment.count?.comment ?? 0) > 0
+              ? moment.count.comment.compact
+              : '评论'),
+        ),
+        context.select<MomentLikeHistoriesProvider, Widget>(
+          (value) {
+            return FlatButton.icon(
+              onPressed: () => onLikeToggle(context),
+              icon: Icon(value.containsKey(moment.id)
+                  ? Icons.favorite
+                  : Icons.favorite_border),
+              label: Text((moment.count?.like ?? 0) > 0
+                  ? moment.count.like.compact
+                  : '喜欢'),
+              textColor: value.containsKey(moment.id) ? Colors.red : null,
+            );
+          },
+        )
       ],
     );
   }
 
-  List<Widget> buildUsersList(BuildContext context) {
-    int count = 3;
-    if (moment.count is MomentCount &&
-        moment.count.like is int &&
-        moment.count.like > 0) {
-      count = moment.count.like >= 3 ? 3 : moment.count.like;
+  onLikeToggle(BuildContext context) async {
+    final hasLogin = await LoginPage.route(context);
+    if (!hasLogin) {
+      return BotToast.showText(text: '请先登录');
     }
-    return List.generate(
-      count,
-      (int index) => Positioned(
-        child: GFAvatar(
-          radius: 12,
-          backgroundColor: index == 1
-              ? Colors.pinkAccent
-              : index == 2 ? Colors.black : Colors.tealAccent,
-        ),
-        left: 12 * index.toDouble(),
-        top: Theme.of(context).buttonTheme.height / 2 -
-            Theme.of(context).textTheme.button.fontSize +
-            2,
-      ),
-    );
-  }
-
-  Positioned buildTextPositioned(BuildContext context) {
-    double left = 12.0 * 3 + 12 + 6;
-    String text = "还没有人喜欢～";
-    if (moment.count?.like != null && moment.count.like > 0) {
-      left = 12.0 * (moment.count.like >= 3 ? 3 : moment.count.like) + 12 + 6;
-      text = "等 ${moment.count.like} 人喜欢";
-    }
-    return Positioned(
-      top: Theme.of(context).buttonTheme.height / 2 -
-          Theme.of(context).textTheme.button.fontSize +
-          4,
-      left: left,
-      child: Center(
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.button,
-        ),
-      ),
-    );
+    final command = MomentLikeToggleCommand(moment.id);
+    CloudBase().command(command);
   }
 }
 
@@ -554,8 +532,8 @@ class _MomentAudioCardState extends State<MomentAudioCard> {
     );
   }
 
-  Positioned buildAudioButton() {
-    return Positioned.fill(
+  Widget buildAudioButton() {
+    Widget child = Positioned.fill(
       child: UnconstrainedBox(
         child: Container(
           padding: EdgeInsets.all(4),
@@ -570,6 +548,20 @@ class _MomentAudioCardState extends State<MomentAudioCard> {
         ),
       ),
     );
+    if (_player == null) {
+      return child;
+    }
+
+    return _player.builderIsBuffering(
+        builder: (BuildContext context, bool isBuffering) {
+      if (isBuffering) {
+        return GFLoader(
+          type: GFLoaderType.circle,
+        );
+      }
+
+      return child;
+    });
   }
 
   Widget buildAudioPlayOrSuspendButton() {
@@ -605,25 +597,6 @@ class _MomentAudioCardState extends State<MomentAudioCard> {
       );
     });
   }
-
-//  Widget buildAudioTime(BuildContext context) {
-//    return SizedBox();
-////    return Positioned(
-////      top: 8,
-////      left: 0,
-////      right: 0,
-////      child: Align(
-////        alignment: Alignment.topCenter,
-////        child: Text(
-////          '50\"',
-////          style: Theme.of(context)
-////              .textTheme
-////              .overline
-////              .copyWith(color: Colors.white),
-////        ),
-////      ),
-////    );
-//  }
 
   Widget buildProgress(BuildContext context) {
     if (_player == null) {

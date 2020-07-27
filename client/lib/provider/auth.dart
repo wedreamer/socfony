@@ -11,6 +11,18 @@ class AuthProvider with ChangeNotifier {
 
   static RealtimeListener _watcher;
 
+  static AuthProvider _instance;
+
+  AuthProvider._();
+
+  factory AuthProvider() {
+    if (_instance is! AuthProvider) {
+      _instance = AuthProvider._();
+    }
+
+    return _instance;
+  }
+
   set user(User user) {
     _user = user;
     notifyListeners();

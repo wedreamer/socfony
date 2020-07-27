@@ -1,11 +1,12 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:cloudbase_auth/cloudbase_auth.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/l10n/localization.dart';
+import 'package:snsmax/models/user.dart';
 import 'package:snsmax/pages/launch.dart';
+import 'package:snsmax/provider/auth.dart';
 import 'package:snsmax/provider/provider.dart';
 import 'package:snsmax/routes.dart';
 import 'package:snsmax/theme.dart';
@@ -52,17 +53,14 @@ class _AppState extends State<App> {
     super.initState();
 
     // Add widgets rendered callback function
-    WidgetsBinding.instance.addPostFrameCallback(postFrameCallback);
+    postFrameCallback();
   }
 
   /// Widgets rendered call function
   ///
   /// [timeSramp] is rending wait time
-  void postFrameCallback(Duration timeSramp) async {
+  void postFrameCallback() async {
     try {
-      // wait rending
-      await Future.delayed(timeSramp);
-
       // get CloudBase auth state
       CloudBaseAuthState authState = await CloudBase().auth.getAuthState();
 
@@ -79,6 +77,14 @@ class _AppState extends State<App> {
       setState(() {
         initialized = true;
       });
+    } catch (e) {
+      print(e);
+    }
+
+    try {
+      final result = await CloudBase.instance
+          .callFunction('auth', {"action": "getCurrentUser"});
+      AuthProvider().user = User.fromJson(result.data);
     } catch (e) {
       print(e);
     }

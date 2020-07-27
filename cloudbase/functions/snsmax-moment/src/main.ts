@@ -1,6 +1,6 @@
 import { Application, CloudBasePayload, CloudBaseContext } from "@bytegem/cloudbase";
 import { name, version } from "../package.json";
-import { PostCommand } from "./commands/post";
+import { LikeToggleCommand } from "./commands/like-toggle";
 
 export function main(event: CloudBasePayload, context: CloudBaseContext) {
     const app = new Application({
@@ -8,7 +8,7 @@ export function main(event: CloudBasePayload, context: CloudBaseContext) {
         name,
         version,
     });
-    app.addCommand('post', () => new PostCommand);
+    app.addCommand('likeToggle', () => new LikeToggleCommand);
 
     return app.run(event);
 }
