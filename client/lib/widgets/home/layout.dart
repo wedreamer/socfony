@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:snsmax/pages/publish.dart';
 import 'package:snsmax/widgets/custom-underline-tab-indicator.dart';
-import 'package:snsmax/widgets/home/new-moments.dart';
+
+import 'FollowingMomentsWidget.dart';
 
 class MainHomeLayout extends StatefulWidget {
   const MainHomeLayout({Key key}) : super(key: key);
@@ -22,7 +23,7 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
 
   @override
   void initState() {
-    controller = TabController(length: 2, vsync: this, initialIndex: 0);
+    controller = TabController(length: 3, vsync: this, initialIndex: 0);
     super.initState();
   }
 
@@ -53,19 +54,20 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
       ),
       body: TabBarView(
         controller: controller,
-        children: <Widget>[const HomeNewMoments(), Text('2')],
+        children: <Widget>[
+          FollowingMomentsWidget(),
+          Text('2'),
+          Text('1'),
+        ],
       ),
     );
   }
 
   List<Widget> tabBarBuilder(BuildContext context) {
     return [
-      Tab(
-        text: '最新',
-      ),
-      Tab(
-        text: '推荐',
-      )
+      Tab(text: '关注'),
+      Tab(text: '推荐'),
+      Tab(text: '同城'),
     ];
   }
 

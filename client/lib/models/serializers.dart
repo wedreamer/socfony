@@ -2,11 +2,12 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
-import 'package:snsmax/models/media.dart';
-import 'package:snsmax/models/moment-like-history.dart';
-import 'package:snsmax/models/moment.dart';
-import 'package:snsmax/models/user.dart';
-import 'package:snsmax/models/vote.dart';
+
+import 'media.dart';
+import 'moment-like-history.dart';
+import 'moment.dart';
+import 'user.dart';
+import 'vote.dart';
 
 part 'serializers.g.dart';
 

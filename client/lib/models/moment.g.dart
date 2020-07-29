@@ -233,12 +233,34 @@ class _$Moment extends Moment {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Moment && id == other.id;
+    return other is Moment &&
+        id == other.id &&
+        text == other.text &&
+        userId == other.userId &&
+        createdAt == other.createdAt &&
+        images == other.images &&
+        video == other.video &&
+        audio == other.audio &&
+        vote == other.vote &&
+        count == other.count;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, id.hashCode));
+    return $jf($jc(
+        $jc(
+            $jc(
+                $jc(
+                    $jc(
+                        $jc(
+                            $jc($jc($jc(0, id.hashCode), text.hashCode),
+                                userId.hashCode),
+                            createdAt.hashCode),
+                        images.hashCode),
+                    video.hashCode),
+                audio.hashCode),
+            vote.hashCode),
+        count.hashCode));
   }
 
   @override

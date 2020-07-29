@@ -14,6 +14,8 @@ abstract class MomentLikeHistory
   String get userId;
   String get momentId;
 
+  DateTime get createdAt;
+
   MomentLikeHistory._();
   factory MomentLikeHistory([void Function(MomentLikeHistoryBuilder) updates]) =
       _$MomentLikeHistory;

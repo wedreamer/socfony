@@ -15,7 +15,7 @@ class Empty extends StatelessWidget {
     this.type,
     this.child,
     this.text,
-  }): super(key: key);
+  }) : super(key: key);
 
   final EmptyTypes type;
   final Widget child;
@@ -43,7 +43,10 @@ class Empty extends StatelessWidget {
     } else if (text is String && text.isNotEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: Text(text, style: Theme.of(context).textTheme.caption,),
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.caption,
+        ),
       );
     }
 

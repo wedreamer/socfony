@@ -8,9 +8,8 @@ import 'serializers.dart';
 
 part 'moment.g.dart';
 
-@BuiltValue(defaultCompare: false)
 abstract class Moment implements Built<Moment, MomentBuilder> {
-  @BuiltValueField(wireName: '_id', compare: true)
+  @BuiltValueField(wireName: '_id')
   String get id;
 
   @nullable

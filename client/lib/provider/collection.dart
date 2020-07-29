@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:snsmax/cloudbase.dart';
+import 'package:snsmax/models/moment-like-history.dart';
 
 /// 用户集合处理结果 keys 值枚举
 ///
@@ -12,6 +15,8 @@ enum CollectionProviderActions {
   /// 更新的数据集合
   updates,
 }
+
+String _toFutureKey<T>(Object key) => '$T:$key';
 
 /// 数据集合基类，专门用于处理数据集合中通用部分
 abstract class BaseCollectionProvider<K, V> with ChangeNotifier {
@@ -137,19 +142,62 @@ abstract class BaseCollectionProvider<K, V> with ChangeNotifier {
           .command
           .into(elements.map<String>((e) => toDocId(e)).toList())
     }).watch(
-      onChange: _onChange,
+      onChange: onChange,
     );
   }
 
+  bool get usingCustomWatchDoc => false;
+
+  Future<V> customWatchDoc(K key) async => null;
+
+  static Map<String, Future> _futures = {};
+
+  Future<V> watchDoc(K key) {
+    final completer = Completer<V>();
+    if (containsKey(key)) {
+      completer.complete(collections[key]);
+      return completer.future;
+    }
+
+    final futureKey = _toFutureKey<V>(key);
+
+    if (usingCustomWatchDoc) {
+      final future = customWatchDoc(key);
+      _futures.putIfAbsent(futureKey, () => future);
+      return future;
+    }
+
+    final future = completer.future;
+    _futures.putIfAbsent(futureKey, () => future);
+
+    CloudBase().database.collection(collectionName).doc(key).watch(
+        onChange: (Snapshot snapshot) {
+      onChange(snapshot);
+      if (!completer.isCompleted) {
+        completer.complete(collections[key]);
+      }
+    }, onError: (error) {
+      completer.completeError(error);
+    });
+
+    return future;
+  }
+
   /// 数据监听回调
-  void _onChange(Snapshot snapshot) {
+  void onChange(Snapshot snapshot) {
     Iterable<Object> elements = snapshot.docChanges
-        .where((element) => element.dataType == "update")
+        .where((element) => element.dataType != "remove")
         .map((e) => e.doc);
+    Iterable<Object> deletedElementIds = snapshot.docChanges
+        .where((element) => element.dataType == "remove")
+        .map((e) => e.docId);
 
     if (elements.isNotEmpty) {
-      originInsertOrUpdate(elements);
-      notifyListeners();
+      insertOrUpdate(elements);
+    }
+
+    if (deletedElementIds.isNotEmpty) {
+      deletedElementIds.forEach((element) => remove(element));
     }
   }
 
@@ -173,11 +221,11 @@ abstract class BaseCollectionProvider<K, V> with ChangeNotifier {
     notifyListeners();
   }
 
-  V remove(String key) {
-    final result = _collections.remove(key);
-    notifyListeners();
-
-    return result;
+  void remove(K key) {
+    if (containsKey(key)) {
+      _collections.remove(key);
+      notifyListeners();
+    }
   }
 
   /// 便捷从集合中使用 [key] 获取文档

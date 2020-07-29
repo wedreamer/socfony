@@ -1,158 +1,34 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bot_toast/bot_toast.dart';
-import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:snsmax/cloudbase.dart';
+import 'package:provider/provider.dart';
 import 'package:snsmax/cloudbase/commands/moment-like-toggle-command.dart';
 import 'package:snsmax/models/media.dart';
+import 'package:snsmax/models/moment-like-history.dart';
 import 'package:snsmax/models/moment.dart';
 import 'package:snsmax/models/user.dart' hide UserBuilder;
 import 'package:snsmax/models/vote.dart';
 import 'package:snsmax/pages/login.dart';
+import 'package:snsmax/provider/MomentHasLikedProvider.dart';
 import 'package:snsmax/provider/cached-network-file.dart';
-import 'package:snsmax/provider/collections/moments.dart';
-import 'package:snsmax/provider/moment-like-histories-provider.dart';
-import 'package:snsmax/utils/number-extension.dart';
-import 'package:snsmax/widgets/cached-network-image.dart';
-import 'package:snsmax/widgets/scroll-back-top-button.dart';
-import 'package:snsmax/utils/date-time-extension.dart';
-import 'package:provider/provider.dart';
-import 'package:snsmax/widgets/user-builder.dart';
 
-class HomeNewMoments extends StatefulWidget {
-  const HomeNewMoments({Key key}) : super(key: key);
+import '../cloudbase.dart';
+import 'CachedNetworkImageBuilder.dart';
+import 'MomentLikedHistoryDocBuilder.dart';
+import 'UserDocBuilder.dart';
+import '../utils/date-time-extension.dart';
+import '../utils/number-extension.dart';
 
-  @override
-  _HomeNewMomentsState createState() => _HomeNewMomentsState();
-}
-
-class _HomeNewMomentsState extends State<HomeNewMoments>
-    with AutomaticKeepAliveClientMixin<HomeNewMoments> {
-  @override
-  bool get wantKeepAlive => true;
-
-  ScrollController scrollController;
-  List<String> moments = [];
-
-  @override
-  void initState() {
-    scrollController = ScrollController();
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback(onFetchMomentCount);
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  void onFetchMomentCount(Duration duration) async {
-    await Future.delayed(duration);
-    CancelFunc onClose = BotToast.showLoading();
-    await onRefreshMomentCount();
-    onClose();
-  }
-
-  Future<void> onRefreshMomentCount() async {
-    try {
-      final DbQueryResponse result = await CloudBase()
-          .database
-          .collection('moments')
-          .orderBy("createdAt", "desc")
-          .limit(20)
-          .get();
-      List<Moment> _moments =
-          (result.data as List)?.map((e) => Moment.fromJson(e))?.toList();
-      context.read<MomentsCollection>().insertOrUpdate(_moments);
-      setState(() {
-        moments = _moments.map((e) => e.id).toList();
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  bool get isPhone {
-    return MediaQuery.of(context).size.shortestSide < 600;
-  }
-
-  bool get isPortrait {
-    return MediaQuery.of(context).orientation == Orientation.portrait;
-  }
-
-  StaggeredTile get staggeredTile {
-    if (isPhone && isPortrait) {
-      return const StaggeredTile.fit(6);
-    } else if (isPhone && !isPortrait) {
-      return const StaggeredTile.fit(3);
-    }
-
-    return const StaggeredTile.fit(2);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-
-    if (moments == null || moments.isEmpty) {
-      return SizedBox();
-    }
-
-    return Scaffold(
-      body: Scrollbar(
-        controller: scrollController,
-        child: RefreshIndicator(
-          color: Theme.of(context).primaryColor,
-          onRefresh: onRefreshMomentCount,
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              SliverPadding(
-                padding: EdgeInsets.only(
-                    top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
-              ),
-              SliverSafeArea(
-                sliver: SliverStaggeredGrid.countBuilder(
-                  itemCount: moments.length ?? 0,
-                  itemBuilder: childBuilder,
-                  crossAxisCount: 6,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing:
-                      staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
-                  staggeredTileBuilder: (int index) => staggeredTile,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: Container(
-        child: ScrollBackTopButton(scrollController),
-        margin: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    );
-  }
-
-  Widget childBuilder(BuildContext context, int index) {
-    return MomentCard(id: moments[index]);
-  }
-}
-
-class MomentCard extends StatelessWidget {
-  const MomentCard({
+class MomentListTile extends StatelessWidget {
+  const MomentListTile(
+    this.moment, {
     Key key,
-    @required this.id,
   }) : super(key: key);
 
-  final String id;
+  final Moment moment;
 
   @override
   Widget build(BuildContext context) {
@@ -164,55 +40,44 @@ class MomentCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: context.select<MomentsCollection, List<Widget>>(
-            (MomentsCollection provider) => childrenBuilder(context, provider),
-          ),
+          children: <Widget>[
+            UserDocBuilder(
+              id: moment.userId,
+              builder: (BuildContext context, User user) {
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    radius: 24,
+                  ),
+                  title:
+                      Text(user.nickName ?? "用户" + user.id.hashCode.toString()),
+                  subtitle: Text(moment.createdAt.formNow),
+                  trailing: Icon(Icons.more_vert),
+                );
+              },
+            ),
+            buildText(moment),
+            MomentImageCard(
+              moment: moment,
+              margin: EdgeInsets.symmetric(vertical: 6),
+            ),
+            MomentVideoCard(
+              moment: moment,
+              margin: EdgeInsets.symmetric(vertical: 6),
+            ),
+            MomentAudioCard(
+              moment: moment,
+              margin: EdgeInsets.symmetric(vertical: 6),
+            ),
+            MomentVoteCard(
+              moment: moment,
+              margin: EdgeInsets.symmetric(vertical: 6),
+            ),
+            _MomentCardToolBar(moment: moment),
+          ],
         ),
       ),
     );
-  }
-
-  List<Widget> childrenBuilder(
-      BuildContext context, MomentsCollection provider) {
-    if (!provider.containsKey(id)) {
-      return [];
-    }
-
-    Moment moment = provider[id];
-    return [
-      UserBuilder(
-        id: moment.userId,
-        builder: (BuildContext context, User user) {
-          return ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: CircleAvatar(
-              radius: 24,
-            ),
-            title: Text(user.nickName ?? "用户" + user.id.hashCode.toString()),
-            subtitle: Text(moment.createdAt.formNow),
-            trailing: Icon(Icons.more_vert),
-          );
-        },
-      ),
-      buildText(moment),
-      MomentImageCard(
-        moment: moment,
-        margin: EdgeInsets.symmetric(vertical: 6),
-      ),
-      MomentVideoCard(
-        moment: moment,
-        margin: EdgeInsets.symmetric(vertical: 6),
-      ),
-      MomentAudioCard(
-        moment: moment,
-        margin: EdgeInsets.symmetric(vertical: 6),
-      ),
-      MomentVoteCard(
-        moment: moment,
-        margin: EdgeInsets.symmetric(vertical: 6),
-      ),
-      _MomentCardToolBar(moment: moment),
-    ];
   }
 
   Widget buildText(Moment moment) {
@@ -253,21 +118,28 @@ class _MomentCardToolBar extends StatelessWidget {
               ? moment.count.comment.compact
               : '评论'),
         ),
-        context.select<MomentLikeHistoriesProvider, Widget>(
-          (value) {
-            return FlatButton.icon(
-              onPressed: () => onLikeToggle(context),
-              icon: Icon(value.containsKey(moment.id)
-                  ? Icons.favorite
-                  : Icons.favorite_border),
-              label: Text((moment.count?.like ?? 0) > 0
-                  ? moment.count.like.compact
-                  : '喜欢'),
-              textColor: value.containsKey(moment.id) ? Colors.red : null,
-            );
-          },
-        )
+        buildLikeButton(context),
       ],
+    );
+  }
+
+  Widget buildLikeButton(BuildContext context) {
+    Widget childBuinder(hasLiked) {
+      return FlatButton.icon(
+        onPressed: () => onLikeToggle(context),
+        icon: Icon(hasLiked == true ? Icons.favorite : Icons.favorite_border),
+        label: Text(
+            (moment.count?.like ?? 0) > 0 ? moment.count.like.compact : '喜欢'),
+        textColor: hasLiked == true ? Colors.red : null,
+      );
+    }
+
+    return MomentLikedHistoryDocBuilder(
+      id: moment.id,
+      builder: (BuildContext context, MomentLikeHistory history) =>
+          childBuinder(history != null),
+      loadingBuilder: (_) => childBuinder(false),
+      errorBuilder: (_, __) => childBuinder(false),
     );
   }
 
@@ -448,7 +320,7 @@ class _MomentAudioCardState extends State<MomentAudioCard> {
 
     final ImageProvider defaultImage = AssetImage('assets/audio-bg.jpg');
     if (audio.cover != null && audio.cover.isNotEmpty) {
-      return CachedNetworkImage(
+      return CachedNetworkImageBuilder(
         fileId: audio.cover,
         builder: builder,
         progressIndicatorBuilder: (BuildContext context, _) =>
@@ -687,7 +559,7 @@ class MomentVideoCard extends StatelessWidget {
             fit: StackFit.expand,
             children: <Widget>[
               Positioned.fill(
-                child: CachedNetworkImage(
+                child: CachedNetworkImageBuilder(
                   fileId: video.cover,
                   fit: BoxFit.cover,
                   rule: "imageMogr2/scrop/854x480/cut/854x480/format/yjpeg",
@@ -781,7 +653,7 @@ class MomentImageCard extends StatelessWidget {
       ),
       itemBuilder: (BuildContext context, int index) {
         return ClipRRect(
-          child: CachedNetworkImage(
+          child: CachedNetworkImageBuilder(
             fileId: images[index],
             fit: BoxFit.cover,
             rule: rule,

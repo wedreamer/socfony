@@ -7,6 +7,7 @@ import 'package:snsmax/l10n/localization.dart';
 import 'package:snsmax/models/user.dart';
 import 'package:snsmax/pages/launch.dart';
 import 'package:snsmax/provider/auth.dart';
+import 'package:snsmax/provider/collections/users.dart';
 import 'package:snsmax/provider/provider.dart';
 import 'package:snsmax/routes.dart';
 import 'package:snsmax/theme.dart';
@@ -84,7 +85,9 @@ class _AppState extends State<App> {
     try {
       final result = await CloudBase.instance
           .callFunction('auth', {"action": "getCurrentUser"});
-      AuthProvider().user = User.fromJson(result.data);
+      final user = User.fromJson(result.data);
+      AuthProvider().user = user.id;
+      UsersCollection().originInsertOrUpdate([user]);
     } catch (e) {
       print(e);
     }

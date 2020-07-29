@@ -240,12 +240,28 @@ class _$User extends User {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is User && id == other.id;
+    return other is User &&
+        id == other.id &&
+        private == other.private &&
+        createdAt == other.createdAt &&
+        uid == other.uid &&
+        nickName == other.nickName &&
+        gender == other.gender &&
+        avatar == other.avatar;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, id.hashCode));
+    return $jf($jc(
+        $jc(
+            $jc(
+                $jc(
+                    $jc($jc($jc(0, id.hashCode), private.hashCode),
+                        createdAt.hashCode),
+                    uid.hashCode),
+                nickName.hashCode),
+            gender.hashCode),
+        avatar.hashCode));
   }
 
   @override

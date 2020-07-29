@@ -5,9 +5,8 @@ import 'package:snsmax/models/serializers.dart';
 
 part 'user.g.dart';
 
-@BuiltValue(defaultCompare: false)
 abstract class User implements Built<User, UserBuilder> {
-  @BuiltValueField(wireName: "_id", compare: true)
+  @BuiltValueField(wireName: "_id")
   String get id;
 
   @nullable

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MainExploreLayout extends StatefulWidget {
-  const MainExploreLayout({Key key}): super(key: key);
+  const MainExploreLayout({Key key}) : super(key: key);
 
   @override
   _MainExploreLayoutState createState() => _MainExploreLayoutState();

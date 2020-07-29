@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ScrollBackTopButton extends StatefulWidget {
-  const ScrollBackTopButton(this.controller, {Key key}): super(key: key);
+  const ScrollBackTopButton(this.controller, {Key key}) : super(key: key);
 
   final ScrollController controller;
 
@@ -48,6 +48,7 @@ class _ScrollBackTopButtonState extends State<ScrollBackTopButton> {
   }
 
   void onBackTop() {
-    widget.controller.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+    widget.controller.animateTo(0,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 }

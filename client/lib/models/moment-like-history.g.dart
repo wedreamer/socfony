@@ -28,6 +28,9 @@ class _$MomentLikeHistorySerializer
       'momentId',
       serializers.serialize(object.momentId,
           specifiedType: const FullType(String)),
+      'createdAt',
+      serializers.serialize(object.createdAt,
+          specifiedType: const FullType(DateTime)),
     ];
 
     return result;
@@ -57,6 +60,10 @@ class _$MomentLikeHistorySerializer
           result.momentId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'createdAt':
+          result.createdAt = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime;
+          break;
       }
     }
 
@@ -71,12 +78,15 @@ class _$MomentLikeHistory extends MomentLikeHistory {
   final String userId;
   @override
   final String momentId;
+  @override
+  final DateTime createdAt;
 
   factory _$MomentLikeHistory(
           [void Function(MomentLikeHistoryBuilder) updates]) =>
       (new MomentLikeHistoryBuilder()..update(updates)).build();
 
-  _$MomentLikeHistory._({this.id, this.userId, this.momentId}) : super._() {
+  _$MomentLikeHistory._({this.id, this.userId, this.momentId, this.createdAt})
+      : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('MomentLikeHistory', 'id');
     }
@@ -85,6 +95,9 @@ class _$MomentLikeHistory extends MomentLikeHistory {
     }
     if (momentId == null) {
       throw new BuiltValueNullFieldError('MomentLikeHistory', 'momentId');
+    }
+    if (createdAt == null) {
+      throw new BuiltValueNullFieldError('MomentLikeHistory', 'createdAt');
     }
   }
 
@@ -102,13 +115,15 @@ class _$MomentLikeHistory extends MomentLikeHistory {
     return other is MomentLikeHistory &&
         id == other.id &&
         userId == other.userId &&
-        momentId == other.momentId;
+        momentId == other.momentId &&
+        createdAt == other.createdAt;
   }
 
   @override
   int get hashCode {
-    return $jf(
-        $jc($jc($jc(0, id.hashCode), userId.hashCode), momentId.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, id.hashCode), userId.hashCode), momentId.hashCode),
+        createdAt.hashCode));
   }
 
   @override
@@ -116,7 +131,8 @@ class _$MomentLikeHistory extends MomentLikeHistory {
     return (newBuiltValueToStringHelper('MomentLikeHistory')
           ..add('id', id)
           ..add('userId', userId)
-          ..add('momentId', momentId))
+          ..add('momentId', momentId)
+          ..add('createdAt', createdAt))
         .toString();
   }
 }
@@ -137,6 +153,10 @@ class MomentLikeHistoryBuilder
   String get momentId => _$this._momentId;
   set momentId(String momentId) => _$this._momentId = momentId;
 
+  DateTime _createdAt;
+  DateTime get createdAt => _$this._createdAt;
+  set createdAt(DateTime createdAt) => _$this._createdAt = createdAt;
+
   MomentLikeHistoryBuilder();
 
   MomentLikeHistoryBuilder get _$this {
@@ -144,6 +164,7 @@ class MomentLikeHistoryBuilder
       _id = _$v.id;
       _userId = _$v.userId;
       _momentId = _$v.momentId;
+      _createdAt = _$v.createdAt;
       _$v = null;
     }
     return this;
@@ -165,7 +186,8 @@ class MomentLikeHistoryBuilder
   @override
   _$MomentLikeHistory build() {
     final _$result = _$v ??
-        new _$MomentLikeHistory._(id: id, userId: userId, momentId: momentId);
+        new _$MomentLikeHistory._(
+            id: id, userId: userId, momentId: momentId, createdAt: createdAt);
     replace(_$result);
     return _$result;
   }

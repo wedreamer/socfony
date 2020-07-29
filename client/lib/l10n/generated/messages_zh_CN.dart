@@ -20,11 +20,14 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_CN';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static _notInlinedMessages(_) => <String, Function> {
-    "AppIntlMessages_name" : MessageLookupByLibrary.simpleMessage("SNS Max"),
-    "NavigationBarMessage_explore" : MessageLookupByLibrary.simpleMessage("发现"),
-    "NavigationBarMessage_me" : MessageLookupByLibrary.simpleMessage("我的"),
-    "NavigationBarMessage_moment" : MessageLookupByLibrary.simpleMessage("动态"),
-    "NavigationBarMessage_notification" : MessageLookupByLibrary.simpleMessage("消息")
-  };
+  static _notInlinedMessages(_) => <String, Function>{
+        "AppIntlMessages_name": MessageLookupByLibrary.simpleMessage("SNS Max"),
+        "NavigationBarMessage_explore":
+            MessageLookupByLibrary.simpleMessage("发现"),
+        "NavigationBarMessage_me": MessageLookupByLibrary.simpleMessage("我的"),
+        "NavigationBarMessage_moment":
+            MessageLookupByLibrary.simpleMessage("动态"),
+        "NavigationBarMessage_notification":
+            MessageLookupByLibrary.simpleMessage("消息")
+      };
 }
