@@ -7,6 +7,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:provider/provider.dart';
 import 'package:snsmax/cloudbase/commands/MomentVoteSelectCommand.dart';
 import 'package:snsmax/cloudbase/commands/moment-like-toggle-command.dart';
+import 'package:snsmax/models/MomentVoteUserSelected.dart';
 import 'package:snsmax/models/media.dart';
 import 'package:snsmax/models/moment-like-history.dart';
 import 'package:snsmax/models/moment.dart';
@@ -14,8 +15,10 @@ import 'package:snsmax/models/user.dart' hide UserBuilder;
 import 'package:snsmax/models/vote.dart';
 import 'package:snsmax/pages/login.dart';
 import 'package:snsmax/provider/MomentHasLikedProvider.dart';
+import 'package:snsmax/provider/MomentVoteHasSelectedProvider.dart';
 import 'package:snsmax/provider/cached-network-file.dart';
 import 'package:snsmax/widgets/UserAvatarWidget.dart';
+import 'package:snsmax/widgets/docs/MomentVoteUserSelectedDocBuilder.dart';
 
 import '../cloudbase.dart';
 import 'CachedNetworkImageBuilder.dart';
@@ -194,8 +197,10 @@ class MomentVoteCard extends StatelessWidget {
       value = 0;
     }
 
+    final defaultProgress = createProgress(value, false);
+
     return GestureDetector(
-      onTap: () => onSelectVote(item.name),
+      onTap: () => onSelectVote(context, item.name),
       child: Container(
         height: 32.0,
         margin: EdgeInsets.only(top: index == 0 ? 0 : 6),
@@ -203,13 +208,16 @@ class MomentVoteCard extends StatelessWidget {
           fit: StackFit.expand,
           children: <Widget>[
             ClipRRect(
-              child: LinearProgressIndicator(
-                value: value,
-                backgroundColor: Colors.black.withOpacity(0.1),
-//                  valueColor: AlwaysStoppedAnimation<Color>(
-//                      Theme.of(context).primaryColor),
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.black.withOpacity(0.12)),
+              child: MomentVoteUserSelectedDocBuilder(
+                id: moment.id,
+                builder: (BuildContext context, MomentVoteUserSelected vote) {
+                  return createProgress(value, vote.vote == item.name);
+                },
+                loadingBuilder: (_) => defaultProgress,
+                errorBuilder: (_, __) {
+                  print(__);
+                  return defaultProgress;
+                },
               ),
               borderRadius: BorderRadius.circular(32.0),
             ),
@@ -234,6 +242,16 @@ class MomentVoteCard extends StatelessWidget {
     );
   }
 
+  LinearProgressIndicator createProgress(double value, bool selected) {
+    return LinearProgressIndicator(
+      value: value,
+      backgroundColor: Colors.black.withOpacity(0.1),
+//                  valueColor: AlwaysStoppedAnimation<Color>(
+//                      Theme.of(context).primaryColor),
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.black.withOpacity(0.12)),
+    );
+  }
+
   Widget buildPercentage(double value, BuildContext context) {
     if (voteCount == 0) {
       return SizedBox();
@@ -252,9 +270,15 @@ class MomentVoteCard extends StatelessWidget {
     );
   }
 
-  onSelectVote(String text) {
+  onSelectVote(BuildContext context, String text) {
+    if (context.read<MomentVoteHasSelectedProvider>().containsKey(moment.id)) {
+      return;
+    }
+    CancelFunc cancel = BotToast.showLoading();
     final command = MomentVoteSelectCommand(moment.id, text);
-    CloudBase().command(command);
+    CloudBase().command(command).catchError((e) {
+      BotToast.showText(text: '操作失败');
+    }).whenComplete(() => cancel());
   }
 }
 

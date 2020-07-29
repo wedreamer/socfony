@@ -84,4 +84,10 @@ class MomentHasLikedProvider
   MomentLikeHistory formObject(Object value) {
     return super.formObject(value) ?? MomentLikeHistory.fromJson(value);
   }
+
+  @override
+  void watcher(Iterable<MomentLikeHistory> elements) {
+    // TODO: implement watcher
+    super.watcher(elements);
+  }
 }

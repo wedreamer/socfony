@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'MomentHasLikedProvider.dart';
+import 'MomentVoteHasSelectedProvider.dart';
 import 'auth.dart';
 import 'cached-network-file.dart';
 import 'collections/moments.dart';
@@ -21,6 +22,7 @@ class RootProvider extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UsersCollection()),
         ChangeNotifierProvider(create: (_) => CachedNetworkFileProvider()),
         ChangeNotifierProvider(create: (_) => MomentHasLikedProvider()),
+        ChangeNotifierProvider(create: (_) => MomentVoteHasSelectedProvider()),
       ],
       child: child,
     );
