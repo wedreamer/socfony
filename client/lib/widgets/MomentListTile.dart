@@ -5,6 +5,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:provider/provider.dart';
+import 'package:snsmax/cloudbase/commands/MomentVoteSelectCommand.dart';
 import 'package:snsmax/cloudbase/commands/moment-like-toggle-command.dart';
 import 'package:snsmax/models/media.dart';
 import 'package:snsmax/models/moment-like-history.dart';
@@ -193,39 +194,42 @@ class MomentVoteCard extends StatelessWidget {
       value = 0;
     }
 
-    return Container(
-      height: 32.0,
-      margin: EdgeInsets.only(top: index == 0 ? 0 : 6),
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          ClipRRect(
-            child: LinearProgressIndicator(
-              value: value,
-              backgroundColor: Colors.black.withOpacity(0.1),
+    return GestureDetector(
+      onTap: () => onSelectVote(item.name),
+      child: Container(
+        height: 32.0,
+        margin: EdgeInsets.only(top: index == 0 ? 0 : 6),
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            ClipRRect(
+              child: LinearProgressIndicator(
+                value: value,
+                backgroundColor: Colors.black.withOpacity(0.1),
 //                  valueColor: AlwaysStoppedAnimation<Color>(
 //                      Theme.of(context).primaryColor),
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(Colors.black.withOpacity(0.12)),
-            ),
-            borderRadius: BorderRadius.circular(32.0),
-          ),
-          Positioned(
-            child: Align(
-              alignment:
-                  voteCount == 0 ? Alignment.center : Alignment.centerLeft,
-              child: Text(
-                item.name,
-                style: Theme.of(context).textTheme.bodyText2,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Colors.black.withOpacity(0.12)),
               ),
+              borderRadius: BorderRadius.circular(32.0),
             ),
-            left: 12,
-            top: 0,
-            bottom: 0,
-            right: voteCount == 0 ? 0 : null,
-          ),
-          buildPercentage(value, context),
-        ],
+            Positioned(
+              child: Align(
+                alignment:
+                    voteCount == 0 ? Alignment.center : Alignment.centerLeft,
+                child: Text(
+                  item.name,
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+              ),
+              left: 12,
+              top: 0,
+              bottom: 0,
+              right: voteCount == 0 ? 0 : null,
+            ),
+            buildPercentage(value, context),
+          ],
+        ),
       ),
     );
   }
@@ -246,6 +250,11 @@ class MomentVoteCard extends StatelessWidget {
       top: 0,
       bottom: 0,
     );
+  }
+
+  onSelectVote(String text) {
+    final command = MomentVoteSelectCommand(moment.id, text);
+    CloudBase().command(command);
   }
 }
 

@@ -1,5 +1,5 @@
 import { Command, Application } from "@bytegem/cloudbase";
-import { GetCurrentUserCommand } from "cloudbase/functions/auth/src/commands/get-current-user";
+import { CurrentUserCommand } from "cloudbase/functions/auth/src/commands/CurrentUser";
 
 export class FollowingMoments extends Command {
     async handle(app: Application, offset: number = 0) {
@@ -11,7 +11,7 @@ export class FollowingMoments extends Command {
     }
 
     async createQuery(app: Application) {
-        const { _id: userId } = await (new GetCurrentUserCommand).handle(app);
+        const { _id: userId } = await (new CurrentUserCommand).handle(app);
 
         const database = app.cloudbase.database();
         const command = database.command;

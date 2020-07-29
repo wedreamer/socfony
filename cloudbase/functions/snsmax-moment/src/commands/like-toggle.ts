@@ -1,9 +1,9 @@
 import { Command, Application } from "@bytegem/cloudbase";
-import { GetCurrentUserCommand } from "cloudbase/functions/auth/src/commands/get-current-user";
+import { CurrentUserCommand } from "cloudbase/functions/auth/src/commands/CurrentUser";
 
 export class LikeToggleCommand extends Command {
     async handle(app: Application, momentId: string) {
-        const { _id: userId } = await (new GetCurrentUserCommand).handle(app);
+        const { _id: userId } = await (new CurrentUserCommand).handle(app);
         const database = app.cloudbase.database();
         const command = database.command;
         const collection = database.collection('moment-liked-histories')

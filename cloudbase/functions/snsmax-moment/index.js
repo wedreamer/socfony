@@ -10,7 +10,7 @@ var tcb = _interopDefault(require('node_modules/@cloudbase/node-sdk/lib/auth'));
 var name = "moment";
 var version = "1.0.0";
 
-class GetCurrentUserCommand extends cloudbase.Command {
+class CurrentUserCommand extends cloudbase.Command {
     async handle(app) {
         const auth = tcb.auth(app.cloudbase);
         const database = app.cloudbase.database();
@@ -45,7 +45,7 @@ class GetCurrentUserCommand extends cloudbase.Command {
 
 class LikeToggleCommand extends cloudbase.Command {
     async handle(app, momentId) {
-        const { _id: userId } = await (new GetCurrentUserCommand).handle(app);
+        const { _id: userId } = await (new CurrentUserCommand).handle(app);
         const database = app.cloudbase.database();
         const command = database.command;
         const collection = database.collection('moment-liked-histories');
@@ -75,7 +75,7 @@ class FollowingMoments extends cloudbase.Command {
         return listResult.data.map((e) => e.id);
     }
     async createQuery(app) {
-        const { _id: userId } = await (new GetCurrentUserCommand).handle(app);
+        const { _id: userId } = await (new CurrentUserCommand).handle(app);
         const database = app.cloudbase.database();
         const command = database.command;
         return database.collection('moments')
@@ -131,6 +131,45 @@ class FollowingMoments extends cloudbase.Command {
     }
 }
 
+class SelectVoteCommand extends cloudbase.Command {
+    async handle(app, data) {
+        const { _id: userId } = await (new CurrentUserCommand).handle(app);
+        const { momentId, vote: voteText } = data;
+        const db = app.cloudbase.database();
+        const _ = db.command;
+        let result = await db.collection('moment-vote-user-selected').where({
+            momentId,
+            userId,
+        }).count();
+        if (result.total) {
+            return;
+        }
+        result = await db.collection('moments').doc(momentId).field('vote').get();
+        if (result.data.length <= 0) {
+            throw new cloudbase.CloudBaseError('Not Found', `Moment doc(${momentId}) not found`);
+        }
+        const { vote } = result.data.pop();
+        const index = vote.map(value => value.name).indexOf(voteText);
+        if (index < 0) {
+            throw new cloudbase.CloudBaseError('illegal', `Moment doc(${momentId}) don't includes vote item(${voteText})`);
+        }
+        await db.runTransaction(async (transaction) => {
+            await transaction.collection('moments').doc(momentId).update({
+                vote: vote.map(value => {
+                    if (voteText == value.name) {
+                        value.count = (value.count ? value.count : 0) + 1;
+                    }
+                    return value;
+                }),
+            });
+            await transaction.collection('moment-vote-user-selected').add({
+                momentId, userId, vote: voteText,
+                createdAt: new Date,
+            });
+        });
+    }
+}
+
 function main(event, context) {
     const app = new cloudbase.Application({
         context,
@@ -139,6 +178,7 @@ function main(event, context) {
     });
     app.addCommand('likeToggle', () => new LikeToggleCommand);
     app.addCommand('followingMoments', () => new FollowingMoments);
+    app.addCommand('selectVote', () => new SelectVoteCommand);
     return app.run(event);
 }
 

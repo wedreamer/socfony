@@ -9,7 +9,7 @@ interface User {
     private?: string;
 }
 
-export class GetCurrentUserCommand extends Command {
+export class CurrentUserCommand extends Command {
     async handle(app: Application) {
         const auth = tcb.auth(app.cloudbase);
         const database = app.cloudbase.database();

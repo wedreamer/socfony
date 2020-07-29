@@ -1,17 +1,31 @@
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 
-export default {
-    input: "cloudbase/functions/snsmax-moment/src/main.ts",
-    output: {
-        file: "cloudbase/functions/snsmax-moment/index.js",
-        format: "cjs"
-    },
-    plugins: [
-        json(),
-        typescript({
-            tsconfig: "tsconfig.json"
-        }),
-    ],
-    external: ["@bytegem/cloudbase"],
-};
+const external = [
+    "@bytegem/cloudbase",
+    "node_modules/@cloudbase/node-sdk/lib/auth"
+];
+
+const functionNames = [
+    'auth',
+    'snsmax-moment',
+];
+
+function createFunctionBuilder(name) {
+    return {
+        input: `cloudbase/functions/${name}/src/main.ts`,
+        output: {
+            file: `cloudbase/functions/${name}/index.js`,
+            format: "cjs"
+        },
+        plugins: [
+            json(),
+            typescript({
+                tsconfig: "tsconfig.json"
+            }),
+        ],
+        external,
+    };
+}
+
+export default functionNames.map(createFunctionBuilder);

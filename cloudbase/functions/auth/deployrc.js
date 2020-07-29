@@ -4,7 +4,7 @@ module.exports = (config) => ({
     installDependency: true,
     handler: "index.main",
     ignore: [
-        "node_modules",
-        "package-lock.json",
+        "src/**/*",
+        "src",
     ],
 });

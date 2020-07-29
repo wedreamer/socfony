@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:snsmax/cloudbase.dart';
+import 'package:snsmax/cloudbase/commands/QueryCurrentUserCommand.dart';
 import 'package:snsmax/l10n/localization.dart';
 import 'package:snsmax/models/user.dart';
 import 'package:snsmax/pages/launch.dart';
@@ -82,15 +83,10 @@ class _AppState extends State<App> {
       print(e);
     }
 
-    try {
-      final result = await CloudBase.instance
-          .callFunction('auth', {"action": "getCurrentUser"});
-      final user = User.fromJson(result.data);
-      AuthProvider().user = user.id;
-      UsersCollection().originInsertOrUpdate([user]);
-    } catch (e) {
-      print(e);
-    }
+    QueryCurrentUserCommand.run().then((value) {
+      AuthProvider().user = value.id;
+      UsersCollection().originInsertOrUpdate([value]);
+    });
   }
 
   /// Build the widget
