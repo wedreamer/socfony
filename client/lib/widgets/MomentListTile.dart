@@ -14,6 +14,7 @@ import 'package:snsmax/models/vote.dart';
 import 'package:snsmax/pages/login.dart';
 import 'package:snsmax/provider/MomentHasLikedProvider.dart';
 import 'package:snsmax/provider/cached-network-file.dart';
+import 'package:snsmax/widgets/UserAvatarWidget.dart';
 
 import '../cloudbase.dart';
 import 'CachedNetworkImageBuilder.dart';
@@ -46,8 +47,9 @@ class MomentListTile extends StatelessWidget {
               builder: (BuildContext context, User user) {
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(
+                  leading: UserAvatarWidget(
                     radius: 24,
+                    fileId: user.avatar,
                   ),
                   title:
                       Text(user.nickName ?? "用户" + user.id.hashCode.toString()),
@@ -319,20 +321,18 @@ class _MomentAudioCardState extends State<MomentAudioCard> {
     }
 
     final ImageProvider defaultImage = AssetImage('assets/audio-bg.jpg');
+    final defaultChild = builder(context, defaultImage);
     if (audio.cover != null && audio.cover.isNotEmpty) {
       return CachedNetworkImageBuilder(
         fileId: audio.cover,
         builder: builder,
-        progressIndicatorBuilder: (BuildContext context, _) =>
-            builder(context, defaultImage),
-        errorBuilder: (BuildContext context, _) =>
-            builder(context, defaultImage),
-        placeholderBuilder: (BuildContext context) =>
-            builder(context, defaultImage),
+        progressIndicatorBuilder: (BuildContext context, _) => defaultChild,
+        errorBuilder: (BuildContext context, _) => defaultChild,
+        placeholderBuilder: (BuildContext context) => defaultChild,
       );
     }
 
-    return builder(context, defaultImage);
+    return defaultChild;
   }
 
   Widget builder(BuildContext context, ImageProvider image) {
