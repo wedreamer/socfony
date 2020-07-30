@@ -3,6 +3,7 @@ import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 
+import 'MomentVoteUserSelected.dart';
 import 'media.dart';
 import 'moment-like-history.dart';
 import 'moment.dart';
@@ -43,6 +44,7 @@ class DateTimeSerializer extends Iso8601DateTimeSerializer {
   MediaAudio,
   MediaVideo,
   MomentLikeHistory,
+  MomentVoteUserSelected,
   User,
   UserPrivate,
   UserGender,

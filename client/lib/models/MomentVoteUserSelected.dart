@@ -28,7 +28,7 @@ abstract class MomentVoteUserSelected
     return serializers.serializeWith(MomentVoteUserSelected.serializer, this);
   }
 
-  static MomentVoteUserSelected fromJson(Map<String, dynamic> json) {
+  static MomentVoteUserSelected fromJson(Object json) {
     return serializers.deserializeWith(MomentVoteUserSelected.serializer, json);
   }
 

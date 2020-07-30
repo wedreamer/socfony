@@ -63,8 +63,8 @@ class MomentVoteHasSelectedProvider
           .collection(collectionName)
           .where(
             {
-              "momentId": CloudBase().database.command.eq(key),
-              "userId": CloudBase().database.command.eq(userId),
+              "momentId": key,
+              "userId": userId,
             },
           )
           .limit(1)

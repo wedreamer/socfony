@@ -197,7 +197,7 @@ class MomentVoteCard extends StatelessWidget {
       value = 0;
     }
 
-    final defaultProgress = createProgress(value, false);
+    final defaultProgress = createProgress(context, value, false);
 
     return GestureDetector(
       onTap: () => onSelectVote(context, item.name),
@@ -211,13 +211,10 @@ class MomentVoteCard extends StatelessWidget {
               child: MomentVoteUserSelectedDocBuilder(
                 id: moment.id,
                 builder: (BuildContext context, MomentVoteUserSelected vote) {
-                  return createProgress(value, vote.vote == item.name);
+                  return createProgress(context, value, vote.vote == item.name);
                 },
                 loadingBuilder: (_) => defaultProgress,
-                errorBuilder: (_, __) {
-                  print(__);
-                  return defaultProgress;
-                },
+                errorBuilder: (_, __) => defaultProgress,
               ),
               borderRadius: BorderRadius.circular(32.0),
             ),
@@ -242,13 +239,15 @@ class MomentVoteCard extends StatelessWidget {
     );
   }
 
-  LinearProgressIndicator createProgress(double value, bool selected) {
+  LinearProgressIndicator createProgress(
+      BuildContext context, double value, bool selected) {
+    Color color = selected
+        ? Theme.of(context).primaryColor.withOpacity(0.8)
+        : Colors.black.withOpacity(0.12);
     return LinearProgressIndicator(
       value: value,
       backgroundColor: Colors.black.withOpacity(0.1),
-//                  valueColor: AlwaysStoppedAnimation<Color>(
-//                      Theme.of(context).primaryColor),
-      valueColor: AlwaysStoppedAnimation<Color>(Colors.black.withOpacity(0.12)),
+      valueColor: AlwaysStoppedAnimation<Color>(color),
     );
   }
 
