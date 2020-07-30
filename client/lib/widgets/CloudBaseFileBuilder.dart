@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/provider/cached-network-file.dart';
 
-import 'CloudBaseDocBuilder.dart';
+import 'docs/CloudBaseDocBuilder.dart';
 
 class CloudBaseFileBuilder extends CloudBaseDocBuilder<String, DownloadMetadata,
     CachedNetworkFileProvider> {

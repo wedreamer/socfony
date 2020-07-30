@@ -4,7 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:snsmax/cloudbase/database/businesses/following-moments.dart';
 import 'package:snsmax/models/moment.dart';
-import 'package:snsmax/widgets/MomentDocBuilder.dart';
+import 'package:snsmax/widgets/docs/MomentDocBuilder.dart';
 import 'package:snsmax/widgets/MomentListTile.dart';
 
 import '../empty.dart';

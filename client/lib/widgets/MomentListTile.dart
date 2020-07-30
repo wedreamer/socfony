@@ -22,8 +22,8 @@ import 'package:snsmax/widgets/docs/MomentVoteUserSelectedDocBuilder.dart';
 
 import '../cloudbase.dart';
 import 'CachedNetworkImageBuilder.dart';
-import 'MomentLikedHistoryDocBuilder.dart';
-import 'UserDocBuilder.dart';
+import 'docs/MomentLikedHistoryDocBuilder.dart';
+import 'docs/UserDocBuilder.dart';
 import '../utils/date-time-extension.dart';
 import '../utils/number-extension.dart';
 

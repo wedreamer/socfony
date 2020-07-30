@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snsmax/models/MomentVoteUserSelected.dart';
 import 'package:snsmax/provider/MomentVoteHasSelectedProvider.dart';
 
-import '../CloudBaseDocBuilder.dart';
+import 'CloudBaseDocBuilder.dart';
 
 class MomentVoteUserSelectedDocBuilder extends CloudBaseDocBuilder<String,
     MomentVoteUserSelected, MomentVoteHasSelectedProvider> {

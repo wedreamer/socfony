@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snsmax/models/user.dart';
 import 'package:snsmax/provider/collections/users.dart';
-import 'package:snsmax/widgets/CloudBaseDocBuilder.dart';
+import 'package:snsmax/widgets/docs/CloudBaseDocBuilder.dart';
 
 class UserDocBuilder
     extends CloudBaseDocBuilder<String, User, UsersCollection> {

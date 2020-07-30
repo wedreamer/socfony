@@ -6,7 +6,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/utils/cache-managers/file-cache-manager.dart';
 
-import 'CloudBaseDocBuilder.dart';
+import 'docs/CloudBaseDocBuilder.dart';
 import 'CloudBaseFileBuilder.dart';
 
 typedef ProgressIndicatorBuilder = Widget Function(
