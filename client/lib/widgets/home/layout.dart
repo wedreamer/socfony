@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:snsmax/pages/publish.dart';
 import 'package:snsmax/widgets/custom-underline-tab-indicator.dart';
@@ -23,8 +22,14 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
 
   @override
   void initState() {
-    controller = TabController(length: 3, vsync: this, initialIndex: 0);
+    controller = TabController(length: 3, vsync: this, initialIndex: 1);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -49,8 +54,13 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
           labelStyle: Theme.of(context).textTheme.headline6,
           labelColor: Theme.of(context).primaryColor,
         ),
-        centerTitle: false,
+        centerTitle: true,
         actions: actionsBuilder(context),
+        leading: FlatButton(
+          onPressed: () {},
+          child: Text('话题'),
+          padding: EdgeInsets.zero,
+        ),
       ),
       body: TabBarView(
         controller: controller,
@@ -78,11 +88,14 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
   }
 
   Widget sendMomentActionBuilder(BuildContext context) {
-    return FlatButton.icon(
+    return IconButton(
       onPressed: onSendMoment,
-      textColor: Theme.of(context).primaryColor,
-      icon: Icon(CupertinoIcons.photo_camera_solid),
-      label: Text("发动态"),
+      color: Theme.of(context).primaryColor,
+      icon: Transform.rotate(
+        child: Icon(Icons.send),
+        angle: 125.0,
+      ),
+      tooltip: "发布动态",
     );
   }
 

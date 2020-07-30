@@ -69,7 +69,6 @@ class MomentVoteHasSelectedProvider
           )
           .limit(1)
           .watch(onChange: (Snapshot snapshot) {
-            print(snapshot);
             onChange(snapshot);
             if (!completer.isCompleted) {
               completer.complete(collections[key]);

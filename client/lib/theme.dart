@@ -20,6 +20,8 @@ class AppTheme {
         primaryColorBrightness: Brightness.light,
         appBarTheme: const AppBarTheme(color: Colors.white, elevation: 0),
         tabBarTheme: _tabBarTheme,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
       );
 
   static ThemeData dark() => ThemeData.dark().copyWith(
@@ -27,5 +29,7 @@ class AppTheme {
         appBarTheme: const AppBarTheme(color: Colors.black, elevation: 0),
         tabBarTheme: _tabBarTheme,
         accentColor: primaryColor,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
       );
 }

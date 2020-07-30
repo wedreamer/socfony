@@ -46,7 +46,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
           margin: const EdgeInsets.symmetric(horizontal: 10)
               .copyWith(bottom: padding.bottom > 0 ? 0 : 20, top: 20),
           decoration: BoxDecoration(
-            color: Theme.of(context).bottomAppBarColor,
+            color: Theme.of(context).appBarTheme.color,
             borderRadius: const BorderRadius.all(const Radius.circular(100)),
             boxShadow: [
               BoxShadow(
