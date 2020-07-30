@@ -95,15 +95,14 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
                 padding: EdgeInsets.only(
                     top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
               ),
-              SliverSafeArea(
-                  sliver: SliverStaggeredGrid.countBuilder(
+              SliverStaggeredGrid.countBuilder(
                 itemCount: business.ids?.length ?? 1,
                 itemBuilder: childBuilder,
                 crossAxisCount: 6,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
                 staggeredTileBuilder: (int index) => staggeredTile,
-              )),
+              ),
             ],
           ),
         ),

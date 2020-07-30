@@ -3,6 +3,7 @@ import 'package:snsmax/pages/publish.dart';
 import 'package:snsmax/widgets/custom-underline-tab-indicator.dart';
 import 'package:snsmax/widgets/home/RecommendTabView.dart';
 
+import 'CityMomentsTabView.dart';
 import 'FollowingMomentsWidget.dart';
 
 class MainHomeLayout extends StatefulWidget {
@@ -68,7 +69,7 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
         children: <Widget>[
           FollowingMomentsWidget(),
           RecommendTabView(),
-          Text('1'),
+          CityMomentsTabView(),
         ],
       ),
     );
