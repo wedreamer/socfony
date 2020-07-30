@@ -71,8 +71,8 @@ class LikeToggleCommand extends cloudbase.Command {
 
 class FollowingMoments extends cloudbase.Command {
     async handle(app, offset = 0) {
-        const listResult = await (await this.createQuery(app)).limit(20).sort({ 'createdAt': -1 }).skip(offset).end();
-        return listResult.data.map((e) => e.id);
+        const result = await (await this.createQuery(app)).limit(20).sort({ 'createdAt': -1 }).skip(offset).end();
+        return result.data.map((e) => e.id);
     }
     async createQuery(app) {
         const { _id: userId } = await (new CurrentUserCommand).handle(app);
@@ -126,6 +126,7 @@ class FollowingMoments extends cloudbase.Command {
             .match(command.expr(command.aggregate.or([
             command.aggregate.in(['$userId', '$follow']),
             command.aggregate.in(['$topicId', '$topices']),
+            command.aggregate.eq(['$userId', userId]),
         ])))
             .project({ id: true, createdAt: true, });
     }
@@ -170,6 +171,58 @@ class SelectVoteCommand extends cloudbase.Command {
     }
 }
 
+class RecommendMoments extends cloudbase.Command {
+    async handle(app, offset = 0) {
+        const database = app.cloudbase.database();
+        const command = database.command;
+        const aggregate = command.aggregate;
+        const weekAgo = Date.now() - 86400000 * 7;
+        const result = await database.collection('moments')
+            .aggregate()
+            .lookup({
+            from: "moment-liked-histories",
+            as: "likes",
+            let: {
+                id: '$_id',
+            },
+            pipeline: aggregate.pipeline().match(command.expr(aggregate.and([
+                aggregate.gte(['$createdAt', weekAgo]),
+                aggregate.eq(['$$id', '$momentId']),
+            ])))
+                .project({ _id: true })
+                .done(),
+        })
+            .lookup({
+            from: "moments",
+            as: 'commands',
+            let: {
+                id: '$_id',
+            },
+            pipeline: aggregate.pipeline().match(command.expr(aggregate.and([
+                aggregate.gte(['$createdAt', weekAgo]),
+                aggregate.eq(['$$id', '$momentId']),
+            ])))
+                .project({ _id: true })
+                .done(),
+        })
+            .project({
+            _id: true,
+            createdAt: true,
+            total: aggregate.sum([
+                aggregate.size('$likes'),
+                aggregate.size('$commands'),
+            ]),
+        })
+            .sort({
+            total: -1,
+            createdAt: -1,
+        })
+            .skip(offset)
+            .end();
+        return result.data.map(e => e._id);
+    }
+}
+
 function main(event, context) {
     const app = new cloudbase.Application({
         context,
@@ -179,6 +232,7 @@ function main(event, context) {
     app.addCommand('likeToggle', () => new LikeToggleCommand);
     app.addCommand('followingMoments', () => new FollowingMoments);
     app.addCommand('selectVote', () => new SelectVoteCommand);
+    app.addCommand('recommendMoments', () => new RecommendMoments);
     return app.run(event);
 }
 

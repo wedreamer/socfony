@@ -3,11 +3,9 @@ import { CurrentUserCommand } from "cloudbase/functions/auth/src/commands/Curren
 
 export class FollowingMoments extends Command {
     async handle(app: Application, offset: number = 0) {
+        const result = await (await this.createQuery(app)).limit(20).sort({ 'createdAt': -1 }).skip(offset).end();
 
-
-        const listResult = await (await this.createQuery(app)).limit(20).sort({ 'createdAt': -1 }).skip(offset).end();
-
-        return (listResult.data as Array<any>).map((e) => e.id);
+        return (result.data as Array<any>).map((e) => e.id);
     }
 
     async createQuery(app: Application) {
@@ -69,6 +67,7 @@ export class FollowingMoments extends Command {
                 command.aggregate.or([
                     command.aggregate.in(['$userId', '$follow']),
                     command.aggregate.in(['$topicId', '$topices']),
+                    command.aggregate.eq(['$userId', userId]),
                 ]),
             ))
             .project({ id: true, createdAt: true, });
