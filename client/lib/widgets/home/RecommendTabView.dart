@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:snsmax/cloudbase/database/businesses/HomeRecommendMomentsBusiness.dart';
 import 'package:snsmax/models/moment.dart';
 import 'package:snsmax/widgets/docs/MomentDocBuilder.dart';
@@ -18,7 +18,7 @@ class RecommendTabView extends StatefulWidget {
 class _RecommendTabViewState extends State<RecommendTabView>
     with AutomaticKeepAliveClientMixin<RecommendTabView> {
   ScrollController scrollController;
-  EasyRefreshController refreshController;
+  RefreshController refreshController;
   HomeRecommendMomentsBusiness business;
 
   bool get isPhone {
@@ -42,7 +42,7 @@ class _RecommendTabViewState extends State<RecommendTabView>
   @override
   void initState() {
     scrollController = ScrollController();
-    refreshController = EasyRefreshController();
+    refreshController = RefreshController(initialRefresh: true);
     business = HomeRecommendMomentsBusiness()..addListener(setState);
     super.initState();
   }
@@ -56,21 +56,20 @@ class _RecommendTabViewState extends State<RecommendTabView>
   Future<void> onRefresh() async {
     try {
       await business.refresh();
-      refreshController.finishRefresh(
-        success: true,
-        noMore: business.isEmpty,
-      );
+      refreshController.refreshCompleted(resetFooterState: true);
     } catch (e) {
-      refreshController.finishRefresh(success: false);
+      refreshController.refreshFailed();
     }
   }
 
   Future<void> onLoadMore() async {
     try {
       final length = await business.loadMore();
-      refreshController.finishLoad(success: true, noMore: length <= 0);
+      length > 0
+          ? refreshController.loadComplete()
+          : refreshController.loadNoData();
     } catch (e) {
-      refreshController.finishLoad(success: false);
+      refreshController.loadFailed();
     }
   }
 
@@ -81,23 +80,22 @@ class _RecommendTabViewState extends State<RecommendTabView>
     return Scaffold(
       body: Scrollbar(
         controller: scrollController,
-        child: EasyRefresh.custom(
-          scrollController: scrollController,
+        child: SmartRefresher(
+          cacheExtent: 5,
           controller: refreshController,
+          scrollController: scrollController,
           onRefresh: onRefresh,
-          onLoad: onLoadMore,
-          emptyWidget: emptyBuilder(),
-          firstRefresh: true,
-          firstRefreshWidget: Center(
-            child: GFLoader(type: GFLoaderType.circle),
-          ),
-          slivers: [
-            SliverPadding(
-              padding: EdgeInsets.only(
-                  top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
-            ),
-            SliverSafeArea(
-              sliver: SliverStaggeredGrid.countBuilder(
+          onLoading: onLoadMore,
+          enablePullDown: true,
+          enablePullUp: true,
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              SliverPadding(
+                padding: EdgeInsets.only(
+                    top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
+              ),
+              SliverStaggeredGrid.countBuilder(
                 itemCount: business.ids?.length ?? 0,
                 itemBuilder: childBuilder,
                 crossAxisCount: 6,
@@ -105,8 +103,8 @@ class _RecommendTabViewState extends State<RecommendTabView>
                 mainAxisSpacing: staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
                 staggeredTileBuilder: (int index) => staggeredTile,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: Container(
@@ -119,17 +117,6 @@ class _RecommendTabViewState extends State<RecommendTabView>
 
   @override
   bool get wantKeepAlive => true;
-
-  Widget emptyBuilder() {
-    if (business.isEmpty) {
-      return Empty(
-        type: EmptyTypes.ghost,
-        text: '暂无推荐内容哦',
-      );
-    }
-
-    return null;
-  }
 
   Widget childBuilder(BuildContext context, int index) {
     final id = business.ids.toList()[index];

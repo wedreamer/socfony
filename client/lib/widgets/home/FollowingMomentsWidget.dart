@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
-import 'package:flutter_easyrefresh/delivery_header.dart';
-import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:snsmax/cloudbase/database/businesses/following-moments.dart';
 import 'package:snsmax/models/moment.dart';
 import 'package:snsmax/widgets/docs/MomentDocBuilder.dart';
@@ -20,12 +18,12 @@ class FollowingMomentsWidget extends StatefulWidget {
 class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
     with AutomaticKeepAliveClientMixin<FollowingMomentsWidget> {
   ScrollController scrollController;
-  EasyRefreshController refreshController;
+  RefreshController refreshController;
   FollowingMomentsBusiness business;
 
   @override
   void initState() {
-    refreshController = EasyRefreshController();
+    refreshController = RefreshController(initialRefresh: true);
     scrollController = ScrollController();
     business = FollowingMomentsBusiness();
     business.addListener(setState);
@@ -41,22 +39,20 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
   Future<void> onRefresh() async {
     try {
       await business.refresh();
-      refreshController.finishRefresh(
-        success: true,
-        noMore: business.ids.isEmpty,
-      );
-      refreshController.resetLoadState();
+      refreshController.refreshCompleted(resetFooterState: true);
     } catch (e) {
-      refreshController.finishRefresh(success: false);
+      refreshController.refreshFailed();
     }
   }
 
   Future<void> onLoadMore() async {
     try {
       final length = await business.loadMore();
-      refreshController.finishLoad(success: true, noMore: length <= 0);
+      length > 0
+          ? refreshController.loadComplete()
+          : refreshController.loadNoData();
     } catch (e) {
-      refreshController.finishLoad(success: false);
+      refreshController.loadFailed();
     }
   }
 
@@ -84,36 +80,32 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
 
     return Scaffold(
       body: Scrollbar(
-        isAlwaysShown: false,
         controller: scrollController,
-        child: EasyRefresh.custom(
-          scrollController: scrollController,
+        child: SmartRefresher(
           controller: refreshController,
-          firstRefresh: true,
-          firstRefreshWidget: Center(
-            child: GFLoader(type: GFLoaderType.circle),
-          ),
+          scrollController: scrollController,
           onRefresh: onRefresh,
-          onLoad: onLoadMore,
-          emptyWidget: buildEmpty(),
-          header: DeliveryHeader(),
-          footer: BallPulseFooter(),
-          slivers: [
-            SliverPadding(
-              padding: EdgeInsets.only(
-                  top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
-            ),
-            SliverSafeArea(
-              sliver: SliverStaggeredGrid.countBuilder(
-                itemCount: business.ids?.length ?? 0,
+          onLoading: onLoadMore,
+          enablePullDown: true,
+          enablePullUp: true,
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              SliverPadding(
+                padding: EdgeInsets.only(
+                    top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
+              ),
+              SliverSafeArea(
+                  sliver: SliverStaggeredGrid.countBuilder(
+                itemCount: business.ids?.length ?? 1,
                 itemBuilder: childBuilder,
                 crossAxisCount: 6,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
                 staggeredTileBuilder: (int index) => staggeredTile,
-              ),
-            ),
-          ],
+              )),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Container(
@@ -122,15 +114,6 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  Widget buildEmpty() {
-    return (business.ids?.isEmpty ?? true)
-        ? Empty(
-            type: EmptyTypes.ghost,
-            text: '参与话题和关注其他用户可以获得',
-          )
-        : null;
   }
 
   Widget childBuilder(BuildContext context, int index) {

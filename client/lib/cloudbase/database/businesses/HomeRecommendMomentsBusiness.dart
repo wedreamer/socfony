@@ -5,7 +5,7 @@ class HomeRecommendMomentsBusiness with ChangeNotifier {
   static HomeRecommendMomentsBusiness _instance;
 
   Iterable<String> _ids;
-  Iterable<String> get ids => _ids;
+  Iterable<String> get ids => _ids ?? [];
 
   HomeRecommendMomentsBusiness._();
 
