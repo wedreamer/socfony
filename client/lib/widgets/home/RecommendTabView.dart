@@ -1,64 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
-import 'package:flutter_easyrefresh/delivery_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:snsmax/cloudbase/database/businesses/following-moments.dart';
+import 'package:snsmax/cloudbase/database/businesses/HomeRecommendMomentsBusiness.dart';
 import 'package:snsmax/models/moment.dart';
 import 'package:snsmax/widgets/docs/MomentDocBuilder.dart';
-import 'package:snsmax/widgets/MomentListTile.dart';
+import 'package:snsmax/widgets/empty.dart';
 
-import '../empty.dart';
+import '../MomentListTile.dart';
 import '../scroll-back-top-button.dart';
 
-class FollowingMomentsWidget extends StatefulWidget {
+class RecommendTabView extends StatefulWidget {
   @override
-  _FollowingMomentsWidgetState createState() => _FollowingMomentsWidgetState();
+  _RecommendTabViewState createState() => _RecommendTabViewState();
 }
 
-class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
-    with AutomaticKeepAliveClientMixin<FollowingMomentsWidget> {
+class _RecommendTabViewState extends State<RecommendTabView>
+    with AutomaticKeepAliveClientMixin<RecommendTabView> {
   ScrollController scrollController;
   EasyRefreshController refreshController;
-  FollowingMomentsBusiness business;
-
-  @override
-  void initState() {
-    refreshController = EasyRefreshController();
-    scrollController = ScrollController();
-    business = FollowingMomentsBusiness();
-    business.addListener(setState);
-    super.initState();
-  }
-
-  @override
-  void setState([fn]) {
-    fn = fn ?? () {};
-    mounted ? super.setState(fn) : fn();
-  }
-
-  Future<void> onRefresh() async {
-    try {
-      await business.refresh();
-      refreshController.finishRefresh(
-        success: true,
-        noMore: business.ids.isEmpty,
-      );
-      refreshController.resetLoadState();
-    } catch (e) {
-      refreshController.finishRefresh(success: false);
-    }
-  }
-
-  Future<void> onLoadMore() async {
-    try {
-      final length = await business.loadMore();
-      refreshController.finishLoad(success: true, noMore: length <= 0);
-    } catch (e) {
-      refreshController.finishLoad(success: false);
-    }
-  }
+  HomeRecommendMomentsBusiness business;
 
   bool get isPhone {
     return MediaQuery.of(context).size.shortestSide < 600;
@@ -79,25 +40,57 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
   }
 
   @override
+  void initState() {
+    scrollController = ScrollController();
+    refreshController = EasyRefreshController();
+    business = HomeRecommendMomentsBusiness()..addListener(setState);
+    super.initState();
+  }
+
+  @override
+  void setState([fn]) {
+    fn = fn ?? () {};
+    mounted ? super.setState(fn) : fn();
+  }
+
+  Future<void> onRefresh() async {
+    try {
+      await business.refresh();
+      refreshController.finishRefresh(
+        success: true,
+        noMore: business.isEmpty,
+      );
+    } catch (e) {
+      refreshController.finishRefresh(success: false);
+    }
+  }
+
+  Future<void> onLoadMore() async {
+    try {
+      final length = await business.loadMore();
+      refreshController.finishLoad(success: true, noMore: length <= 0);
+    } catch (e) {
+      refreshController.finishLoad(success: false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
 
     return Scaffold(
       body: Scrollbar(
-        isAlwaysShown: false,
         controller: scrollController,
         child: EasyRefresh.custom(
           scrollController: scrollController,
           controller: refreshController,
+          onRefresh: onRefresh,
+          onLoad: onLoadMore,
+          emptyWidget: emptyBuilder(),
           firstRefresh: true,
           firstRefreshWidget: Center(
             child: GFLoader(type: GFLoaderType.circle),
           ),
-          onRefresh: onRefresh,
-          onLoad: onLoadMore,
-          emptyWidget: buildEmpty(),
-          header: DeliveryHeader(),
-          footer: BallPulseFooter(),
           slivers: [
             SliverPadding(
               padding: EdgeInsets.only(
@@ -124,13 +117,18 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
     );
   }
 
-  Widget buildEmpty() {
-    return (business.ids?.isEmpty ?? true)
-        ? Empty(
-            type: EmptyTypes.ghost,
-            text: '参与话题和关注其他用户可以获得',
-          )
-        : null;
+  @override
+  bool get wantKeepAlive => true;
+
+  Widget emptyBuilder() {
+    if (business.isEmpty) {
+      return Empty(
+        type: EmptyTypes.ghost,
+        text: '暂无推荐内容哦',
+      );
+    }
+
+    return null;
   }
 
   Widget childBuilder(BuildContext context, int index) {
@@ -141,7 +139,4 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
           return MomentListTile(moment);
         });
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

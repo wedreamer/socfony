@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snsmax/pages/publish.dart';
 import 'package:snsmax/widgets/custom-underline-tab-indicator.dart';
+import 'package:snsmax/widgets/home/RecommendTabView.dart';
 
 import 'FollowingMomentsWidget.dart';
 
@@ -66,7 +67,7 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
         controller: controller,
         children: <Widget>[
           FollowingMomentsWidget(),
-          Text('2'),
+          RecommendTabView(),
           Text('1'),
         ],
       ),

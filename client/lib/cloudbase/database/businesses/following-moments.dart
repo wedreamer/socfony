@@ -7,7 +7,7 @@ class FollowingMomentsBusiness with ChangeNotifier {
   static FollowingMomentsBusiness _instance;
 
   Iterable<String> _ids;
-  Iterable<String> get ids => _ids;
+  Iterable<String> get ids => _ids ?? [];
 
   FollowingMomentsBusiness._() {
     AuthProvider().addListener(() {
@@ -28,21 +28,25 @@ class FollowingMomentsBusiness with ChangeNotifier {
     return _instance;
   }
 
-  Future<void> refresh() async {
+  Future<int> refresh() async {
     final command = QueryFollowingMomentCommand();
     _ids = await CloudBase().command(command);
 
     notifyListeners();
+
+    return ids.length;
   }
 
-  Future<void> loadMore() async {
-    final command = QueryFollowingMomentCommand(this.ids.length);
+  Future<int> loadMore() async {
+    final command = QueryFollowingMomentCommand(this.ids?.length ?? 0);
     final ids = await CloudBase().command(command);
 
-    _ids = ids.toList()
+    _ids = this.ids.toList()
       ..addAll(ids)
       ..toSet().toList();
 
     notifyListeners();
+
+    return ids.length;
   }
 }
