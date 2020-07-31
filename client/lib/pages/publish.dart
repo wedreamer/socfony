@@ -8,6 +8,7 @@ import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:getwidget/shape/gf_icon_button_shape.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -17,6 +18,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/pages/audio-recorder.dart';
 import 'package:snsmax/pages/login.dart';
+import 'package:snsmax/provider/auth.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
@@ -60,6 +62,8 @@ class _PublishState extends State<PublishPage> {
   Map<AudioMapKeys, String> audio;
   List<String> votes;
   String text;
+  Position position;
+  bool usingPosition = false;
 
   bool get allowPhoto => video == null && audio == null;
   bool get allowVideo => images.isEmpty && audio == null;
@@ -71,7 +75,14 @@ class _PublishState extends State<PublishPage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    onChangePositionSwitch(true);
     super.initState();
+  }
+
+  @override
+  void setState([VoidCallback fn]) {
+    fn = fn ?? () {};
+    mounted ? super.setState(fn) : fn();
   }
 
   @override
@@ -116,6 +127,17 @@ class _PublishState extends State<PublishPage> {
                     ),
                     onChanged: onTextChanged,
                   ),
+                  GFListTile(
+                    padding: EdgeInsets.zero,
+                    margin: EdgeInsets.symmetric(vertical: 12),
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    title: Text('发布到同城'),
+                    icon: Switch(
+                      value: usingPosition,
+                      onChanged: onChangePositionSwitch,
+                      activeColor: Theme.of(context).primaryColor,
+                    ),
+                  ),
                   buildImagesGridView(),
                   buildVideoGridView(),
                   buildAudioCard(context),
@@ -128,6 +150,40 @@ class _PublishState extends State<PublishPage> {
         ),
       ),
     );
+  }
+
+  onChangePositionSwitch(bool value) {
+    setState(() {
+      usingPosition = value;
+    });
+    if (value && position == null) {
+      Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.low)
+          .then((position) {
+        setState(() {
+          this.position = position;
+          usingPosition = true;
+        });
+        if (position == null) {
+          setState(() {
+            usingPosition = false;
+            this.position = null;
+          });
+          BotToast.showText(text: '获取位置信息失败');
+        }
+      }).catchError((e) {
+        setState(() {
+          usingPosition = false;
+          position = null;
+        });
+        String message = '获取位置失败';
+        if (e.code == 'PERMISSION_DENIED') {
+          message = '需要开启位置权限才能发布到同城';
+        }
+
+        BotToast.showText(text: message);
+      });
+    }
   }
 
   Widget buildVoteWidget() {
@@ -265,13 +321,40 @@ class _PublishState extends State<PublishPage> {
     );
   }
 
+  static Map<String, File> _imageFilesCache = {};
+
+  Future<File> createImageFileFuture(AssetEntity image) async {
+    if (_imageFilesCache.containsKey(image.id)) {
+      return _imageFilesCache[image.id];
+    }
+
+    File file = await image.file;
+    _imageFilesCache.putIfAbsent(image.id, () => file);
+
+    return file;
+  }
+
   Widget buildImagesGridViewItem(BuildContext context, int index) {
     if (images.length < 9 && index == images.length) {
       return buildAddPhotoGridViewItem(context);
     }
     AssetEntity image = images[index];
+    if (_imageFilesCache.containsKey(image.id)) {
+      return GestureDetector(
+        onTap: () => onDeleteImagesItem(image),
+        child: Image.file(
+          _imageFilesCache[image.id],
+          fit: BoxFit.cover,
+          frameBuilder: (_, Widget child, __, ___) => ClipRRect(
+            child: child,
+            borderRadius: BorderRadius.circular(6),
+          ),
+        ),
+      );
+    }
+
     return FutureBuilder<File>(
-      future: image.file,
+      future: createImageFileFuture(image),
       builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container(
@@ -514,19 +597,19 @@ class _PublishState extends State<PublishPage> {
     FocusScope.of(context).unfocus();
     try {
       // 获取视频资源
-      List<AssetEntity> entitys = await AssetPicker.pickAssets(
+      List<AssetEntity> entities = await AssetPicker.pickAssets(
         context,
         themeColor: Theme.of(context).primaryColor,
         requestType: RequestType.video,
         maxAssets: 1,
         filterOptions: videoFilterOptions,
       );
-      if (entitys is! List<AssetEntity> || entitys == null) {
+      if (entities is! List<AssetEntity> || entities == null) {
         return;
       }
 
       CancelFunc cancel = BotToast.showLoading();
-      AssetEntity entity = entitys.last;
+      AssetEntity entity = entities.last;
       File video = await entity.file;
 
       // 获取缩略图文件
@@ -750,6 +833,7 @@ class _PublishState extends State<PublishPage> {
       doc = await uploadVideo(doc);
       doc = await uploadAudio(doc);
       doc = await createVote(doc);
+      doc = await pointSetter(doc);
 
       DbCreateResponse response =
           await CloudBase().database.collection('moments').add(doc);
@@ -766,6 +850,19 @@ class _PublishState extends State<PublishPage> {
       print(e);
       BotToast.showText(text: "发布失败");
     }
+  }
+
+  Future<Map<String, dynamic>> pointSetter(Map<String, dynamic> doc) async {
+    Map<String, dynamic> _doc = doc != null ? doc : {};
+    Map<String, dynamic> value = {};
+
+    if (usingPosition == true && position is Position) {
+      value = {
+        'location': Geo().point(position.longitude, position.latitude),
+      };
+    }
+
+    return {..._doc, ...value};
   }
 
   Future<Map<String, dynamic>> createVote(Map<String, dynamic> doc) async {
@@ -845,12 +942,11 @@ class _PublishState extends State<PublishPage> {
   }
 
   Future<Map<String, dynamic>> senderSetter(Map<String, dynamic> doc) async {
-    CloudBaseResponse result =
-        await CloudBase().callFunction('auth', {"action": "getCurrentUser"});
+    final userId = AuthProvider().user;
     Map<String, dynamic> _doc = doc != null ? doc : {};
     return {
       ..._doc,
-      "userId": result.data['_id'],
+      "userId": userId,
     };
   }
 }
