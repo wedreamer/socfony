@@ -5,7 +5,7 @@ import 'pages/TopicSquare.dart';
 import 'pages/main.dart';
 import 'pages/vote-setter.dart';
 
-const String R_initialRoute = 'CreateTopicPage';
+const String R_initialRoute = 'main';
 
 final Map<String, WidgetBuilder> routes = {
   'main': (BuildContext context) => const MainPage(),

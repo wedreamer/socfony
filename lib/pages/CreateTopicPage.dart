@@ -44,7 +44,7 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('话题'),
+        title: Text('创建话题'),
       ),
       body: ListView(),
     );
