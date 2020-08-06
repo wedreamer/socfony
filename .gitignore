@@ -1,3 +1,13 @@
+/.yarn/*
+!/.yarn/releases
+!/.yarn/plugins
+!/.yarn/sdks
+
+# Swap the comments on the following lines if you don't wish to use zero-installs
+# Documentation here: https://yarnpkg.com/features/zero-installs
+!/.yarn/cache
+#/.pnp.*
+
 node_modules
 **/*/node_modules
 
@@ -5,9 +15,6 @@ custom-login-key.json
 custom-login-key.js
 snsmaxrc.js
 snsmaxrc.json
-
-.yarn
-.pnp.js
 
 # Miscellaneous
 *.class
