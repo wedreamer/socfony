@@ -1,9 +1,16 @@
-# SNS Max
+# snsmax
 
-The repo is SNS Max **Feature**, **Bugs**, TODO work.
+A new Flutter project.
 
-## Next v1.1.2.9
+## Getting Started
 
-- [ ] Block Feed
-- [ ] Block User
-- [ ] refactor Report
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

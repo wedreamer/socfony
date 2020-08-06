@@ -5,9 +5,9 @@
     "cloudbase/functions/*"
   ],
   "devDependencies": {
+    "@rollup/plugin-json": "^4.1.0",
     "@types/node": "^14.0.25",
     "rollup": "^2.23.0",
-    "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-typescript2": "^0.27.1",
     "typescript": "^3.9.7"
   },

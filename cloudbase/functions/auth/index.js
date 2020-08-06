@@ -5,7 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var cloudbase = require('@bytegem/cloudbase');
-var tcb = _interopDefault(require('node_modules/@cloudbase/node-sdk/lib/auth'));
+var tcb = _interopDefault(require('@cloudbase/node-sdk/lib/auth'));
 
 var name = "auth";
 var version = "1.0.0";

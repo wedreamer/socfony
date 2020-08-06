@@ -1,9 +1,9 @@
 import typescript from 'rollup-plugin-typescript2';
-import json from 'rollup-plugin-json';
+import json from '@rollup/plugin-json';
 
 const external = [
     "@bytegem/cloudbase",
-    "node_modules/@cloudbase/node-sdk/lib/auth"
+    "@cloudbase/node-sdk/lib/auth"
 ];
 
 const functionNames = [

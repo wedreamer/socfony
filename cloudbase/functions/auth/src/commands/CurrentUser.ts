@@ -1,5 +1,5 @@
 import { Command, Application, CloudBaseError } from "@bytegem/cloudbase";
-import tcb from "node_modules/@cloudbase/node-sdk/lib/auth";
+import tcb from "@cloudbase/node-sdk/lib/auth";
 
 interface User {
     _id: string;
