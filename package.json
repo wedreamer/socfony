@@ -6,7 +6,8 @@
     "cloudbase/functions/*"
   ],
   "scripts": {
-    "build": "rollup -c"
+    "app:intl": "./intl.sh",
+    "functions:build": "rollup -c"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
