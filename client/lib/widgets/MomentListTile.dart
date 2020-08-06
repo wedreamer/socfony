@@ -14,7 +14,6 @@ import 'package:snsmax/models/moment.dart';
 import 'package:snsmax/models/user.dart' hide UserBuilder;
 import 'package:snsmax/models/vote.dart';
 import 'package:snsmax/pages/login.dart';
-import 'package:snsmax/provider/MomentHasLikedProvider.dart';
 import 'package:snsmax/provider/MomentVoteHasSelectedProvider.dart';
 import 'package:snsmax/provider/cached-network-file.dart';
 import 'package:snsmax/widgets/UserAvatarWidget.dart';
@@ -594,12 +593,14 @@ class MomentVideoCard extends StatelessWidget {
                 child: CachedNetworkImageBuilder(
                   fileId: video.cover,
                   fit: BoxFit.cover,
-                  rule: "imageMogr2/scrop/854x480/cut/854x480/format/yjpeg",
+                  rule:
+                      "imageMogr2/scrop/854x480/cut/854x480/gravity/center/format/yjpeg",
                 ),
               ),
               Positioned.fill(
                 child: UnconstrainedBox(
                   child: FloatingActionButton(
+                    heroTag: video,
                     backgroundColor: Colors.black45,
                     onPressed: () {},
                     child: Icon(
@@ -658,12 +659,12 @@ class MomentImageCard extends StatelessWidget {
   String get rule {
     switch (length) {
       case 1:
-        return "imageMogr2/scrop/854x480/cut/854x480/format/yjpeg";
+        return "imageMogr2/scrop/854x480/cut/854x480/gravity/center/format/yjpeg";
       case 2:
       case 4:
-        return "imageMogr2/scrop/432x288/cut/432x288/format/yjpeg";
+        return "imageMogr2/scrop/432x288/cut/432x288/gravity/center/format/yjpeg";
       default:
-        return "imageMogr2/scrop/360x360/cut/360x360/format/yjpeg";
+        return "imageMogr2/scrop/360x360/cut/360x360/gravity/center/format/yjpeg";
     }
   }
 

@@ -44,6 +44,7 @@ class _ScrollBackTopButtonState extends State<ScrollBackTopButton> {
       backgroundColor: Theme.of(context).primaryColor,
       child: const Icon(Icons.arrow_upward),
       mini: true,
+      heroTag: 'scrollBackTop',
     );
   }
 

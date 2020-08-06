@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:snsmax/cloudbase.dart';
-import 'package:snsmax/models/moment-like-history.dart';
 
 /// 用户集合处理结果 keys 值枚举
 ///

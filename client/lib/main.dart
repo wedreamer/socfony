@@ -1,11 +1,9 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/cloudbase/commands/QueryCurrentUserCommand.dart';
 import 'package:snsmax/l10n/localization.dart';
-import 'package:snsmax/models/user.dart';
 import 'package:snsmax/pages/launch.dart';
 import 'package:snsmax/provider/auth.dart';
 import 'package:snsmax/provider/collections/users.dart';
@@ -112,7 +110,7 @@ class _AppState extends State<App> {
         builder: layout,
         navigatorObservers: [BotToastNavigatorObserver()],
         routes: routes,
-        initialRoute: 'main',
+        initialRoute: R_initialRoute,
       ),
     );
   }

@@ -1,5 +1,3 @@
-import 'dart:math' show Point;
-
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart' show Position;
 import 'package:snsmax/cloudbase.dart';

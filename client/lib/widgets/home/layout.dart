@@ -59,7 +59,9 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
         centerTitle: true,
         actions: actionsBuilder(context),
         leading: FlatButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, 'TopicSquare');
+          },
           child: Text('话题'),
           padding: EdgeInsets.zero,
         ),

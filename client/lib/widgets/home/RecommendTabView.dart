@@ -76,33 +76,30 @@ class _RecommendTabViewState extends State<RecommendTabView>
     super.build(context);
 
     return Scaffold(
-      body: Scrollbar(
-        controller: scrollController,
-        child: SmartRefresher(
-          cacheExtent: 5,
-          controller: refreshController,
-          scrollController: scrollController,
-          onRefresh: onRefresh,
-          onLoading: onLoadMore,
-          enablePullDown: true,
-          enablePullUp: true,
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              SliverPadding(
-                padding: EdgeInsets.only(
-                    top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
-              ),
-              SliverStaggeredGrid.countBuilder(
-                itemCount: business.ids?.length ?? 0,
-                itemBuilder: childBuilder,
-                crossAxisCount: 6,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
-                staggeredTileBuilder: (int index) => staggeredTile,
-              ),
-            ],
-          ),
+      body: SmartRefresher(
+        cacheExtent: 5,
+        controller: refreshController,
+        scrollController: scrollController,
+        onRefresh: onRefresh,
+        onLoading: onLoadMore,
+        enablePullDown: true,
+        enablePullUp: true,
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            SliverPadding(
+              padding: EdgeInsets.only(
+                  top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
+            ),
+            SliverStaggeredGrid.countBuilder(
+              itemCount: business.ids?.length ?? 0,
+              itemBuilder: childBuilder,
+              crossAxisCount: 6,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
+              staggeredTileBuilder: (int index) => staggeredTile,
+            ),
+          ],
         ),
       ),
       floatingActionButton: Container(
