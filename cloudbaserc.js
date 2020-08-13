@@ -1,6 +1,10 @@
-const { runCloudBase } = require("./cloudbase/cli/main.js");
-const app = runCloudBase();
+module.exports = {
+    envId: "snsmax-1e572d",
+    functionRoot: "./cloudbase/functions",
+    functions: [
+        /// Client
+        require('./cloudbase/functions/app-api/.function'),
+    ],
+};
 
-console.log(app['functions']);
-
-module.exports = app;
+console.log(module.exports);

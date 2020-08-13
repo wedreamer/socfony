@@ -13,6 +13,6 @@
         "allowSyntheticDefaultImports": true
     },
     "include": [
-        "cloudbase/functions/*/src"
+        "cloudbase/functions/app-api/src"
     ]
 }

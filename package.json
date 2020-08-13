@@ -2,19 +2,18 @@
   "version": "2.0.0-2",
   "private": true,
   "languageName": "node",
-  "workspaces": [
-    "cloudbase/functions/*"
-  ],
   "scripts": {
     "app:intl": "./intl.sh",
-    "functions:build": "rollup -c"
+    "build:functions": "rollup -c"
   },
   "devDependencies": {
-    "@rollup/plugin-json": "^4.1.0",
+    "@cloudbase/cli": "^0.9.4",
     "@types/node": "^14.0.27",
-    "@yarnpkg/pnpify": "^2.1.0",
-    "rollup": "^2.23.0",
-    "rollup-plugin-typescript2": "^0.27.1",
+    "rollup": "^2.23.1",
+    "rollup-plugin-typescript2": "^0.27.2",
     "typescript": "^3.9.7"
-  }
+  },
+  "workspaces": [
+    "cloudbase/functions/app-api"
+  ]
 }

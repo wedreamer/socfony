@@ -1,0 +1,8 @@
+{
+  "name": "client",
+  "private": true,
+  "main": "index.js",
+  "dependencies": {
+    "@cloudbase/node-sdk": "^2.3.1"
+  }
+}

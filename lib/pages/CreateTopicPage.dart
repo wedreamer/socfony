@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreateTopicController with ChangeNotifier {
   String _name;
@@ -32,21 +33,33 @@ class CreateTopicController with ChangeNotifier {
   }
 }
 
-class CreateTopicPage extends StatefulWidget {
-  @override
-  _CreateTopicPageState createState() => _CreateTopicPageState();
-}
-
-class _CreateTopicPageState extends State<CreateTopicPage> {
+class CreateTopicPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-//    CreateTopicController().name;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text('创建话题'),
       ),
-      body: ListView(),
+      body: ChangeNotifierProvider(
+        create: (_) => CreateTopicController(),
+        child: ListView(
+          children: [
+            Selector<CreateTopicController, String>(
+              builder: (BuildContext context, String value, _) {
+                return GestureDetector(
+                  child: Text(value.toString()),
+                  onTap: () {
+                    context.read<CreateTopicController>().name = '0000';
+                  },
+                );
+              },
+              selector: (_, CreateTopicController controller) =>
+                  controller.name,
+            )
+          ],
+        ),
+      ),
     );
   }
 }

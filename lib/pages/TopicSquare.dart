@@ -121,7 +121,9 @@ class _TopicSquareState extends State<TopicSquare> {
       return SizedBox();
     }
     return FlatButton.icon(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pushNamed(context, 'CreateTopicPage');
+      },
       icon: Icon(Icons.add),
       label: Text('创建'),
       textColor: Theme.of(context).primaryColor,
