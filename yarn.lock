@@ -738,6 +738,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"app-api@workspace:cloudbase/functions/app-api":
+  version: 0.0.0-use.local
+  resolution: "app-api@workspace:cloudbase/functions/app-api"
+  dependencies:
+    "@cloudbase/node-sdk": ^2.3.1
+    async-validator: ^3.4.0
+  languageName: unknown
+  linkType: soft
+
 "aproba@npm:^1.0.3":
   version: 1.2.0
   resolution: "aproba@npm:1.2.0"
@@ -824,6 +833,13 @@ __metadata:
   version: 1.0.0
   resolution: "assert-plus@npm:1.0.0"
   checksum: 1bda24f67343ccb75a7eee31179c92cf9f79bd6f6bc24101b0ce1495ef979376dd9b0f9b9064812bba564cdade5fbf851ed76b4a44b5e141d49cdaee6ffed6b2
+  languageName: node
+  linkType: hard
+
+"async-validator@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "async-validator@npm:3.4.0"
+  checksum: 1786557ba1079561dff375dcf21ea2ce959f68a601b0008f781af496f3e2b990b2999efc57efac64337a289ea64c81c4fa7e549388c1a3aa5486377165ab90e7
   languageName: node
   linkType: hard
 
@@ -1240,14 +1256,6 @@ __metadata:
   checksum: 6e5bc71774e202bfd3782d0be56eacee9462bfc7dc4a601dad10636163ab9c8abe625e760b0f28e590f9044bc23df3927ee3406f8c961fd2e4a51ef3f67fab2f
   languageName: node
   linkType: hard
-
-"client@workspace:cloudbase/functions/app-api":
-  version: 0.0.0-use.local
-  resolution: "client@workspace:cloudbase/functions/app-api"
-  dependencies:
-    "@cloudbase/node-sdk": ^2.3.1
-  languageName: unknown
-  linkType: soft
 
 "cliui@npm:^6.0.0":
   version: 6.0.0

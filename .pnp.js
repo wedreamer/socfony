@@ -23,14 +23,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:."
       },
       {
-        "name": "client",
+        "name": "app-api",
         "reference": "workspace:cloudbase/functions/app-api"
       }
     ],
     "enableTopLevelFallback": true,
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)|$))$)",
     "fallbackExclusionList": [
-      ["client", ["workspace:cloudbase/functions/app-api"]],
+      ["app-api", ["workspace:cloudbase/functions/app-api"]],
       ["root-workspace-0b6124", ["workspace:."]]
     ],
     "fallbackPool": [
@@ -885,6 +885,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["app-api", [
+        ["workspace:cloudbase/functions/app-api", {
+          "packageLocation": "./cloudbase/functions/app-api/",
+          "packageDependencies": [
+            ["app-api", "workspace:cloudbase/functions/app-api"],
+            ["@cloudbase/node-sdk", "npm:2.3.1"],
+            ["async-validator", "npm:3.4.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["aproba", [
         ["npm:1.2.0", {
           "packageLocation": "./.yarn/cache/aproba-npm-1.2.0-34129f0778-d4bac3e640.zip/node_modules/aproba/",
@@ -1007,6 +1018,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/async-npm-3.2.0-b6fd825ddc-5c7913c084.zip/node_modules/async/",
           "packageDependencies": [
             ["async", "npm:3.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["async-validator", [
+        ["npm:3.4.0", {
+          "packageLocation": "./.yarn/cache/async-validator-npm-3.4.0-26cec06bcd-1786557ba1.zip/node_modules/async-validator/",
+          "packageDependencies": [
+            ["async-validator", "npm:3.4.0"]
           ],
           "linkType": "HARD",
         }]
@@ -1454,16 +1474,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cli-width", "npm:3.0.0"]
           ],
           "linkType": "HARD",
-        }]
-      ]],
-      ["client", [
-        ["workspace:cloudbase/functions/app-api", {
-          "packageLocation": "./cloudbase/functions/app-api/",
-          "packageDependencies": [
-            ["client", "workspace:cloudbase/functions/app-api"],
-            ["@cloudbase/node-sdk", "npm:2.3.1"]
-          ],
-          "linkType": "SOFT",
         }]
       ]],
       ["cliui", [

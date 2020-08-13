@@ -1,9 +1,0 @@
-{
-  "name": "moments",
-  "version": "1.0.0",
-  "main": "index.mjs",
-  "private": true,
-  "dependencies": {
-    "@cloudbase/node-sdk": "^2.3.1"
-  }
-}

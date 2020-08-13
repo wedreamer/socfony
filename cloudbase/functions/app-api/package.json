@@ -1,8 +1,9 @@
 {
-  "name": "client",
+  "name": "app-api",
   "private": true,
   "main": "index.js",
   "dependencies": {
-    "@cloudbase/node-sdk": "^2.3.1"
+    "@cloudbase/node-sdk": "^2.3.1",
+    "async-validator": "^3.4.0"
   }
 }

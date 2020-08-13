@@ -1,8 +1,8 @@
-import { Command, Application } from "@bytegem/cloudbase";
+import { App } from "../../app";
 
-export class RecommendMoments extends Command {
-    async handle(app: Application, offset: number = 0) {
-        const database = app.cloudbase.database();
+export default async function(app: App) {
+    const database = app.server.database();
+        const { limit = 20, offset = 0 } = app.event.data;
         const command = database.command;
         const aggregate = command.aggregate;
 
@@ -53,9 +53,9 @@ export class RecommendMoments extends Command {
                 total: -1,
                 createdAt: -1,
             })
+            .limit(limit)
             .skip(offset)
             .end();
 
         return (result.data as Array<any>).map(e => e._id);
-    }
 }

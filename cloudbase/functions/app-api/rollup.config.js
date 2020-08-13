@@ -5,7 +5,8 @@ const _p = path.resolve(__dirname, 'cloudbase/functions/app-api');
 
 const resolve = (...args) => path.resolve(_p, ...args);
 
-console.error(_p);
+const pkg = require(resolve('package.json'));
+
 
 export default {
     input: resolve('src/main.ts'),
@@ -18,5 +19,5 @@ export default {
             tsconfig: 'tsconfig.json',
         })
     ],
-    external: ['@cloudbase/node-sdk'],
+    external: Object.keys(pkg.dependencies),
 };
