@@ -81,10 +81,10 @@ class _AppState extends State<App> {
       print(e);
     }
 
-    QueryCurrentUserCommand.run().then((value) {
-      AuthProvider().user = value.id;
-      UsersCollection().originInsertOrUpdate([value]);
-    });
+//    QueryCurrentUserCommand.run().then((value) {
+//      AuthProvider().user = value.id;
+//      UsersCollection().originInsertOrUpdate([value]);
+//    });
   }
 
   /// Build the widget
