@@ -23,6 +23,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:."
       },
       {
+        "name": "database",
+        "reference": "workspace:cloudbase/database"
+      },
+      {
         "name": "app-api",
         "reference": "workspace:cloudbase/functions/app-api"
       }
@@ -31,7 +35,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)|$))$)",
     "fallbackExclusionList": [
       ["@bytegem/snsmax", ["workspace:."]],
-      ["app-api", ["workspace:cloudbase/functions/app-api"]]
+      ["app-api", ["workspace:cloudbase/functions/app-api"]],
+      ["database", ["workspace:cloudbase/database"]]
     ],
     "fallbackPool": [
       [
@@ -41,6 +46,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/node",
         "npm:14.0.27"
+      ],
+      [
+        "app-api",
+        "workspace:cloudbase/functions/app-api"
+      ],
+      [
+        "database",
+        "workspace:cloudbase/database"
       ],
       [
         "typescript",
@@ -56,6 +69,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@cloudbase/cli", "npm:0.9.4"],
             ["@types/node", "npm:14.0.27"],
+            ["app-api", "workspace:cloudbase/functions/app-api"],
+            ["database", "workspace:cloudbase/database"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"]
           ],
           "linkType": "SOFT",
@@ -99,6 +114,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@bytegem/snsmax", "workspace:."],
             ["@cloudbase/cli", "npm:0.9.4"],
             ["@types/node", "npm:14.0.27"],
+            ["app-api", "workspace:cloudbase/functions/app-api"],
+            ["database", "workspace:cloudbase/database"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"]
           ],
           "linkType": "SOFT",
@@ -1807,6 +1824,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["assert-plus", "npm:1.0.0"]
           ],
           "linkType": "HARD",
+        }]
+      ]],
+      ["database", [
+        ["workspace:cloudbase/database", {
+          "packageLocation": "./cloudbase/database/",
+          "packageDependencies": [
+            ["database", "workspace:cloudbase/database"]
+          ],
+          "linkType": "SOFT",
         }]
       ]],
       ["debug", [

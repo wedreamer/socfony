@@ -3,7 +3,7 @@ const cli = {
     functionRoot: "./cloudbase/functions",
     functions: [
         /// Client
-        require('./cloudbase/functions/app-api/.function'),
+        require('app-api/.function'),
     ],
 };
 
@@ -19,7 +19,7 @@ const framework = {
         },
         database: {
             use: '@cloudbase/framework-plugin-database',
-            inputs: require('./cloudbase/database'),
+            inputs: require('database'),
         }
     },
 };

@@ -38,6 +38,8 @@ __metadata:
   dependencies:
     "@cloudbase/cli": ^0.9.4
     "@types/node": ^14.0.27
+    app-api: "workspace:cloudbase/functions/app-api"
+    database: "workspace:cloudbase/database"
     typescript: ^3.9.7
   languageName: unknown
   linkType: soft
@@ -1564,6 +1566,12 @@ __metadata:
   checksum: 5959409ee42dc4bdbf3fa384b801ece580ca336658bb0342ffab0099b3fc6bf9b3e239e1b82dcc4fcaeee315353e08f2eae47b0928a6a579391598c44958afa1
   languageName: node
   linkType: hard
+
+"database@workspace:cloudbase/database":
+  version: 0.0.0-use.local
+  resolution: "database@workspace:cloudbase/database"
+  languageName: unknown
+  linkType: soft
 
 "debug@npm:4":
   version: 4.2.0

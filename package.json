@@ -1,21 +1,25 @@
 {
   "name": "@bytegem/snsmax",
-  "version": "2.0.0-2",
+  "version": "2.0.0-3",
   "private": true,
   "languageName": "node",
   "scripts": {
     "app:intl": "./intl.sh",
     "build:app-models": "flutter pub run build_runner",
-    "build:functions": "yarn workspaces foreach run build",
+    "build:functions": "yarn workspaces foreach --exclude database run build",
+    "build:version": "yarn workspaces foreach version ${0}-${1} && node scripts/change-flutter-app-version.js $0 $1",
     "deploy:functions": "yarn build:functions && cloudbase functions:deploy",
     "deploy:cloudbase": "yarn build:functions && cloudbase framework:deploy"
   },
   "devDependencies": {
     "@cloudbase/cli": "^0.9.4",
     "@types/node": "^14.0.27",
+    "app-api": "workspace:cloudbase/functions/app-api",
+    "database": "workspace:cloudbase/database",
     "typescript": "^3.9.7"
   },
   "workspaces": [
-    "cloudbase/functions/app-api"
+    "cloudbase/database",
+    "cloudbase/functions/*"
   ]
 }
