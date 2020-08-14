@@ -10,7 +10,6 @@ class SmsLoginCommand extends SmsBaseCommand<String> {
 
   @override
   String deserializer(data, CloudBaseResponse response) {
-    print(data);
     if (data['code'] == 'LOGIN_SUCCESS') {
       return data['res'];
     }

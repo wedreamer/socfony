@@ -1,0 +1,39 @@
+{
+    "$schema": "../schema.json",
+    "collectionName": "moments",
+    "description": "动态数据集合",
+    "aclTag": "ADMINWRITE",
+    "createIndexes": [
+        {
+            "name": "user_id_index",
+            "keys": [
+                {
+                    "name": "userId",
+                    "direction": "1"
+                }
+            ],
+            "unique": false
+        },
+        {
+            "name": "location_index",
+            "keys": [
+                {
+                    "name": "location",
+                    "direction": "2dsphere"
+                }
+            ],
+            "unique": false
+        },
+        {
+            "name": "create_at_index",
+            "keys": [
+                {
+                    "name": "createdAt",
+                    "direction": "1"
+                }
+            ],
+            "unique": false
+        }
+    ],
+    "dropIndexes": []
+}
