@@ -16,7 +16,6 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(TopicCategory.serializer)
       ..add(User.serializer)
       ..add(UserGender.serializer)
-      ..add(UserPrivate.serializer)
       ..add(Vote.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),

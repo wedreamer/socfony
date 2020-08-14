@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+import 'AppAuthProvider.dart';
 import 'MomentHasLikedProvider.dart';
 import 'MomentVoteHasSelectedProvider.dart';
-import 'auth.dart';
 import 'cached-network-file.dart';
 import 'collections/moments.dart';
 import 'collections/users.dart';
@@ -17,7 +17,7 @@ class RootProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AppAuthProvider()),
         ChangeNotifierProvider(create: (_) => MomentsCollection()),
         ChangeNotifierProvider(create: (_) => UsersCollection()),
         ChangeNotifierProvider(create: (_) => CachedNetworkFileProvider()),

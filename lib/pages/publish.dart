@@ -13,9 +13,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:snsmax/cloudbase.dart';
+import 'package:snsmax/cloudbase/commands/moment/CreateMomentCommand.dart';
 import 'package:snsmax/pages/audio-recorder.dart';
 import 'package:snsmax/pages/login.dart';
-import 'package:snsmax/provider/auth.dart';
+import 'package:snsmax/utils/number-extension.dart';
+import 'package:snsmax/widgets/ToastLoadingWidget.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
@@ -450,17 +452,17 @@ class _PublishState extends State<PublishPage> {
       elevation: 0,
       automaticallyImplyLeading: true,
       actions: <Widget>[
-        UnconstrainedBox(
-          child: GFButton(
-            onPressed: allowPost ? onPostMoment : null,
-            shape: GFButtonShape.pills,
-            text: '发布',
-            color: Theme.of(context).primaryColor,
-            size: GFSize.SMALL,
+        Padding(
+          padding: EdgeInsets.only(right: 12.0),
+          child: UnconstrainedBox(
+            child: FlatButton(
+              onPressed: allowPost ? onPostMoment : null,
+              child: Text('发布'),
+              color: Theme.of(context).primaryColor,
+              colorBrightness: Brightness.dark,
+              shape: StadiumBorder(),
+            ),
           ),
-        ),
-        SizedBox(
-          width: 12,
         ),
       ],
     );
@@ -801,7 +803,8 @@ class _PublishState extends State<PublishPage> {
     });
   }
 
-  Future<String> uploadFile(File file) async {
+  Future<String> uploadFile(File file,
+      [void onProcess(int count, int total)]) async {
     convert.Digest digest = convert.md5.convert(file.readAsBytesSync());
     String ext = "." + file.path.toLowerCase().split('.').last;
     String cloudPath = DateFormat("yyyy/MM/dd/").format(DateTime.now()) +
@@ -811,6 +814,7 @@ class _PublishState extends State<PublishPage> {
         await CloudBase().storage.uploadFile(
               cloudPath: cloudPath,
               filePath: file.path,
+              onProcess: onProcess,
             );
 
     return result.data.fileId;
@@ -818,132 +822,106 @@ class _PublishState extends State<PublishPage> {
 
   onPostMoment() async {
     FocusScope.of(context).unfocus();
-    CancelFunc cancel = BotToast.showLoading();
+
+    ToastLoadingController loading = ToastLoadingController();
+    CancelFunc cancelFunc = ToastLoadingWidget.show(loading);
+
     try {
-      Map<String, dynamic> doc = {
-        "createdAt": ServerDate(),
-        "updatedAt": ServerDate(),
-      };
-      doc = await senderSetter(doc);
-      doc = await textSetter(doc);
-      doc = await uploadImages(doc);
-      doc = await uploadVideo(doc);
-      doc = await uploadAudio(doc);
-      doc = await createVote(doc);
-      doc = await pointSetter(doc);
+      CreateMomentCommandController controller = CreateMomentCommandController(
+        text: text,
+        images: await uploadImages(loading),
+        video: await uploadVideo(loading),
+        audio: await uploadAudio(loading),
+        vote: votes,
+        location: position,
+      );
 
-      DbCreateResponse response =
-          await CloudBase().database.collection('moments').add(doc);
-      if (response.code == null && response.id is String) {
-        Navigator.of(context).pop();
-        cancel();
-        BotToast.showText(text: "发布成功");
-        return;
-      }
+      loading.text = '正在发布...';
+      loading.progress = null;
 
-      throw FormatException("发布失败");
+      await CreateMomentCommand(controller).run();
+
+      cancelFunc();
+
+      Navigator.of(context).pop();
+
+      BotToast.showText(text: '发布成功');
+    } on UnimplementedError catch (e) {
+      cancelFunc();
+      BotToast.showText(text: e.message);
     } catch (e) {
-      cancel();
-      print(e);
-      BotToast.showText(text: "发布失败");
+      cancelFunc();
+      BotToast.showText(text: e.message ?? '发布失败');
     }
   }
 
-  Future<Map<String, dynamic>> pointSetter(Map<String, dynamic> doc) async {
-    Map<String, dynamic> _doc = doc != null ? doc : {};
-    Map<String, dynamic> value = {};
-
-    if (usingPosition == true && position is Position) {
-      value = {
-        'location': Geo().point(position.longitude, position.latitude),
-      };
-    }
-
-    return {..._doc, ...value};
-  }
-
-  Future<Map<String, dynamic>> createVote(Map<String, dynamic> doc) async {
-    if (votes is! List<String> || votes.isEmpty) {
-      return doc;
-    }
-    Map<String, dynamic> _doc = doc != null ? doc : {};
-
-    return {
-      ..._doc,
-      "vote": votes
-          .map((e) => {
-                "name": e,
-              })
-          .toList(),
-    };
-  }
-
-  Future<Map<String, dynamic>> uploadAudio(Map<String, dynamic> doc) async {
+  Future<CreateMomentCommandAudioItemController> uploadAudio(
+      ToastLoadingController controller) async {
     if (audio == null || !audio.containsKey(AudioMapKeys.src)) {
-      return doc;
+      return null;
     }
-    Map<String, dynamic> _doc = doc != null ? doc : {};
-    Map<String, String> _audio = {
-      "src": await uploadFile(File(audio[AudioMapKeys.src])),
-    };
 
+    String cover;
     if (audio.containsKey(AudioMapKeys.cover)) {
-      _audio = {
-        ..._audio,
-        "cover": await uploadFile(File(audio[AudioMapKeys.cover])),
-      };
+      cover = await uploadFile(File(audio[AudioMapKeys.cover]),
+          (int count, int total) {
+        controller.progress = count / total;
+        controller.text =
+            '正在上传音频封面...\n${controller.progress.format('##.0#%')}';
+      });
     }
 
-    return {..._doc, "audio": _audio};
+    return CreateMomentCommandAudioItemController(
+      await uploadFile(File(audio[AudioMapKeys.src]), (int count, int total) {
+        controller.progress = count / total;
+        controller.text = '正在上传音频...\n${controller.progress.format('##.0#%')}';
+      }),
+      cover,
+    );
   }
 
-  Future<Map<String, dynamic>> uploadVideo(Map<String, dynamic> doc) async {
+  Future<CreateMomentCommandVideoItemController> uploadVideo(
+      ToastLoadingController controller) async {
     if (video == null ||
         !video.containsKey(VideoMapKeys.cover) ||
         !video.containsKey(VideoMapKeys.src)) {
-      return doc;
+      return null;
     }
-    Map<String, dynamic> _doc = doc != null ? doc : {};
-    Map<String, String> _video = {
-      "cover": await uploadFile(File(video[VideoMapKeys.cover])),
-      "src": await uploadFile(File(video[VideoMapKeys.src])),
-    };
 
-    return {..._doc, "video": _video};
+    controller.text = '正在上传视频...';
+
+    return CreateMomentCommandVideoItemController(
+      await uploadFile(File(video[VideoMapKeys.cover]), (int count, int total) {
+        controller.progress = count / total / 2;
+        controller.text = '正在上传视频...\n${controller.progress.format('##.0#%')}';
+      }),
+      await uploadFile(File(video[VideoMapKeys.src]), (int count, int total) {
+        double progress = count / total;
+        if (progress < 0.5) {
+          progress += 0.5;
+        }
+        controller.progress = progress;
+        controller.text = '正在上传视频...\n${progress.format('##.0#%')}';
+      }),
+    );
   }
 
-  Future<Map<String, dynamic>> uploadImages(Map<String, dynamic> doc) async {
-    if (images is! List<AssetEntity> || images.isEmpty) {
-      return doc;
-    }
-    Map<String, dynamic> _doc = doc != null ? doc : {};
+  Future<Iterable<String>> uploadImages(
+      ToastLoadingController controller) async {
     List<String> paths = [];
     for (AssetEntity image in images) {
+      controller.text = "正在上传图片...\n正在处理第${images.indexOf(image) + 1}张图片...";
+      controller.progress = null;
       File file = await image.file;
-      String fileId = await uploadFile(file);
+      String fileId = await uploadFile(file, (int count, int total) {
+        controller.progress = count / total;
+        String progress = controller.progress.format('##.0#%');
+        controller.text =
+            "正在上传图片...\n正在上传第${images.indexOf(image) + 1}张图片\n$progress";
+      });
       paths.add(fileId);
     }
 
-    return {
-      ..._doc,
-      "images": paths,
-    };
-  }
-
-  Future<Map<String, dynamic>> textSetter(Map<String, dynamic> doc) async {
-    Map<String, dynamic> _doc = doc != null ? doc : {};
-    return {
-      ..._doc,
-      "text": text.trim(),
-    };
-  }
-
-  Future<Map<String, dynamic>> senderSetter(Map<String, dynamic> doc) async {
-    final userId = AuthProvider().user;
-    Map<String, dynamic> _doc = doc != null ? doc : {};
-    return {
-      ..._doc,
-      "userId": userId,
-    };
+    return paths;
   }
 }

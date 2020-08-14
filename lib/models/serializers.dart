@@ -48,7 +48,6 @@ class DateTimeSerializer extends Iso8601DateTimeSerializer {
   MomentVoteUserSelected,
   TopicCategory,
   User,
-  UserPrivate,
   UserGender,
   Vote,
 ])

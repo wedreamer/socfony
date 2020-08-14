@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:snsmax/cloudbase/commands/sms/SendPhoneCode.dart';
+import 'package:snsmax/cloudbase/commands/sms/SmsLoginCommand.dart';
+import 'package:snsmax/cloudbase/commands/sms/SmsSendPhoneCodeCommand.dart';
+import 'package:snsmax/provider/AppAuthProvider.dart';
 
 import '../cloudbase.dart' hide RegExp;
 
@@ -100,6 +102,7 @@ class LoginPage extends StatelessWidget {
               _LoginPageLogo(),
               _LoginAccount(),
               _LoginPhoneCode(),
+              _LoginButton(),
             ],
           ),
         ),
@@ -111,6 +114,55 @@ class LoginPage extends StatelessWidget {
   VoidCallback _createFocusUnHandler(BuildContext context) {
     return () {
       FocusScope.of(context).unfocus();
+    };
+  }
+}
+
+class _LoginButton extends StatelessWidget {
+  const _LoginButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.0).copyWith(top: 36.0),
+      child: FlatButton(
+        onPressed: _createLoginHandler(context),
+        child: Text('登录'),
+        shape: StadiumBorder(),
+        color: Theme.of(context).primaryColor,
+        colorBrightness: Brightness.dark,
+        padding: EdgeInsets.symmetric(vertical: 12.0),
+      ),
+    );
+  }
+
+  VoidCallback _createLoginHandler(BuildContext context) {
+    return () async {
+      LoginController controller = context.read<LoginController>();
+      CancelFunc cancel = BotToast.showLoading();
+      try {
+        // create login ticket.
+        String ticket =
+            await SmsLoginCommand(controller.phone, controller.code).run();
+
+        // using ticket login.
+        await CloudBase().auth.signInWithTicket(ticket);
+
+        // fetch state and user.
+        await context.read<AppAuthProvider>().fetch();
+
+        cancel();
+        Navigator.of(context).pop(true);
+        BotToast.showText(text: '登录成功');
+      } on UnimplementedError catch (e) {
+        cancel();
+        BotToast.showText(text: e.message);
+      } catch (e) {
+        cancel();
+        BotToast.showText(text: '登录失败');
+      }
     };
   }
 }
@@ -181,10 +233,11 @@ class _LoginPhoneCodeActionButton extends StatelessWidget {
     return () {
       LoginController controller = context.read<LoginController>();
       controller.showSending = true;
-      SendPhoneCode(controller.phone).run().then((message) {
+      SmsSendPhoneCodeCommand(controller.phone).run().then((_) {
         BotToast.showText(text: '验证码发送成功');
         controller.showTimer = true;
       }).catchError((error) {
+        print(error);
         String message = '发送验证码失败';
         if (error is UnimplementedError) {
           message = error.message;

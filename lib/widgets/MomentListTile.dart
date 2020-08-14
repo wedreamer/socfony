@@ -5,8 +5,8 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:provider/provider.dart';
-import 'package:snsmax/cloudbase/commands/MomentVoteSelectCommand.dart';
-import 'package:snsmax/cloudbase/commands/moment-like-toggle-command.dart';
+import 'package:snsmax/cloudbase/commands/moment/TapMomentVoteItemCommand.dart';
+import 'package:snsmax/cloudbase/commands/moment/ToggleLikeMomentCommand.dart';
 import 'package:snsmax/models/MomentVoteUserSelected.dart';
 import 'package:snsmax/models/media.dart';
 import 'package:snsmax/models/moment-like-history.dart';
@@ -16,6 +16,7 @@ import 'package:snsmax/models/vote.dart';
 import 'package:snsmax/pages/login.dart';
 import 'package:snsmax/provider/MomentVoteHasSelectedProvider.dart';
 import 'package:snsmax/provider/cached-network-file.dart';
+import 'package:snsmax/widgets/ToastLoadingWidget.dart';
 import 'package:snsmax/widgets/UserAvatarWidget.dart';
 import 'package:snsmax/widgets/docs/MomentVoteUserSelectedDocBuilder.dart';
 
@@ -54,8 +55,8 @@ class MomentListTile extends StatelessWidget {
                     radius: 24,
                     fileId: user.avatar,
                   ),
-                  title:
-                      Text(user.nickName ?? "用户" + user.id.hashCode.toString()),
+                  title: Text(
+                      user.nickName ?? "用户" + user.uid.hashCode.toString()),
                   subtitle: Text(moment.createdAt.formNow),
                   trailing: Icon(Icons.more_vert),
                 );
@@ -113,15 +114,27 @@ class _MomentCardToolBar extends StatelessWidget {
       children: <Widget>[
         FlatButton.icon(
           onPressed: () {},
-          icon: Icon(Icons.share),
-          label: Text('分享'),
+          icon: Icon(
+            Icons.share,
+            size: 18.0,
+          ),
+          label: Text(
+            '分享',
+            style: TextStyle(fontWeight: FontWeight.normal),
+          ),
         ),
         FlatButton.icon(
           onPressed: () {},
-          icon: Icon(Icons.forum),
-          label: Text((moment.count?.comment ?? 0) > 0
-              ? moment.count.comment.compact
-              : '评论'),
+          icon: Icon(
+            Icons.forum,
+            size: 18.0,
+          ),
+          label: Text(
+            (moment.count?.comment ?? 0) > 0
+                ? moment.count.comment.compact
+                : '评论',
+            style: TextStyle(fontWeight: FontWeight.normal),
+          ),
         ),
         buildLikeButton(context),
       ],
@@ -129,12 +142,19 @@ class _MomentCardToolBar extends StatelessWidget {
   }
 
   Widget buildLikeButton(BuildContext context) {
-    Widget childBuinder(hasLiked) {
+    Widget childBuilder(hasLiked) {
       return FlatButton.icon(
         onPressed: () => onLikeToggle(context),
-        icon: Icon(hasLiked == true ? Icons.favorite : Icons.favorite_border),
+        icon: Icon(
+          hasLiked == true ? Icons.favorite : Icons.favorite_border,
+          size: 18.0,
+        ),
         label: Text(
-            (moment.count?.like ?? 0) > 0 ? moment.count.like.compact : '喜欢'),
+          (moment.count?.like ?? 0) > 0 ? moment.count.like.compact : '喜欢',
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+          ),
+        ),
         textColor: hasLiked == true ? Colors.red : null,
       );
     }
@@ -142,9 +162,9 @@ class _MomentCardToolBar extends StatelessWidget {
     return MomentLikedHistoryDocBuilder(
       id: moment.id,
       builder: (BuildContext context, MomentLikeHistory history) =>
-          childBuinder(history != null),
-      loadingBuilder: (_) => childBuinder(false),
-      errorBuilder: (_, __) => childBuinder(false),
+          childBuilder(history != null),
+      loadingBuilder: (_) => childBuilder(false),
+      errorBuilder: (_, __) => childBuilder(false),
     );
   }
 
@@ -153,8 +173,14 @@ class _MomentCardToolBar extends StatelessWidget {
     if (!hasLogin) {
       return BotToast.showText(text: '请先登录');
     }
-    final command = MomentLikeToggleCommand(moment.id);
-    CloudBase().command(command);
+    CancelFunc cancel = ToastLoadingWidget.show();
+    try {
+      await ToggleLikeMomentCommand(moment.id).run();
+    } catch (e) {
+      BotToast.showText(text: e.message ?? '操作失败');
+    } finally {
+      cancel();
+    }
   }
 }
 
@@ -272,11 +298,11 @@ class MomentVoteCard extends StatelessWidget {
     if (context.read<MomentVoteHasSelectedProvider>().containsKey(moment.id)) {
       return;
     }
-    CancelFunc cancel = BotToast.showLoading();
-    final command = MomentVoteSelectCommand(moment.id, text);
-    CloudBase().command(command).catchError((e) {
-      BotToast.showText(text: '操作失败');
-    }).whenComplete(() => cancel());
+    CancelFunc cancel = ToastLoadingWidget.show();
+
+    TapMomentVoteItemCommand(moment.id, text).run().catchError((e) {
+      BotToast.showText(text: e.message ?? '操作失败');
+    }).whenComplete(cancel);
   }
 }
 

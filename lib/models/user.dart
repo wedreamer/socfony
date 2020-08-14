@@ -6,12 +6,6 @@ import 'package:snsmax/models/serializers.dart';
 part 'user.g.dart';
 
 abstract class User implements Built<User, UserBuilder> {
-  @BuiltValueField(wireName: "_id")
-  String get id;
-
-  @nullable
-  String get private;
-
   @nullable
   @BuiltValueField(serialize: false)
   DateTime get createdAt;
@@ -26,6 +20,7 @@ abstract class User implements Built<User, UserBuilder> {
   UserGender get gender;
 
   @nullable
+  @BuiltValueField(wireName: 'avatarUrl')
   String get avatar;
 
   User._();
@@ -40,32 +35,6 @@ abstract class User implements Built<User, UserBuilder> {
   }
 
   static Serializer<User> get serializer => _$userSerializer;
-}
-
-@BuiltValue(defaultCompare: false)
-abstract class UserPrivate implements Built<UserPrivate, UserPrivateBuilder> {
-  @BuiltValueField(wireName: "_id", compare: true)
-  String get id;
-
-  @nullable
-  String get phone;
-
-  @nullable
-  String get userId;
-
-  UserPrivate._();
-  factory UserPrivate([void Function(UserPrivateBuilder) updates]) =
-      _$UserPrivate;
-
-  Map<String, dynamic> toJson() {
-    return serializers.serializeWith(UserPrivate.serializer, this);
-  }
-
-  static UserPrivate fromJson(Map<String, dynamic> json) {
-    return serializers.deserializeWith(UserPrivate.serializer, json);
-  }
-
-  static Serializer<UserPrivate> get serializer => _$userPrivateSerializer;
 }
 
 class UserGender extends EnumClass {

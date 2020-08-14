@@ -1,12 +1,9 @@
 import path from 'path';
 import typescript from 'rollup-plugin-typescript2';
 
-const _p = path.resolve(__dirname, 'cloudbase/functions/app-api');
-
-const resolve = (...args) => path.resolve(_p, ...args);
+const resolve = (...args) => path.resolve(__dirname, ...args);
 
 const pkg = require(resolve('package.json'));
-
 
 export default {
     input: resolve('src/main.ts'),
@@ -16,7 +13,7 @@ export default {
     },
     plugins: [
         typescript({
-            tsconfig: 'tsconfig.json',
+            tsconfig: resolve('tsconfig.json'),
         })
     ],
     external: Object.keys(pkg.dependencies),

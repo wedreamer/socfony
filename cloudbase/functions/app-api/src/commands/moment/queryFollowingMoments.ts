@@ -1,13 +1,24 @@
 import { App } from "../../app";
 import queryCurrentUser from "../user/queryCurrentUser";
+import Schema, { Rules, ValidateError } from "async-validator";
 
-export default async (app: App) => {
+const descriptor: Rules = {
+    limit: {
+        type: 'number'
+    },
+    offset: { type: 'number' },
+};
+const validator = new Schema(descriptor);
+
+async function handler(app: App) {
+    await validator.validate(app.event.data);
+
     const { uid } = await queryCurrentUser(app);
     const db = app.server.database();
     const _ = db.command;
     const { limit = 20, offset = 0 } = app.event.data || {};
 
-    return db.collection('moments')
+    const result = await db.collection('moments')
         .aggregate()
         .lookup({
             from: "user-follow",
@@ -68,4 +79,19 @@ export default async (app: App) => {
         .sort({ 'createdAt': -1 })
         .skip(offset)
         .end();
+    
+    return (result.data as Array<any>).map(e => e.id);
+}
+
+export default function(app: App) {
+    return new Promise<any>((resolve, reject) => {
+        validator.validate(app.event.data, { first: true }, errors => {
+            if (errors) {
+                const error = errors.pop() as ValidateError;
+                return reject(new Error(error.message));
+            }
+
+            return handler(app).then(resolve).catch(reject);
+        });
+    });
 }

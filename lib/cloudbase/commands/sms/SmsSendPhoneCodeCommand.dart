@@ -1,8 +1,8 @@
 import '../../../cloudbase.dart';
 import 'SmsBaseCommand.dart';
 
-class SendPhoneCode extends SmsBaseCommand<String> {
-  SendPhoneCode(String phone) : super({'phone': phone});
+class SmsSendPhoneCodeCommand extends SmsBaseCommand<String> {
+  SmsSendPhoneCodeCommand(String phone) : super({'phone': phone});
 
   @override
   String get commandName => 'send';

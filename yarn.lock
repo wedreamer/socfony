@@ -32,6 +32,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@bytegem/snsmax@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@bytegem/snsmax@workspace:."
+  dependencies:
+    "@cloudbase/cli": ^0.9.4
+    "@types/node": ^14.0.27
+    typescript: ^3.9.7
+  languageName: unknown
+  linkType: soft
+
 "@cloudbase/cli@npm:^0.9.4":
   version: 0.9.4
   resolution: "@cloudbase/cli@npm:0.9.4"
@@ -156,6 +166,24 @@ __metadata:
     query-string: ^6.8.3
     walkdir: ^0.4.1
   checksum: eac8bbda803d5232df697f8bc04c080f121d849e26a132e1f81c1e2460f65ea556063d5fd45a605e7729b53c7fc296b21c0e04d29cc4b7a358ae4743f1c7d4de
+  languageName: node
+  linkType: hard
+
+"@cloudbase/manager-node@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "@cloudbase/manager-node@npm:3.6.0"
+  dependencies:
+    "@cloudbase/database": ^0.6.2
+    archiver: ^3.1.1
+    cos-nodejs-sdk-v5: ^2.5.20
+    del: ^5.1.0
+    https-proxy-agent: ^2.2.4
+    make-dir: ^3.0.0
+    micromatch: ^4.0.2
+    node-fetch: ^2.6.0
+    query-string: ^6.8.3
+    walkdir: ^0.4.1
+  checksum: f4288e5495d55a479be7e148a492966837ce3fd2cf2d3d5e903889130d55fab92a7ce545ca19b502a8317842b715dc4895576c512b910236675b9c2574457fe8
   languageName: node
   linkType: hard
 
@@ -508,7 +536,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:*":
+"@types/lodash@npm:*, @types/lodash@npm:^4.14.159":
   version: 4.14.159
   resolution: "@types/lodash@npm:4.14.159"
   checksum: 15fc1b690916aec2e169327759fbc71b0cb25ca0cd0003c4d20d2e5b4ed14b7bc2feb2835d643e0335eabc1536e7c11b499de591eb794fbb764523cb06c66eee
@@ -742,8 +770,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app-api@workspace:cloudbase/functions/app-api"
   dependencies:
+    "@cloudbase/manager-node": ^3.6.0
     "@cloudbase/node-sdk": ^2.3.1
+    "@types/lodash": ^4.14.159
+    "@types/node": ^14.0.27
     async-validator: ^3.4.0
+    lodash: ^4.17.20
+    rollup: ^2.23.1
+    rollup-plugin-typescript2: ^0.27.2
+    typescript: ^3.9.7
   languageName: unknown
   linkType: soft
 
@@ -3104,6 +3139,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.20":
+  version: 4.17.20
+  resolution: "lodash@npm:4.17.20"
+  checksum: c62101d2500c383b5f174a7e9e6fe8098149ddd6e9ccfa85f36d4789446195f5c4afd3cfba433026bcaf3da271256566b04a2bf2618e5a39f6e67f8c12030cb6
+  languageName: node
+  linkType: hard
+
 "log-symbols@npm:^3.0.0":
   version: 3.0.0
   resolution: "log-symbols@npm:3.0.0"
@@ -4081,18 +4123,6 @@ resolve@1.17.0:
   checksum: 14f41440a4d58a6a25c74c365e4e1422af152cc63fc49f61fa620aa4490e99ac8ea26c613cdc85a7f5f3533f1054e6f0bfe21536b6770288732c1b14237a3b57
   languageName: node
   linkType: hard
-
-"root-workspace-0b6124@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "root-workspace-0b6124@workspace:."
-  dependencies:
-    "@cloudbase/cli": ^0.9.4
-    "@types/node": ^14.0.27
-    rollup: ^2.23.1
-    rollup-plugin-typescript2: ^0.27.2
-    typescript: ^3.9.7
-  languageName: unknown
-  linkType: soft
 
 "run-async@npm:^2.2.0, run-async@npm:^2.4.0":
   version: 2.4.1

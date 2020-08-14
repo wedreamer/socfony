@@ -1,4 +1,4 @@
-import 'package:snsmax/cloudbase.dart';
+import '../../cloudbase.dart';
 
 abstract class Command<T> {
   String get functionName;
@@ -11,7 +11,7 @@ abstract class Command<T> {
         'data': data,
       };
 
-  const Command(this.data);
+  const Command([this.data]);
 
   Future<T> run() async {
     final result = await CloudBase().callFunction(functionName, options);

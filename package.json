@@ -1,16 +1,17 @@
 {
+  "name": "@bytegem/snsmax",
   "version": "2.0.0-2",
   "private": true,
   "languageName": "node",
   "scripts": {
     "app:intl": "./intl.sh",
-    "build:functions": "rollup -c"
+    "build:app-models": "flutter pub run build_runner",
+    "build:functions": "yarn workspaces foreach run build",
+    "deploy:functions": "yarn build:functions && cloudbase functions:deploy"
   },
   "devDependencies": {
     "@cloudbase/cli": "^0.9.4",
     "@types/node": "^14.0.27",
-    "rollup": "^2.23.1",
-    "rollup-plugin-typescript2": "^0.27.2",
     "typescript": "^3.9.7"
   },
   "workspaces": [

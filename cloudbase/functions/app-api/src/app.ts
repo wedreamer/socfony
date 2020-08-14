@@ -1,29 +1,50 @@
 import { EventPayload } from "./event";
 import { Context } from "./context";
 import { CloudBase } from "@cloudbase/node-sdk/lib/cloudbase";
+import CloudBaseManager from '@cloudbase/manager-node';
 import { cloudbaseServer } from "./cloudbase-server";
+
+interface _Commands {
+    [name: string]: Function;
+}
+
+let _commands:_Commands = {};
 
 export class App {
     event!: EventPayload;
     context!: Context;
-    commands: Map<string, Function> = new Map;
+    commands: Map<string, Function>;
+
+    constructor(context: Context) {
+        this.commands = new Map<string, Function>();
+        this.context = context;
+    }
 
     public get server() : CloudBase {
-        return cloudbaseServer();
+        return cloudbaseServer(this.context);
+    }
+
+    public get manager(): CloudBaseManager {
+        return CloudBaseManager.init({
+            envId: this.context.namespace,
+        });
     }
     
     public get currentCommand() : string {
         return this.event.command;
     }
     
-    async handle(context: Context, event: EventPayload) {
-        this.context = context;
+    async handle(event: EventPayload) {
         this.event = event;
-        this.context = context;
 
-        const command = this.commands.get(this.currentCommand) as Function;
+        console.log(this.commands.size);
 
-        return await command(this);
+        const command = this.commands.get(this.currentCommand);
+        if (command instanceof Function) {
+            return await command(this);
+        }
+
+        throw new Error(`Unsupported command(${this.currentCommand})`);
     }
 
     command(name: string, command: Function) {

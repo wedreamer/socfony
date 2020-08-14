@@ -19,7 +19,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     ],
     "dependencyTreeRoots": [
       {
-        "name": "root-workspace-0b6124",
+        "name": "@bytegem/snsmax",
         "reference": "workspace:."
       },
       {
@@ -30,8 +30,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)|$))$)",
     "fallbackExclusionList": [
-      ["app-api", ["workspace:cloudbase/functions/app-api"]],
-      ["root-workspace-0b6124", ["workspace:."]]
+      ["@bytegem/snsmax", ["workspace:."]],
+      ["app-api", ["workspace:cloudbase/functions/app-api"]]
     ],
     "fallbackPool": [
       [
@@ -41,14 +41,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/node",
         "npm:14.0.27"
-      ],
-      [
-        "rollup",
-        "npm:2.23.1"
-      ],
-      [
-        "rollup-plugin-typescript2",
-        "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.27.2"
       ],
       [
         "typescript",
@@ -64,8 +56,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@cloudbase/cli", "npm:0.9.4"],
             ["@types/node", "npm:14.0.27"],
-            ["rollup", "npm:2.23.1"],
-            ["rollup-plugin-typescript2", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.27.2"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"]
           ],
           "linkType": "SOFT",
@@ -100,6 +90,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["js-tokens", "npm:4.0.0"]
           ],
           "linkType": "HARD",
+        }]
+      ]],
+      ["@bytegem/snsmax", [
+        ["workspace:.", {
+          "packageLocation": "./",
+          "packageDependencies": [
+            ["@bytegem/snsmax", "workspace:."],
+            ["@cloudbase/cli", "npm:0.9.4"],
+            ["@types/node", "npm:14.0.27"],
+            ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"]
+          ],
+          "linkType": "SOFT",
         }]
       ]],
       ["@cloudbase/cli", [
@@ -217,6 +219,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@cloudbase-manager-node-npm-3.5.0-389bff6291-eac8bbda80.zip/node_modules/@cloudbase/manager-node/",
           "packageDependencies": [
             ["@cloudbase/manager-node", "npm:3.5.0"],
+            ["@cloudbase/database", "npm:0.6.2"],
+            ["archiver", "npm:3.1.1"],
+            ["cos-nodejs-sdk-v5", "npm:2.6.2"],
+            ["del", "npm:5.1.0"],
+            ["https-proxy-agent", "npm:2.2.4"],
+            ["make-dir", "npm:3.1.0"],
+            ["micromatch", "npm:4.0.2"],
+            ["node-fetch", "npm:2.6.0"],
+            ["query-string", "npm:6.13.1"],
+            ["walkdir", "npm:0.4.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.6.0", {
+          "packageLocation": "./.yarn/cache/@cloudbase-manager-node-npm-3.6.0-f3996d1a3d-f4288e5495.zip/node_modules/@cloudbase/manager-node/",
+          "packageDependencies": [
+            ["@cloudbase/manager-node", "npm:3.6.0"],
             ["@cloudbase/database", "npm:0.6.2"],
             ["archiver", "npm:3.1.1"],
             ["cos-nodejs-sdk-v5", "npm:2.6.2"],
@@ -350,10 +369,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@rollup/pluginutils", [
-        ["virtual:a7e18c2f808c516721835d83d21576fab3fc0b26ab1b8e325ce3ac4a17c313982ee02441c195557cd65e80e517bc327bae3070d7a2e0d1242a77511c8effb8f8#npm:3.1.0", {
-          "packageLocation": "./.yarn/$$virtual/@rollup-pluginutils-virtual-68d7483169/0/cache/@rollup-pluginutils-npm-3.1.0-b44b222e7d-45da6411e0.zip/node_modules/@rollup/pluginutils/",
+        ["virtual:8e36b8fc7004ffff47ab6578b4e9e81b62418ee929296b405e0392411751dbdc939cdebf6042736657f9783fe01057a2e1fb74c0e757539eed2f22f29ca13c60#npm:3.1.0", {
+          "packageLocation": "./.yarn/$$virtual/@rollup-pluginutils-virtual-4f418f99eb/0/cache/@rollup-pluginutils-npm-3.1.0-b44b222e7d-45da6411e0.zip/node_modules/@rollup/pluginutils/",
           "packageDependencies": [
-            ["@rollup/pluginutils", "virtual:a7e18c2f808c516721835d83d21576fab3fc0b26ab1b8e325ce3ac4a17c313982ee02441c195557cd65e80e517bc327bae3070d7a2e0d1242a77511c8effb8f8#npm:3.1.0"],
+            ["@rollup/pluginutils", "virtual:8e36b8fc7004ffff47ab6578b4e9e81b62418ee929296b405e0392411751dbdc939cdebf6042736657f9783fe01057a2e1fb74c0e757539eed2f22f29ca13c60#npm:3.1.0"],
             ["@types/estree", "npm:0.0.39"],
             ["estree-walker", "npm:1.0.1"],
             ["picomatch", "npm:2.2.2"],
@@ -890,8 +909,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./cloudbase/functions/app-api/",
           "packageDependencies": [
             ["app-api", "workspace:cloudbase/functions/app-api"],
+            ["@cloudbase/manager-node", "npm:3.6.0"],
             ["@cloudbase/node-sdk", "npm:2.3.1"],
-            ["async-validator", "npm:3.4.0"]
+            ["@types/lodash", "npm:4.14.159"],
+            ["@types/node", "npm:14.0.27"],
+            ["async-validator", "npm:3.4.0"],
+            ["lodash", "npm:4.17.20"],
+            ["rollup", "npm:2.23.1"],
+            ["rollup-plugin-typescript2", "virtual:5e836726f4297e8768cd2e721bf6af834ce7e9a10490cba5a1d81051d4be6a7f8d15755e1849b354580164f7fe3033c7f5c32d25812764aae31dcd4996455a27#npm:0.27.2"],
+            ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"]
           ],
           "linkType": "SOFT",
         }]
@@ -3437,6 +3463,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash", "npm:4.17.19"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.17.20", {
+          "packageLocation": "./.yarn/cache/lodash-npm-4.17.20-c0db62021c-c62101d250.zip/node_modules/lodash/",
+          "packageDependencies": [
+            ["lodash", "npm:4.17.20"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["lodash.clonedeep", [
@@ -4648,11 +4681,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["rollup-plugin-typescript2", [
-        ["virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.27.2", {
-          "packageLocation": "./.yarn/$$virtual/rollup-plugin-typescript2-virtual-a7e18c2f80/0/cache/rollup-plugin-typescript2-npm-0.27.2-f905624bd6-ff62b82640.zip/node_modules/rollup-plugin-typescript2/",
+        ["virtual:5e836726f4297e8768cd2e721bf6af834ce7e9a10490cba5a1d81051d4be6a7f8d15755e1849b354580164f7fe3033c7f5c32d25812764aae31dcd4996455a27#npm:0.27.2", {
+          "packageLocation": "./.yarn/$$virtual/rollup-plugin-typescript2-virtual-8e36b8fc70/0/cache/rollup-plugin-typescript2-npm-0.27.2-f905624bd6-ff62b82640.zip/node_modules/rollup-plugin-typescript2/",
           "packageDependencies": [
-            ["rollup-plugin-typescript2", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.27.2"],
-            ["@rollup/pluginutils", "virtual:a7e18c2f808c516721835d83d21576fab3fc0b26ab1b8e325ce3ac4a17c313982ee02441c195557cd65e80e517bc327bae3070d7a2e0d1242a77511c8effb8f8#npm:3.1.0"],
+            ["rollup-plugin-typescript2", "virtual:5e836726f4297e8768cd2e721bf6af834ce7e9a10490cba5a1d81051d4be6a7f8d15755e1849b354580164f7fe3033c7f5c32d25812764aae31dcd4996455a27#npm:0.27.2"],
+            ["@rollup/pluginutils", "virtual:8e36b8fc7004ffff47ab6578b4e9e81b62418ee929296b405e0392411751dbdc939cdebf6042736657f9783fe01057a2e1fb74c0e757539eed2f22f29ca13c60#npm:3.1.0"],
             ["find-cache-dir", "npm:3.3.1"],
             ["fs-extra", "npm:8.1.0"],
             ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
@@ -4665,20 +4698,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "typescript"
           ],
           "linkType": "HARD",
-        }]
-      ]],
-      ["root-workspace-0b6124", [
-        ["workspace:.", {
-          "packageLocation": "./",
-          "packageDependencies": [
-            ["root-workspace-0b6124", "workspace:."],
-            ["@cloudbase/cli", "npm:0.9.4"],
-            ["@types/node", "npm:14.0.27"],
-            ["rollup", "npm:2.23.1"],
-            ["rollup-plugin-typescript2", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.27.2"],
-            ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"]
-          ],
-          "linkType": "SOFT",
         }]
       ]],
       ["run-async", [

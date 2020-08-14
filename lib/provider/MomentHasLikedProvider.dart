@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:snsmax/cloudbase.dart';
 import 'package:snsmax/models/moment-like-history.dart';
+import 'package:snsmax/provider/AppAuthProvider.dart';
 
-import 'auth.dart';
 import 'collection.dart';
 
 class MomentHasLikedProvider
@@ -12,7 +12,7 @@ class MomentHasLikedProvider
   static Map<String, RealtimeListener> _watchers = {};
 
   MomentHasLikedProvider._() {
-    AuthProvider().addListener(_listener);
+    AppAuthProvider().addListener(_listener);
   }
 
   factory MomentHasLikedProvider() {
@@ -41,7 +41,7 @@ class MomentHasLikedProvider
 
   @override
   Future<MomentLikeHistory> customWatchDoc(String key) {
-    final userId = AuthProvider().user;
+    final userId = AppAuthProvider().uid;
     if (userId == null || userId.isEmpty || _watchers.containsKey(key)) {
       return null;
     } else if (containsKey(key)) {
@@ -72,7 +72,7 @@ class MomentHasLikedProvider
   }
 
   void _listener() {
-    final userId = AuthProvider().user;
+    final userId = AppAuthProvider().uid;
     if (userId == null || userId.isEmpty) {
       _watchers.values.forEach((element) => element.close());
       _watchers.clear();

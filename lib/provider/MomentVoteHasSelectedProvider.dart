@@ -4,7 +4,7 @@ import 'package:snsmax/models/MomentVoteUserSelected.dart';
 import 'package:snsmax/provider/collection.dart';
 
 import '../cloudbase.dart';
-import 'auth.dart';
+import 'AppAuthProvider.dart';
 
 class MomentVoteHasSelectedProvider
     extends BaseCollectionProvider<String, MomentVoteUserSelected> {
@@ -12,7 +12,7 @@ class MomentVoteHasSelectedProvider
   static Map<String, RealtimeListener> _watchers = {};
 
   MomentVoteHasSelectedProvider._() {
-    AuthProvider().addListener(_listener);
+    AppAuthProvider().addListener(_listener);
   }
 
   factory MomentVoteHasSelectedProvider() {
@@ -49,7 +49,7 @@ class MomentVoteHasSelectedProvider
 
   @override
   Future<MomentVoteUserSelected> customWatchDoc(String key) {
-    final userId = AuthProvider().user;
+    final userId = AppAuthProvider().uid;
     if (userId == null || userId.isEmpty || _watchers.containsKey(key)) {
       return null;
     } else if (containsKey(key)) {
@@ -80,7 +80,7 @@ class MomentVoteHasSelectedProvider
   }
 
   void _listener() {
-    final userId = AuthProvider().user;
+    final userId = AppAuthProvider().uid;
     if (userId == null || userId.isEmpty) {
       _watchers.values.forEach((element) => element.close());
       _watchers.clear();

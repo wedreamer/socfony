@@ -6,5 +6,3 @@ module.exports = {
         require('./cloudbase/functions/app-api/.function'),
     ],
 };
-
-console.log(module.exports);
