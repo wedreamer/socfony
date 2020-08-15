@@ -1,6 +1,6 @@
-import 'package:snsmax/cloudbase/commands/user/QueryUserCommand.dart';
-import 'package:snsmax/models/user.dart';
-import 'package:snsmax/provider/collection.dart';
+import 'package:fans/cloudbase/commands/user/QueryUserCommand.dart';
+import 'package:fans/models/user.dart';
+import 'package:fans/provider/collection.dart';
 
 class UsersCollection extends BaseCollectionProvider<String, User> {
   static UsersCollection _instance;

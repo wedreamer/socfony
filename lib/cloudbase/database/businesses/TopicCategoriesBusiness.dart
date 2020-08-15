@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:snsmax/cloudbase.dart';
-import 'package:snsmax/models/TopicCategory.dart';
+import 'package:fans/cloudbase.dart';
+import 'package:fans/models/TopicCategory.dart';
 
 class TopicCategoriesBusiness with ChangeNotifier {
   Iterable<TopicCategory> _categories;

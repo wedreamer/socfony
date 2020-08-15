@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:snsmax/cloudbase/commands/moment/QueryRecommendMomentsCommand.dart';
+import 'package:fans/cloudbase/commands/moment/QueryRecommendMomentsCommand.dart';
 
 class HomeRecommendMomentsBusiness with ChangeNotifier {
   static HomeRecommendMomentsBusiness _instance;

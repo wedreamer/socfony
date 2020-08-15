@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:snsmax/provider/collection.dart';
+import 'package:fans/provider/collection.dart';
 
 typedef Widget CloudBaseDocLoadingBuilder(BuildContext context);
 typedef Widget CloudBaseDocErrorBuilder(BuildContext context, Object error);

@@ -1,5 +1,5 @@
 import 'package:cloudbase_storage/cloudbase_storage.dart';
-import 'package:snsmax/cloudbase.dart';
+import 'package:fans/cloudbase.dart';
 import 'collection.dart';
 
 class CachedNetworkFileProvider

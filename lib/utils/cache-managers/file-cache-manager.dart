@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 class FileCacheManager extends cache.BaseCacheManager {
-  static const String key = "snsmax";
+  static const String key = "fans";
 
   static cache.BaseCacheManager _instance;
 

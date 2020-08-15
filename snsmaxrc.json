@@ -1,0 +1,8 @@
+{
+    "sms": {
+        "appId": "1400394939",
+        "sign": "SNSMax",
+        "template": "617248",
+        "codeExpiredTime": 5
+    }
+}

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:snsmax/cloudbase.dart';
-import 'package:snsmax/models/moment-like-history.dart';
-import 'package:snsmax/provider/AppAuthProvider.dart';
+import 'package:fans/cloudbase.dart';
+import 'package:fans/models/moment-like-history.dart';
+import 'package:fans/provider/AppAuthProvider.dart';
 
 import 'collection.dart';
 

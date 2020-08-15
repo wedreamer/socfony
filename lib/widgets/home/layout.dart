@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:snsmax/pages/publish.dart';
-import 'package:snsmax/widgets/custom-underline-tab-indicator.dart';
-import 'package:snsmax/widgets/home/RecommendTabView.dart';
+import 'package:fans/pages/publish.dart';
+import 'package:fans/widgets/custom-underline-tab-indicator.dart';
+import 'package:fans/widgets/home/RecommendTabView.dart';
 
 import 'CityMomentsTabView.dart';
 import 'FollowingMomentsWidget.dart';

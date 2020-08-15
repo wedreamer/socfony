@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:snsmax/models/MomentVoteUserSelected.dart';
-import 'package:snsmax/provider/collection.dart';
+import 'package:fans/models/MomentVoteUserSelected.dart';
+import 'package:fans/provider/collection.dart';
 
 import '../cloudbase.dart';
 import 'AppAuthProvider.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' hide BottomNavigationBar;
-import 'package:snsmax/widgets/bottom-navigation-bar/bottom-navigation-bar.dart';
-import 'package:snsmax/widgets/explore/layout.dart';
-import 'package:snsmax/widgets/home/layout.dart';
+import 'package:fans/widgets/bottom-navigation-bar/bottom-navigation-bar.dart';
+import 'package:fans/widgets/explore/layout.dart';
+import 'package:fans/widgets/home/layout.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key key}) : super(key: key);

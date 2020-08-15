@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:snsmax/cloudbase.dart';
-import 'package:snsmax/provider/cached-network-file.dart';
+import 'package:fans/cloudbase.dart';
+import 'package:fans/provider/cached-network-file.dart';
 
 import 'docs/CloudBaseDocBuilder.dart';
 

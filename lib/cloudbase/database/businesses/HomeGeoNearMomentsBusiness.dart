@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart' show Position;
-import 'package:snsmax/cloudbase.dart';
+import 'package:fans/cloudbase.dart';
 
 class HomeGeoNearMomentsBusiness with ChangeNotifier {
   static HomeGeoNearMomentsBusiness _instance;

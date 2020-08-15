@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide BottomNavigationBar;
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:snsmax/l10n/localization.dart';
+import 'package:fans/l10n/localization.dart';
 
 class BottomNavigationBar extends StatefulWidget {
   final PageController controller;

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:snsmax/cloudbase/commands/moment/QueryFollowingMomentsCommand.dart';
-import 'package:snsmax/provider/AppAuthProvider.dart';
+import 'package:fans/cloudbase/commands/moment/QueryFollowingMomentsCommand.dart';
+import 'package:fans/provider/AppAuthProvider.dart';
 
 class FollowingMomentsBusiness with ChangeNotifier {
   static FollowingMomentsBusiness _instance;

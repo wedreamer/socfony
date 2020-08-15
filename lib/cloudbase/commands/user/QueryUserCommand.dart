@@ -1,4 +1,4 @@
-import 'package:snsmax/models/user.dart';
+import 'package:fans/models/user.dart';
 
 import '../../../cloudbase.dart';
 import '../ClientApiFunctionCommand.dart';

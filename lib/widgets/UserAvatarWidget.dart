@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:snsmax/utils/cache-managers/file-cache-manager.dart';
-import 'package:snsmax/widgets/CachedNetworkImageBuilder.dart';
+import 'package:fans/utils/cache-managers/file-cache-manager.dart';
+import 'package:fans/widgets/CachedNetworkImageBuilder.dart';
 
 class UserAvatarWidget extends StatelessWidget {
   final String fileId;

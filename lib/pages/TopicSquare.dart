@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:snsmax/cloudbase/database/businesses/TopicCategoriesBusiness.dart';
-import 'package:snsmax/models/TopicCategory.dart';
+import 'package:fans/cloudbase/database/businesses/TopicCategoriesBusiness.dart';
+import 'package:fans/models/TopicCategory.dart';
 
 enum TopicSquareMode {
   selector,

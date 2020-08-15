@@ -1,4 +1,4 @@
-import 'package:snsmax/cloudbase/commands/ClientApiFunctionCommand.dart';
+import 'package:fans/cloudbase/commands/ClientApiFunctionCommand.dart';
 
 import '../../../cloudbase.dart';
 

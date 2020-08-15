@@ -1,5 +1,5 @@
-import 'package:snsmax/models/moment.dart';
-import 'package:snsmax/provider/collection.dart';
+import 'package:fans/models/moment.dart';
+import 'package:fans/provider/collection.dart';
 
 class MomentsCollection extends BaseCollectionProvider<String, Moment> {
   static MomentsCollection _instance;

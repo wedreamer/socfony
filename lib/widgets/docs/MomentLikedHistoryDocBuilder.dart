@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:snsmax/models/moment-like-history.dart';
-import 'package:snsmax/provider/MomentHasLikedProvider.dart';
+import 'package:fans/models/moment-like-history.dart';
+import 'package:fans/provider/MomentHasLikedProvider.dart';
 
 import 'CloudBaseDocBuilder.dart';
 

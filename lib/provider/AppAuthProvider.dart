@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:snsmax/cloudbase.dart';
-import 'package:snsmax/cloudbase/commands/user/QueryCurrentUserCommand.dart';
-import 'package:snsmax/provider/collections/users.dart';
+import 'package:fans/cloudbase.dart';
+import 'package:fans/cloudbase/commands/user/QueryCurrentUserCommand.dart';
+import 'package:fans/provider/collections/users.dart';
 
 final _cloudbase = CloudBase();
 final _auth = _cloudbase.auth;

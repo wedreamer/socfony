@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:snsmax/cloudbase/commands/sms/SmsLoginCommand.dart';
-import 'package:snsmax/cloudbase/commands/sms/SmsSendPhoneCodeCommand.dart';
-import 'package:snsmax/provider/AppAuthProvider.dart';
+import 'package:fans/cloudbase/commands/sms/SmsLoginCommand.dart';
+import 'package:fans/cloudbase/commands/sms/SmsSendPhoneCodeCommand.dart';
+import 'package:fans/provider/AppAuthProvider.dart';
 
 import '../cloudbase.dart' hide RegExp;
 
@@ -333,7 +333,7 @@ class _LoginPageLogo extends StatelessWidget {
 
 // import 'package:bot_toast/bot_toast.dart';
 // import 'package:flutter/material.dart';
-// import 'package:snsmax/cloudbase.dart' hide RegExp;
+// import 'package:fans/cloudbase.dart' hide RegExp;
 
 // class LoginPage extends StatefulWidget {
 //   const LoginPage({Key key}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:snsmax/models/MomentVoteUserSelected.dart';
-import 'package:snsmax/provider/MomentVoteHasSelectedProvider.dart';
+import 'package:fans/models/MomentVoteUserSelected.dart';
+import 'package:fans/provider/MomentVoteHasSelectedProvider.dart';
 
 import 'CloudBaseDocBuilder.dart';
 

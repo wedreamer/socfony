@@ -3,8 +3,8 @@ import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:snsmax/cloudbase.dart';
-import 'package:snsmax/utils/cache-managers/file-cache-manager.dart';
+import 'package:fans/cloudbase.dart';
+import 'package:fans/utils/cache-managers/file-cache-manager.dart';
 
 import 'docs/CloudBaseDocBuilder.dart';
 import 'CloudBaseFileBuilder.dart';

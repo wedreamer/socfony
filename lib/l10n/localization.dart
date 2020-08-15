@@ -35,19 +35,19 @@ class AppLocalizations {
   /// that encloses the given context.
   ///
   /// This method is just a convenient shorthand for:
-  /// `SNSMaxLocalizations.of(context)`.
+  /// `fansLocalizations.of(context)`.
   ///
   /// References to the localized resources defined by this class are typically
   /// written in terms of this method. For example:
   ///
   /// ```dart
-  /// FlatButton(onPressed: null, child: Text(SNSMaxLocalizations.of(context).cancel))
+  /// FlatButton(onPressed: null, child: Text(fansLocalizations.of(context).cancel))
   /// ```
   static AppLocalizations of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  /// The `SNSMaxLocalizationsDelegate` form the [AppLocalizations] static
+  /// The `fansLocalizationsDelegate` form the [AppLocalizations] static
   /// getter instance.
   ///
   /// This method is just a convenient shorthand for:
@@ -79,7 +79,7 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   /// Whether resources for the given locale can be loaded by this delegate.
   ///
-  /// Return true if the instance of `SNSMaxLocalizations` loaded by this delegate's [load]
+  /// Return true if the instance of `fansLocalizations` loaded by this delegate's [load]
   /// method supports the given `locale`'s language.
   @override
   bool isSupported(Locale locale) {

@@ -1,8 +1,8 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:snsmax/models/media.dart';
-import 'package:snsmax/models/vote.dart';
+import 'package:fans/models/media.dart';
+import 'package:fans/models/vote.dart';
 
 import 'serializers.dart';
 

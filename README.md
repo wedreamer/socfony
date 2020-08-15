@@ -1,4 +1,4 @@
-# snsmax
+# Fans
 
 A new Flutter project.
 

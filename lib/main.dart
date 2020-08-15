@@ -1,13 +1,13 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:snsmax/cloudbase.dart';
-import 'package:snsmax/l10n/localization.dart';
-import 'package:snsmax/pages/launch.dart';
-import 'package:snsmax/provider/AppAuthProvider.dart';
-import 'package:snsmax/provider/provider.dart';
-import 'package:snsmax/routes.dart';
-import 'package:snsmax/theme.dart';
+import 'package:fans/cloudbase.dart';
+import 'package:fans/l10n/localization.dart';
+import 'package:fans/pages/launch.dart';
+import 'package:fans/provider/AppAuthProvider.dart';
+import 'package:fans/provider/provider.dart';
+import 'package:fans/routes.dart';
+import 'package:fans/theme.dart';
 
 void main() {
   App.run();

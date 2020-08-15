@@ -1,6 +1,6 @@
 import 'package:cloudbase/cloudbase.dart' as cloudbase
     show CloudBase, CloudBaseCoreCredentials, CloudBaseCoreSecurityCredentials;
-import 'package:snsmax/config.dart';
+import 'package:fans/config.dart';
 
 export 'package:cloudbase/cloudbase.dart' hide CloudBase;
 

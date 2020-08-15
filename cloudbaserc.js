@@ -8,7 +8,7 @@ const cli = {
 };
 
 const framework = {
-    name: 'snsmax',
+    name: 'Fans',
     plugins: {
         function: {
             use: "@cloudbase/framework-plugin-function",

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart' show Position;
-import 'package:snsmax/cloudbase/commands/ClientApiFunctionCommand.dart';
+import 'package:fans/cloudbase/commands/ClientApiFunctionCommand.dart';
 
 import '../../../cloudbase.dart';
 

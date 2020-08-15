@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:snsmax/l10n/localization.dart';
+import 'package:fans/l10n/localization.dart';
 
 class Launch extends StatelessWidget {
   const Launch({Key key}) : super(key: key);

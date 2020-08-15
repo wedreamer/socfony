@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:snsmax/models/moment.dart';
-import 'package:snsmax/provider/collections/moments.dart';
-import 'package:snsmax/widgets/docs/CloudBaseDocBuilder.dart';
+import 'package:fans/models/moment.dart';
+import 'package:fans/provider/collections/moments.dart';
+import 'package:fans/widgets/docs/CloudBaseDocBuilder.dart';
 
 class MomentDocBuilder
     extends CloudBaseDocBuilder<String, Moment, MomentsCollection> {

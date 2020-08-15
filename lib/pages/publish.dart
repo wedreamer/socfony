@@ -12,12 +12,12 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:snsmax/cloudbase.dart';
-import 'package:snsmax/cloudbase/commands/moment/CreateMomentCommand.dart';
-import 'package:snsmax/pages/audio-recorder.dart';
-import 'package:snsmax/pages/login.dart';
-import 'package:snsmax/utils/number-extension.dart';
-import 'package:snsmax/widgets/ToastLoadingWidget.dart';
+import 'package:fans/cloudbase.dart';
+import 'package:fans/cloudbase/commands/moment/CreateMomentCommand.dart';
+import 'package:fans/pages/audio-recorder.dart';
+import 'package:fans/pages/login.dart';
+import 'package:fans/utils/number-extension.dart';
+import 'package:fans/widgets/ToastLoadingWidget.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
