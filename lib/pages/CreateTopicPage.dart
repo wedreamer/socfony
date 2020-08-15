@@ -59,7 +59,6 @@ class CreateTopicPage extends StatelessWidget {
       onTap: _createFocusScopeHandler(context),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           centerTitle: true,
           title: Text('创建话题'),
         ),
@@ -352,7 +351,7 @@ class _TopicCover extends StatelessWidget {
         height: 80.0,
         child: FlatButton(
           onPressed: _createImagePicker(context),
-          color: Theme.of(context).cardColor,
+          color: Theme.of(context).highlightColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),

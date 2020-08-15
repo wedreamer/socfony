@@ -42,7 +42,7 @@ class _TopicSquareState extends State<TopicSquare> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
         centerTitle: true,
         leading: BackButton(),
         title: Text(widget.title),
@@ -126,7 +126,6 @@ class _TopicSquareState extends State<TopicSquare> {
       },
       icon: Icon(Icons.add),
       label: Text('创建'),
-      textColor: Theme.of(context).primaryColor,
     );
   }
 }

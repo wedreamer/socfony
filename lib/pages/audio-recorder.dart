@@ -135,13 +135,6 @@ class _AudioRecorderPageState extends State<AudioRecorderPage> {
           );
         },
       );
-//      return StreamBuilder<Playing>(
-//        stream: audioPlayer.builderCurrentPosition(builder: null),
-//        builder: (BuildContext context, AsyncSnapshot<Playing> snapshot) {
-//          print(snapshot.data.audio.)
-//          return AudioWidget.file(child: null, path: null);
-//        },
-//      );
     }
 
     Duration duration = (recording?.duration) ?? Duration();
@@ -158,9 +151,13 @@ class _AudioRecorderPageState extends State<AudioRecorderPage> {
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.transparent,
+      elevation: 0,
       automaticallyImplyLeading: false,
       leading: CloseButton(
         onPressed: onClose,
+        color: Theme.of(context).brightness == Brightness.light
+            ? Colors.black
+            : Colors.white,
       ),
       centerTitle: true,
       title: buildAudioTime(context),

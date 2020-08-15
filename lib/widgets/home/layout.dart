@@ -43,18 +43,13 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
           controller: controller,
           tabs: tabBarBuilder(context),
           indicator: CustomUnderlineTabIndicator(
-            borderSide: BorderSide(
-              color: Theme.of(context).primaryColor,
-              width: 3.0,
-            ),
             insets: EdgeInsets.only(bottom: 4.0),
           ),
           indicatorWeight: 0,
+          indicatorSize: TabBarIndicatorSize.label,
           isScrollable: true,
           unselectedLabelStyle: Theme.of(context).textTheme.subtitle1,
-          unselectedLabelColor: Theme.of(context).textTheme.subtitle1.color,
           labelStyle: Theme.of(context).textTheme.headline6,
-          labelColor: Theme.of(context).primaryColor,
         ),
         centerTitle: true,
         actions: actionsBuilder(context),
@@ -94,7 +89,6 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
   Widget sendMomentActionBuilder(BuildContext context) {
     return IconButton(
       onPressed: onSendMoment,
-      color: Theme.of(context).primaryColor,
       icon: Transform.rotate(
         child: Icon(Icons.send),
         angle: 125.0,

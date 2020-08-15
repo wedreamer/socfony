@@ -46,28 +46,8 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
           margin: const EdgeInsets.symmetric(horizontal: 10)
               .copyWith(bottom: padding.bottom > 0 ? 0 : 20, top: 20),
           decoration: BoxDecoration(
-            color: Theme.of(context).appBarTheme.color,
+            color: Theme.of(context).bottomAppBarColor,
             borderRadius: const BorderRadius.all(const Radius.circular(100)),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Theme.of(context).scaffoldBackgroundColor
-                    : Theme.of(context).hoverColor,
-                offset: Offset(0,
-                    Theme.of(context).brightness == Brightness.dark ? 0.5 : 2),
-                blurRadius:
-                    Theme.of(context).brightness == Brightness.dark ? 1 : 4,
-              ),
-              BoxShadow(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Theme.of(context).scaffoldBackgroundColor
-                    : Theme.of(context).hoverColor,
-                offset: Offset(0,
-                    Theme.of(context).brightness == Brightness.dark ? 0.5 : 2),
-                blurRadius:
-                    Theme.of(context).brightness == Brightness.dark ? 0 : 4,
-              ),
-            ],
           ),
           child: GNav(
             selectedIndex: index,

@@ -97,7 +97,6 @@ class _PublishState extends State<PublishPage> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).appBarTheme.color,
         appBar: buildAppBar(context),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -129,12 +128,11 @@ class _PublishState extends State<PublishPage> {
                   GFListTile(
                     padding: EdgeInsets.zero,
                     margin: EdgeInsets.symmetric(vertical: 12),
-                    color: Theme.of(context).scaffoldBackgroundColor,
+                    color: Theme.of(context).highlightColor,
                     title: Text('发布到同城'),
                     icon: Switch(
                       value: usingPosition,
                       onChanged: onChangePositionSwitch,
-                      activeColor: Theme.of(context).primaryColor,
                     ),
                   ),
                   buildImagesGridView(),
@@ -203,7 +201,7 @@ class _PublishState extends State<PublishPage> {
           title: Center(
             child: Text(votes[index]),
           ),
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: Theme.of(context).highlightColor,
           icon: GestureDetector(
             child: Icon(
               Icons.remove_circle,
@@ -358,7 +356,7 @@ class _PublishState extends State<PublishPage> {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
+              color: Theme.of(context).highlightColor,
               borderRadius: BorderRadius.circular(6),
             ),
             child: Center(
@@ -389,7 +387,7 @@ class _PublishState extends State<PublishPage> {
       onTap: onTapInsertPhoto,
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: Theme.of(context).highlightColor,
           borderRadius: BorderRadius.circular(6),
         ),
         child: Icon(
@@ -409,7 +407,7 @@ class _PublishState extends State<PublishPage> {
         ),
       ),
       icon: Icon(Icons.chevron_right),
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: Theme.of(context).highlightColor,
     );
   }
 
@@ -458,8 +456,6 @@ class _PublishState extends State<PublishPage> {
             child: FlatButton(
               onPressed: allowPost ? onPostMoment : null,
               child: Text('发布'),
-              color: Theme.of(context).primaryColor,
-              colorBrightness: Brightness.dark,
               shape: StadiumBorder(),
             ),
           ),

@@ -186,7 +186,7 @@ class _LoginPhoneCode extends StatelessWidget {
             borderRadius: BorderRadius.circular(36.0),
           ),
           contentPadding: EdgeInsets.all(12.0),
-          fillColor: Theme.of(context).scaffoldBackgroundColor,
+          fillColor: Theme.of(context).splashColor,
           filled: true,
           prefixIcon: const Icon(Icons.code),
           suffixIcon: UnconstrainedBox(
@@ -295,7 +295,7 @@ class _LoginAccount extends StatelessWidget {
             borderRadius: BorderRadius.circular(36.0),
           ),
           contentPadding: EdgeInsets.all(12.0),
-          fillColor: Theme.of(context).scaffoldBackgroundColor,
+          fillColor: Theme.of(context).splashColor,
           filled: true,
           prefixIcon: const Icon(Icons.account_circle),
         ),
@@ -322,9 +322,12 @@ class _LoginPageLogo extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 36.0),
       child: Align(
         alignment: Alignment.topCenter,
-        child: Image.asset(
-          'assets/launcher.png',
-          width: 240,
+        child: ClipRRect(
+          child: Image.asset(
+            'assets/logo-full.png',
+            height: 96.0,
+          ),
+          borderRadius: BorderRadius.circular(96.0),
         ),
       ),
     );

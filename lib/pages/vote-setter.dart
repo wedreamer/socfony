@@ -60,6 +60,7 @@ class _VoteSetterPageState extends State<VoteSetterPage> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
+            SizedBox(height: 24.0),
             buildVoteItems(),
             buildAddItemButton(context),
           ],
@@ -80,7 +81,7 @@ class _VoteSetterPageState extends State<VoteSetterPage> {
         textColor: Theme.of(context).primaryColor,
         blockButton: true,
         shape: GFButtonShape.pills,
-        color: Theme.of(context).hoverColor,
+        color: Theme.of(context).highlightColor,
       );
     return SizedBox.shrink();
   }
@@ -110,7 +111,7 @@ class _VoteSetterPageState extends State<VoteSetterPage> {
             borderRadius: BorderRadius.circular(60),
           ),
           filled: true,
-          fillColor: Theme.of(context).hoverColor,
+          fillColor: Theme.of(context).highlightColor,
           contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
           suffixIcon: votes.length > 2 ? buildRemoveButton(index) : null,
         ),
@@ -133,7 +134,6 @@ class _VoteSetterPageState extends State<VoteSetterPage> {
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
       automaticallyImplyLeading: true,
       centerTitle: true,
       elevation: 0,
@@ -147,13 +147,10 @@ class _VoteSetterPageState extends State<VoteSetterPage> {
     );
   }
 
-  UnconstrainedBox buildDoneButton(BuildContext context) {
-    return UnconstrainedBox(
-      child: FlatButton(
-        onPressed: allowDone ? onDoneBack : null,
-        child: Text('完成'),
-        textColor: Theme.of(context).primaryColor,
-      ),
+  Widget buildDoneButton(BuildContext context) {
+    return FlatButton(
+      onPressed: allowDone ? onDoneBack : null,
+      child: Text('完成'),
     );
   }
 
