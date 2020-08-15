@@ -20,7 +20,7 @@ class Launch extends StatelessWidget {
       children: <Widget>[
         Center(
           child: Image.asset(
-            'assets/wide-logo.webp',
+            'assets/launcher.png',
             width: mediaQueryData.size.width * 0.7,
           ),
         ),
