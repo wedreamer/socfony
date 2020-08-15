@@ -32,9 +32,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bytegem/snsmax@workspace:.":
+"@bytegem/fans@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@bytegem/snsmax@workspace:."
+  resolution: "@bytegem/fans@workspace:."
   dependencies:
     "@cloudbase/cli": ^0.9.4
     "@types/node": ^14.0.27

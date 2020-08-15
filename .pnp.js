@@ -19,7 +19,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     ],
     "dependencyTreeRoots": [
       {
-        "name": "@bytegem/snsmax",
+        "name": "@bytegem/fans",
         "reference": "workspace:."
       },
       {
@@ -34,7 +34,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)|$))$)",
     "fallbackExclusionList": [
-      ["@bytegem/snsmax", ["workspace:."]],
+      ["@bytegem/fans", ["workspace:."]],
       ["app-api", ["workspace:cloudbase/functions/app-api"]],
       ["database", ["workspace:cloudbase/database"]]
     ],
@@ -107,11 +107,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["@bytegem/snsmax", [
+      ["@bytegem/fans", [
         ["workspace:.", {
           "packageLocation": "./",
           "packageDependencies": [
-            ["@bytegem/snsmax", "workspace:."],
+            ["@bytegem/fans", "workspace:."],
             ["@cloudbase/cli", "npm:0.9.4"],
             ["@types/node", "npm:14.0.27"],
             ["app-api", "workspace:cloudbase/functions/app-api"],
