@@ -6,6 +6,7 @@
   "scripts": {
     "app:intl": "./intl.sh",
     "build:app-models": "flutter pub run build_runner",
+    "build:app-launcher-icons": "flutter pub run flutter_launcher_icons:main",
     "build:functions": "yarn workspaces foreach --exclude database run build",
     "build:version": "yarn workspaces foreach version ${0}-${1} && node scripts/change-flutter-app-version.js $0 $1",
     "deploy:functions": "yarn build:functions && cloudbase functions:deploy",

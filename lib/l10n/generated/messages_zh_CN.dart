@@ -21,7 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "AppIntlMessages_name" : MessageLookupByLibrary.simpleMessage("SNS Max"),
+    "AppIntlMessages_name" : MessageLookupByLibrary.simpleMessage("Fans"),
     "NavigationBarMessage_explore" : MessageLookupByLibrary.simpleMessage("发现"),
     "NavigationBarMessage_me" : MessageLookupByLibrary.simpleMessage("我的"),
     "NavigationBarMessage_moment" : MessageLookupByLibrary.simpleMessage("动态"),
