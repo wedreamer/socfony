@@ -624,16 +624,21 @@ class MomentVideoCard extends StatelessWidget {
                 ),
               ),
               Positioned.fill(
-                child: UnconstrainedBox(
-                  child: FloatingActionButton(
-                    heroTag: video,
-                    backgroundColor: Colors.black45,
-                    onPressed: () {},
+                child: FlatButton(
+                  onPressed: () {},
+                  child: Container(
+                    width: 42.0,
+                    height: 42.0,
+                    decoration: BoxDecoration(
+                      color: Colors.black45,
+                      borderRadius: BorderRadius.circular(36.0),
+                    ),
                     child: Icon(
                       Icons.play_arrow,
-                      size: 48,
+                      size: 36.0,
                     ),
                   ),
+                  color: Colors.transparent,
                 ),
               ),
             ],
