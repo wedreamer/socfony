@@ -9,6 +9,7 @@ import queryRecommentMoments from "./commands/moment/queryRecommentMoments";
 import createMomentCommand from "./commands/moment/createMomentCommand";
 import toggleLikeMoment from "./commands/moment/toggleLikeMoment";
 import tapMomentVoteItemCommand from "./commands/moment/tapMomentVoteItemCommand";
+import { createTopicCommand } from "./commands/topic/createTopicCommand";
 
 export function main(event: EventPayload, context: Context) {
     // create app
@@ -24,6 +25,9 @@ export function main(event: EventPayload, context: Context) {
     app.command('moment:toggleLike', toggleLikeMoment);
     app.command('moment:tapVoteItem', tapMomentVoteItemCommand);
     app.command('moment:create', createMomentCommand);
+
+    // Topic
+    app.command('topic:create', createTopicCommand);
 
     return app.handle(event);
 }

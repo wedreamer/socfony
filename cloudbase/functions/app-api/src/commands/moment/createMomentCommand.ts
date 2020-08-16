@@ -3,16 +3,9 @@ import queryCurrentUser from "../user/queryCurrentUser";
 
 import Schema, { Rules, ValidateError } from "async-validator";
 import lodash from 'lodash';
+import { getCloudFilePath } from "../../utils/managerFilePathUtil";
 
 let _app: App;
-
-function getCloudFilePath(cloudFileId: string): string {
-    if (cloudFileId.match('cloud://*') == null) {
-        throw new Error('文件id不合法');
-    }
-
-    return cloudFileId.replace(/cloud:\/\/[a-zA-z0-9\.\-\_]+\//, '');
-}
 
 const descriptor: Rules = {
     text: { type: 'string', required: true, message: '动态内容不能为空', },
@@ -162,7 +155,7 @@ export default function(app: App) {
         validator.validate(app.event.data, { first: true }, function(errors) {
             if (errors) {
                 const error = errors.pop() as ValidateError;
-                return reject(new Error(error.message));
+                return reject(error.message);
             }
 
             return createMoment(app).then(resolve).catch(reject);

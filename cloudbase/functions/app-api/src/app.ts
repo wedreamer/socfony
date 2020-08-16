@@ -4,12 +4,6 @@ import { CloudBase } from "@cloudbase/node-sdk/lib/cloudbase";
 import CloudBaseManager from '@cloudbase/manager-node';
 import { cloudbaseServer } from "./cloudbase-server";
 
-interface _Commands {
-    [name: string]: Function;
-}
-
-let _commands:_Commands = {};
-
 export class App {
     event!: EventPayload;
     context!: Context;
@@ -44,7 +38,7 @@ export class App {
             return await command(this);
         }
 
-        throw new Error(`Unsupported command(${this.currentCommand})`);
+        throw `Unsupported command(${this.currentCommand})`;
     }
 
     command(name: string, command: Function) {

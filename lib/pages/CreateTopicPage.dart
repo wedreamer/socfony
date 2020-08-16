@@ -1,10 +1,17 @@
 import 'dart:io';
+import 'package:crypto/crypto.dart' as convert;
 
+import 'package:bot_toast/bot_toast.dart';
+import 'package:fans/cloudbase.dart' hide RegExp;
+import 'package:fans/cloudbase/commands/topic/CreateTopicCommand.dart';
+import 'package:fans/utils/number-extension.dart';
+import 'package:fans/widgets/ToastLoadingWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:fans/models/Topic.dart';
 
@@ -104,10 +111,76 @@ class _TopicSubmitButton extends StatelessWidget {
         color: Theme.of(context).primaryColor,
         shape: StadiumBorder(),
         colorBrightness: Brightness.dark,
-        onPressed: () {},
+        onPressed: _createSubmitHandler(context),
         child: Text('创建'),
       ),
     );
+  }
+
+  VoidCallback _createSubmitHandler(BuildContext context) {
+    return () async {
+      CreateTopicController controller = context.read<CreateTopicController>();
+      List<String> messages = [
+        _TopicNameTextField.validator(controller.name),
+        _TopicTitleTextField.validator(controller.title),
+        _TopicDescField.validator(controller.description),
+      ].where((element) => element is String).toList();
+      if (messages.isNotEmpty) {
+        BotToast.showText(text: messages.first);
+        return;
+      }
+      ToastLoadingController loading = ToastLoadingController();
+      CancelFunc cancelFunc = ToastLoadingWidget.show(loading);
+      CreateTopicCommandController value = CreateTopicCommandController();
+      try {
+        value.cover = await _uploadCover(controller.cover, loading);
+        value.name = controller.name;
+        value.title = controller.title;
+        value.description = controller.description;
+        value.joinType = controller.joinType;
+        value.postType = controller.postType;
+
+        loading.text = '正在创建话题...';
+        await CreateTopicCommand(value).run();
+
+        cancelFunc();
+
+        Navigator.of(context).pop();
+        BotToast.showText(text: '话题创建成功');
+      } catch (e) {
+        cancelFunc();
+        BotToast.showText(text: e.message ?? '创建话题失败');
+      }
+    };
+  }
+
+  Future<String> _uploadCover(
+      File file, ToastLoadingController controller) async {
+    if (file == null) {
+      throw UnimplementedError('请选择话题封面');
+    }
+
+    convert.Digest digest = convert.md5.convert(file.readAsBytesSync());
+    String ext = "." + file.path.toLowerCase().split('.').last;
+    String cloudPath = DateFormat("yyyy/MM/dd/").format(DateTime.now()) +
+        digest.toString() +
+        ext;
+    controller.text = '正在处理图片';
+
+    CloudBaseStorageRes<UploadRes> result =
+        await CloudBase().storage.uploadFile(
+              cloudPath: cloudPath,
+              filePath: file.path,
+              onProcess: (int count, int total) {
+                controller.progress = count / total;
+                controller.text =
+                    '正在上传封面...\n${controller.progress.format('##.0#%')}';
+              },
+            );
+    controller.progress = null;
+    controller.text = null;
+
+    return result.data.fileId;
   }
 }
 
@@ -230,7 +303,9 @@ class _TopicDescField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      initialValue: Provider.of<CreateTopicController>(context, listen: false)
+          .description,
       decoration: InputDecoration(
         labelText: '话题描述',
         labelStyle: Theme.of(context).textTheme.headline6,
@@ -243,6 +318,8 @@ class _TopicDescField extends StatelessWidget {
       ),
       maxLength: 200,
       onChanged: _createFieldChangedHandler(context),
+      validator: validator,
+      autovalidate: true,
     );
   }
 
@@ -250,6 +327,16 @@ class _TopicDescField extends StatelessWidget {
     return (String value) {
       context.read<CreateTopicController>().description = value;
     };
+  }
+
+  static String validator(String value) {
+    if (value == null || value.isEmpty) {
+      return '请输入话题描述';
+    } else if (value.length > 200) {
+      return '话题描述过长';
+    }
+
+    return null;
   }
 }
 
@@ -273,20 +360,20 @@ class _TopicTitleTextField extends StatelessWidget {
       ),
       autovalidate: true,
       keyboardType: TextInputType.text,
-      validator: _validator,
+      validator: validator,
       onChanged: _createFieldChangedHandler(context),
     );
   }
 
   ValueChanged<String> _createFieldChangedHandler(BuildContext context) {
     return (String value) {
-      context.read<CreateTopicController>().name = value.trim();
+      context.read<CreateTopicController>().title = value.trim();
     };
   }
 
-  String _validator(String value) {
+  static String validator(String value) {
     if (value == null || value.isEmpty) {
-      return null;
+      return '请输入称谓';
     } else if (value.length > 20) {
       return '称谓不能超过20个字符';
     } else if (!RegExp(r'^[\u4E00-\u9FA5A-Za-z0-9]+$').hasMatch(value)) {
@@ -317,7 +404,7 @@ class _TopicNameTextField extends StatelessWidget {
       ),
       autovalidate: true,
       keyboardType: TextInputType.text,
-      validator: _validator,
+      validator: validator,
       onChanged: _createFieldChangedHandler(context),
     );
   }
@@ -328,8 +415,10 @@ class _TopicNameTextField extends StatelessWidget {
     };
   }
 
-  String _validator(String value) {
-    if (value.length > 100) {
+  static String validator(String value) {
+    if (value == null || value.isEmpty) {
+      return '请输入话题名称';
+    } else if (value.length > 100) {
       return '话题名称过长，请限制在100个字符内';
     }
 

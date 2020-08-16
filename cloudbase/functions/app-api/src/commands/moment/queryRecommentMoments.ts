@@ -76,7 +76,7 @@ export default function(app: App) {
         validator.validate(app.event.data, { first: true }, errors => {
             if (errors) {
                 const error = errors.pop() as ValidateError;
-                return reject(new Error(error.message));
+                return reject(error.message);
             }
 
             return handler(app).then(resolve).catch(reject);

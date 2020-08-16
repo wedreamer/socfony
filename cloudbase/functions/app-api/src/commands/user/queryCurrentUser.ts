@@ -5,7 +5,7 @@ export default async function(app: App) {
     const { userInfo: user } =  await auth.getEndUserInfo();
 
     if (!user.uid || user.isAnonymous == true) {
-        throw new Error('请选登录');
+        throw '请选登录';
     }
 
     return user;
