@@ -67,7 +67,7 @@ async function handler(app: App) {
 
     const result = await database.collection('topics').add({ corator_id: creatorUserId, name, description, title, cover, joinType, postType  });
 
-    return !!result.id;
+    return result.id;
 }
 
 export function createTopicCommand(app: App) {
