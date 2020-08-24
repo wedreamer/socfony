@@ -23,7 +23,7 @@ class CreateTopicCommandController {
   }
 }
 
-class CreateTopicCommand extends ClientApiFunctionCommand<bool> {
+class CreateTopicCommand extends ClientApiFunctionCommand<String> {
   CreateTopicCommand(CreateTopicCommandController controller)
       : super(controller.toData());
 
@@ -31,9 +31,9 @@ class CreateTopicCommand extends ClientApiFunctionCommand<bool> {
   String get commandName => 'topic:create';
 
   @override
-  bool deserializer(data, CloudBaseResponse response) {
-    if (data == true) {
-      return true;
+  String deserializer(data, CloudBaseResponse response) {
+    if (data is Map && data['success'] == true) {
+      return data['docId'];
     }
 
     throw UnimplementedError(response.message ?? '创建失败');

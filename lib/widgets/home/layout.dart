@@ -42,11 +42,6 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
         title: TabBar(
           controller: controller,
           tabs: tabBarBuilder(context),
-          indicator: CustomUnderlineTabIndicator(
-            insets: EdgeInsets.only(bottom: 4.0),
-          ),
-          indicatorWeight: 0,
-          indicatorSize: TabBarIndicatorSize.label,
           isScrollable: true,
           unselectedLabelStyle: Theme.of(context).textTheme.subtitle1,
           labelStyle: Theme.of(context).textTheme.headline6,

@@ -66,6 +66,7 @@ class CreateTopicPage extends StatelessWidget {
       onTap: _createFocusScopeHandler(context),
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           centerTitle: true,
           title: Text('创建话题'),
         ),
@@ -281,6 +282,7 @@ class _TopicJoinType extends StatelessWidget {
           title: child,
           dense: true,
           onChanged: _createRadioChangedHandler(context),
+          activeColor: Theme.of(context).primaryColor,
         );
       },
       shouldRebuild: (TopicJoinType oldValue, TopicJoinType newValue) =>

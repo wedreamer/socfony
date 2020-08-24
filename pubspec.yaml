@@ -31,6 +31,7 @@ dependencies:
   flutter_audio_recorder: ^0.5.5
   bot_toast: ^3.0.0
   google_nav_bar: ^2.2.0
+  google_fonts: ^1.1.0
   intl: ^0.16.1
   built_value: ^7.1.0
   getwidget: ^1.1.0

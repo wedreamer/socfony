@@ -128,11 +128,12 @@ class _PublishState extends State<PublishPage> {
                   GFListTile(
                     padding: EdgeInsets.zero,
                     margin: EdgeInsets.symmetric(vertical: 12),
-                    color: Theme.of(context).highlightColor,
+                    color: Theme.of(context).splashColor,
                     title: Text('发布到同城'),
                     icon: Switch(
                       value: usingPosition,
                       onChanged: onChangePositionSwitch,
+                      activeColor: Theme.of(context).primaryColor,
                     ),
                   ),
                   buildImagesGridView(),
@@ -407,7 +408,7 @@ class _PublishState extends State<PublishPage> {
         ),
       ),
       icon: Icon(Icons.chevron_right),
-      color: Theme.of(context).highlightColor,
+      color: Theme.of(context).splashColor,
     );
   }
 
@@ -449,6 +450,7 @@ class _PublishState extends State<PublishPage> {
     return AppBar(
       elevation: 0,
       automaticallyImplyLeading: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       actions: <Widget>[
         Padding(
           padding: EdgeInsets.only(right: 12.0),
@@ -457,6 +459,8 @@ class _PublishState extends State<PublishPage> {
               onPressed: allowPost ? onPostMoment : null,
               child: Text('发布'),
               shape: StadiumBorder(),
+              color: Theme.of(context).primaryColor,
+              colorBrightness: Brightness.dark,
             ),
           ),
         ),
