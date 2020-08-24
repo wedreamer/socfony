@@ -65,7 +65,7 @@ async function handler(app: App) {
     const { cover, title, description, name, joinType = 'freely', postType = 'any' } = app.event.data;
     const database = app.server.database();
 
-    const result = await database.collection('topics').add({ corator_id: creatorUserId, name, description, title, cover, joinType, postType  });
+    const result = await database.collection('topics').add({ coratorId: creatorUserId, name, description, title, cover, joinType, postType, createdAt: new Date,  });
 
     return {
         success: !!result.ok,

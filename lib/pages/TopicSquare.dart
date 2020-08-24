@@ -184,7 +184,36 @@ class __TopicCategoryPageViewState extends State<_TopicCategoryPageView>
   }
 
   Widget itemBuilder(BuildContext context, int index) {
-    return Text(index.toString());
+    if (index == 0) {
+      return Text('最近，待完成！');
+    }
+    TopicCategory category = business.categories.toList()[index - 1];
+    print(category.name);
+    return _TopicListItemView(category: category);
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+}
+
+class _TopicListItemView extends StatefulWidget {
+  const _TopicListItemView({
+    Key key,
+    @required this.category,
+  }) : super(key: key);
+
+  final TopicCategory category;
+
+  @override
+  __TopicListItemViewState createState() => __TopicListItemViewState();
+}
+
+class __TopicListItemViewState extends State<_TopicListItemView>
+    with AutomaticKeepAliveClientMixin<_TopicListItemView> {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Text(widget.category.name);
   }
 
   @override

@@ -1,3 +1,42 @@
 {
-    "aclTag": "READONLY"
+    "$schema": "../schema.json",
+    "aclTag": "ADMINWRITE",
+    "collectionName": "moment-liked-histories",
+    "description": "动态点赞记录表",
+    "createIndexes": [
+        {
+            "name": "momentId",
+            "keys": [
+                {
+                    "name": "momentId",
+                    "direction": "1"
+                }
+            ],
+            "unique": false
+        },
+        {
+            "name": "userId",
+            "keys": [
+                {
+                    "name": "userId",
+                    "direction": "1"
+                }
+            ],
+            "unique": false
+        },
+        {
+            "name": "moment-user-index",
+            "unique": true,
+            "keys": [
+                {
+                    "name": "userId",
+                    "direction": "1"
+                },
+                {
+                    "name": "momentId",
+                    "direction": "1"
+                }
+            ]
+        }
+    ]
 }

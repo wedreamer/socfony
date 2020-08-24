@@ -89,6 +89,7 @@ class _MainHomeLayoutState extends State<MainHomeLayout>
         angle: 125.0,
       ),
       tooltip: "发布动态",
+      color: Theme.of(context).primaryColor,
     );
   }
 

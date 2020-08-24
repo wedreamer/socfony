@@ -32,7 +32,7 @@
                     "default": [
                         {
                             "name": "字段名称",
-                            "direction": 1
+                            "direction": "1"
                         }
                     ],
                     "items": {
