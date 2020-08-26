@@ -1,6 +1,6 @@
 {
   "name": "@bytegem/fans",
-  "version": "0.0.1-1",
+  "version": "1.0.1",
   "private": true,
   "languageName": "node",
   "scripts": {
@@ -8,7 +8,7 @@
     "build:app-models": "flutter pub run build_runner",
     "build:app-launcher-icons": "flutter pub run flutter_launcher_icons:main",
     "build:functions": "yarn workspaces foreach --exclude database run build",
-    "build:version": "yarn workspaces foreach version ${0}-${1} && node scripts/change-flutter-app-version.js $0 $1",
+    "build:version": "node scripts/change-flutter-app-version.js ${0} && yarn workspaces foreach version ${0}",
     "deploy:functions": "yarn build:functions && cloudbase functions:deploy",
     "deploy:cloudbase": "yarn build:functions && cloudbase framework:deploy"
   },
