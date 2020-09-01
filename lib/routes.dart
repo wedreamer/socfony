@@ -1,3 +1,4 @@
+import 'package:fans/pages/EditUserCard.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/CreateTopicPage.dart';
@@ -12,4 +13,5 @@ final Map<String, WidgetBuilder> routes = {
   "vote-setter": (_) => VoteSetterPage.routeBuilder(_),
   "TopicSquare": (_) => TopicSquare(),
   "CreateTopicPage": (_) => CreateTopicPage(),
+  'EdgeUserCard': (_) => EditUserCard(),
 };

@@ -10,6 +10,7 @@
     "build:functions": "yarn workspaces foreach --exclude database run build",
     "build:version": "yarn workspaces foreach version ${0}-${1} && node scripts/change-flutter-app-version.js $0 $1",
     "deploy:functions": "yarn build:functions && cloudbase functions:deploy",
+    "deploy:database": "cloudbase framework:deploy database",
     "deploy:cloudbase": "yarn build:functions && cloudbase framework:deploy"
   },
   "devDependencies": {

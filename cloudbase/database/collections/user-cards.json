@@ -1,0 +1,48 @@
+{
+    "$schema": "../schema.json",
+    "aclTag": "ADMINWRITE",
+    "collectionName": "user-cards",
+    "description": "用户交友卡",
+    "createIndexes": [
+        {
+            "name": "location",
+            "keys": [
+                {
+                    "name": "location",
+                    "direction": "2dsphere"
+                }
+            ],
+            "unique": false
+        },
+        {
+            "name": "gender",
+            "unique": false,
+            "keys": [
+                {
+                    "name": "gender",
+                    "direction": "1"
+                }
+            ]
+        },
+        {
+            "name": "userId",
+            "unique": true,
+            "keys": [
+                {
+                    "name": "userId",
+                    "direction": "1"
+                }
+            ]
+        },
+        {
+            "name": "cardCategory",
+            "unique": false,
+            "keys": [
+                {
+                    "name": "cardCategoryID",
+                    "direction": "1"
+                }
+            ]
+        }
+    ]
+}
