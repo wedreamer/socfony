@@ -324,7 +324,7 @@ class _LoginPageLogo extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: ClipRRect(
           child: Image.asset(
-            'assets/logo-full.png',
+            'assets/ios_launcher.png',
             height: 96.0,
           ),
           borderRadius: BorderRadius.circular(96.0),

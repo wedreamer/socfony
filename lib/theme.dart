@@ -83,6 +83,12 @@ final TabBarTheme _tabBarTheme = TabBarTheme(
   indicatorSize: TabBarIndicatorSize.label,
 );
 
+final BottomNavigationBarThemeData _bottomNavigationBarTheme =
+    BottomNavigationBarThemeData(
+  type: BottomNavigationBarType.fixed,
+  selectedItemColor: primaryColor,
+);
+
 class AppTheme {
   const AppTheme._();
 
@@ -103,6 +109,7 @@ class AppTheme {
         unselectedLabelColor: Colors.white,
       ),
       textTheme: textTheme,
+      bottomNavigationBarTheme: _bottomNavigationBarTheme,
     );
   }
 
@@ -121,6 +128,7 @@ class AppTheme {
       ),
       tabBarTheme: _tabBarTheme,
       textTheme: textTheme,
+      bottomNavigationBarTheme: _bottomNavigationBarTheme,
     );
   }
 }

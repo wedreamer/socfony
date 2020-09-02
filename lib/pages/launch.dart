@@ -20,7 +20,7 @@ class Launch extends StatelessWidget {
       children: <Widget>[
         Center(
           child: Image.asset(
-            'assets/launcher.png',
+            'assets/android_launcher.png',
             width: mediaQueryData.size.width * 0.7,
           ),
         ),
