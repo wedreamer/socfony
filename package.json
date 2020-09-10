@@ -1,5 +1,8 @@
 {
   "name": "@bytegem/fans",
   "version": "1.0.0-2",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
 }
