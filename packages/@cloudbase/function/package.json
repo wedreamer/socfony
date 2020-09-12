@@ -1,0 +1,29 @@
+{
+	"name": "@cloudbase/fans-function",
+	"version": "1.0.0-2",
+	"description": "Tencent CloudBase Framework Function Plugin for Fans",
+	"author": "Seven Du <shiweidu@outlook.com>",
+	"homepage": "https://github.com/bytegem/fans#readme",
+	"license": "BSD-2-Clause",
+	"main": "lib/index.js",
+	"directories": {
+		"lib": "lib"
+	},
+	"files": [
+		"lib"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bytegem/fans.git"
+	},
+	"bugs": {
+		"url": "https://github.com/bytegem/fans/issues"
+	},
+	"devDependencies": {
+		"typescript": "^4.0.2"
+	},
+	"dependencies": {
+		"@cloudbase/framework-core": "^1.1.1",
+		"@cloudbase/framework-plugin-function": "^1.1.1"
+	}
+}

@@ -19,7 +19,7 @@ const functions = {
       'package-lock.json',
     ],
   }
-}
+};
 
 // CloudBase CLI 配置信息
 const cli = {

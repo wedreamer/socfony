@@ -1,5 +1,4 @@
 {
-    "$schema": "../schema.json",
     "aclTag": "ADMINWRITE",
     "collectionName": "moment-liked-histories",
     "description": "动态点赞记录表",

@@ -1,5 +1,4 @@
 {
-    "$schema": "../schema.json",
     "collectionName": "moments",
     "description": "动态数据集合",
     "aclTag": "ADMINWRITE",

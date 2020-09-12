@@ -1,0 +1,10 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "packages/database/collections/**/*.json"
+            ],
+            "url": "https://bytegem.github.io/schemas/tcb-database.json#"
+        }
+    ]
+}

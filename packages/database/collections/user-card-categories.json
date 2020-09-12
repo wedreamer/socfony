@@ -1,5 +1,4 @@
 {
-    "$schema": "../schema.json",
     "aclTag": "ADMINWRITE",
     "collectionName": "user-card-categories",
     "description": "用户交友卡类别"

@@ -13,6 +13,7 @@
     "server:build": "lerna run --scope server build",
     "server:deploy": "npm run server:build && tcb fn deploy server",
     "server:only-deploy": "tcb fn deploy server",
-    "server:dev": "lerna run --scope server dev"
+    "server:dev": "lerna run --scope server dev",
+    "publish": "lerna publish"
   }
 }

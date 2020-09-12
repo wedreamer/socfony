@@ -1,6 +1,11 @@
 {
+  "publishConfig": {
+    "access": "public"
+  },
   "packages": [
-    "packages/*"
+    "packages/@cloudbase/*",
+    "packages/database",
+    "packages/server"
   ],
   "version": "1.0.0-2"
 }
