@@ -1,6 +1,6 @@
 {
 	"name": "@cloudbase/fans-function",
-	"version": "1.0.1-1.0.0-0.0",
+	"version": "0.0.1",
 	"description": "Tencent CloudBase Framework Function Plugin for Fans",
 	"author": "Seven Du <shiweidu@outlook.com>",
 	"homepage": "https://github.com/bytegem/fans#readme",
