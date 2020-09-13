@@ -1,5 +1,7 @@
 import { createApp } from "./app";
 
+console.log(process.env);
+
 const bootstrap = async () => {
     const app = await createApp();
     const port = 3000;

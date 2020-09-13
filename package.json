@@ -1,8 +1,10 @@
 {
   "name": "@bytegem/fans",
-  "version": "1.0.0-2",
   "private": true,
   "license": "BSD-2-Clause",
+  "dependencies": {
+    "server": "file:packages/tcb-functions/server"
+  },
   "devDependencies": {
     "@cloudbase/cli": "^1.0.0-1",
     "lerna": "^3.22.1"
@@ -13,7 +15,8 @@
     "server:build": "lerna run --scope server build",
     "server:deploy": "npm run server:build && tcb fn deploy server",
     "server:only-deploy": "tcb fn deploy server",
-    "server:dev": "lerna run --scope server dev",
-    "publish": "lerna publish"
+    "server:dev": "lerna run --scope server dev --stream",
+    "publish": "lerna publish",
+    "fansrc": "node scripts/cloudbaserc-builder.js"
   }
 }

@@ -5,9 +5,13 @@ import { UserService } from "./user.service";
 export class UserController {
     constructor(private readonly service: UserService) {}
 
-    @Get(':id')
-    user(@Param('id') id: string) {
-        // request.user
-        return { id };
+    @Get(':uid')
+    async user(@Param('uid') uid: string) {
+        try {
+            const user = await this.service.find(uid);
+            return user;
+        } catch (e) {
+            console.log(e);
+        }
     }
 }

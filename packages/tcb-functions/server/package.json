@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "server",
-  "version": "0.0.2-1",
+  "version": "0.0.2-2",
   "description": "Fans App client APIs server",
   "author": "Seven Du <shiweidu@outlook.com>",
   "homepage": "https://bytegem.net",
@@ -13,7 +13,7 @@
   "scripts": {
     "build": "nest build",
     "start": "nest start",
-    "dev": "FANS_APP_MODE=dev nest start --watch"
+    "dev": "nest start --watch"
   },
   "bugs": {
     "url": "https://github.com/bytegem/fans/issues"

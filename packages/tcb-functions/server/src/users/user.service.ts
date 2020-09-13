@@ -22,4 +22,11 @@ export class UserService {
         const { uid } = await this.current();
         return !!uid;
     }
+
+    async find(uid: string): Promise<UserDto> {
+        const auth = this.cloudbase.auth();
+        const { userInfo: user } = await auth.getEndUserInfo(uid);
+
+        return user;
+    }
 }
