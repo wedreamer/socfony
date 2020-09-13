@@ -1,11 +1,14 @@
 
 export class UserDto {
-    uid: string;
-    nickName: string;
-    username?: string;
-    gender?: "MALE" | "FEMALE" | "UNKNOWN" = "UNKNOWN";
-    country?: string;
-    province?: string;
-    city?: string;
-    avatarUrl?: string;
+    constructor(
+        data?: UserDto,
+        public uid: string = data.uid,
+        public nickName: string = data.nickName,
+        public username: string = data.username,
+        public gender: "MALE" | "FEMALE" | "UNKNOWN" = data.gender || "UNKNOWN",
+        public country: string = data.country,
+        public province: string = data.province,
+        public city: string = data.city,
+        public avatarUrl: string = data.avatarUrl,
+    ) {}
 }

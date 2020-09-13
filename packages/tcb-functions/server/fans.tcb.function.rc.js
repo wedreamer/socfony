@@ -19,5 +19,8 @@ module.exports = {
         "src/**/*",
         // 忽略 npm 锁文件，避免系统不一致所导致的云函数安装失败
         'package-lock.json',
+        // 忽略脚本文件
+        "scripts",
+        "scripts/*"
     ],
 };
