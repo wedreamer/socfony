@@ -1,9 +1,7 @@
 {
-  "packages": [
-    "packages/*"
-  ],
   "version": "0.0.2-1",
-  "command": {
-    "publish": {}
-  }
+  "packages": [
+    "packages/*",
+    "packages/tcb-functions/*"
+  ]
 }

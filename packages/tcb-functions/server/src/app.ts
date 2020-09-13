@@ -10,11 +10,16 @@ export interface CreateAppOptions extends NestApplicationOptions {
 }
 
 export async function createApp<T extends INestApplication>(options: CreateAppOptions = {}): Promise<T> {
-    if (options && options.adapter instanceof AbstractHttpAdapter) {
-        return await NestFactory.create<T>(AppModule, options.adapter, options);
-    }
+    const getApp = async (): Promise<T> => {
+        if (options && options.adapter instanceof AbstractHttpAdapter) {
+            return await NestFactory.create<T>(AppModule, options.adapter, options);
+        } 
+    
+        return await NestFactory.create<T>(AppModule, options);
+    };
+    const app = await getApp();
 
-    return await NestFactory.create<T>(AppModule, options);
+    return app;
 }
 
 let expressApp: express.Express;
@@ -35,8 +40,12 @@ export async function createExpressApp(options: NestApplicationOptions = {}): Pr
 }
 
 export async function createFnApp(event: any, context: any) {
-    const app = await createExpressApp();
-    const mock = serverless(app);
+    const getRunner = async () => {
+        const app = await createExpressApp();
+
+        return serverless(app);
+    }
+    const runner = await getRunner();
     
-    return await mock(event, context);
+    return await runner(event, context);
 }

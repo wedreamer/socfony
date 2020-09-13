@@ -7,6 +7,7 @@ export class UserController {
 
     @Get(':id')
     user(@Param('id') id: string) {
+        // request.user
         return { id };
     }
 }

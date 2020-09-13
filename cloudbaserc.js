@@ -23,13 +23,8 @@ const functions = {
 // CloudBase CLI 配置信息
 const cli = {
   envId: "snsmax-1e572d",
-  functionRoot: 'packages',
+  functionRoot: 'packages/tcb-functions',
   functions: Object.values(functions),
 };
 
-// @cloudbase/framework 配置信息
-const framework = {
-  name: 'Fans',
-};
-
-module.exports = { ...cli, framework };
+module.exports = cli;
