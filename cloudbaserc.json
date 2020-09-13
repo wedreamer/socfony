@@ -1,4 +1,5 @@
 {
+  "version": "2.0",
   "envId": "{{env.ENV_ID}}",
   "functionRoot": "packages/tcb-functions",
   "functions": [
@@ -15,7 +16,9 @@
         "node_modules/**/*",
         "src",
         "src/**/*",
-        "package-lock.json"
+        "package-lock.json",
+        "scripts",
+        "scripts/*"
       ]
     }
   ],

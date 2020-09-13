@@ -9,6 +9,7 @@ const functions = [
 
 // CloudBase CLI 配置信息
 const cli = {
+  version: "2.0",
   envId: "{{env.ENV_ID}}",
   functionRoot,
   functions: Object.values(functions),
