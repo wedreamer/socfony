@@ -19,9 +19,12 @@ class Launch extends StatelessWidget {
       fit: StackFit.expand,
       children: <Widget>[
         Center(
-          child: Image.asset(
-            'assets/android_launcher.png',
-            width: mediaQueryData.size.width * 0.7,
+          child: ClipRRect(
+            child: Image.asset(
+              'assets/ios_launcher.png',
+              width: mediaQueryData.size.width * 0.4,
+            ),
+            borderRadius: BorderRadius.circular(mediaQueryData.size.width),
           ),
         ),
         Positioned(

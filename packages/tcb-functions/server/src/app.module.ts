@@ -3,6 +3,7 @@ import { APP_FILTER } from "@nestjs/core";
 import { CloudBaseModule } from "./cloudbase/cloudbase.module";
 import { HttpExceptionFilter } from "./http.exception.filter";
 import { HttpMiddleware } from "./middlewares/http.middleware";
+import { TcbAuthMiddleware } from "./middlewares/tcb.auth.middleware";
 import { UserModule } from "./users/user.module";
 
 @Module({
@@ -16,7 +17,10 @@ import { UserModule } from "./users/user.module";
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(HttpMiddleware)
+        consumer.apply(
+                HttpMiddleware, 
+                TcbAuthMiddleware,
+            )
             .forRoutes('*');
     }
 };

@@ -385,7 +385,6 @@ class _MomentAudioCardState extends State<MomentAudioCard> {
         builder: builder,
         progressIndicatorBuilder: (BuildContext context, _) => defaultChild,
         errorBuilder: (BuildContext context, _) => defaultChild,
-        placeholderBuilder: (BuildContext context) => defaultChild,
       );
     }
 

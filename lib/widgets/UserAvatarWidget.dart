@@ -38,7 +38,6 @@ class UserAvatarWidget extends StatelessWidget {
         fileId: fileId,
         rule: rule,
         builder: _avatarBuilder,
-        placeholderBuilder: (_) => defaultAvatarWidget,
         progressIndicatorBuilder: (_, __) => defaultAvatarWidget,
         errorBuilder: (_, __) => defaultAvatarWidget,
       );

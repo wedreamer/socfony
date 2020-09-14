@@ -11,13 +11,11 @@ import 'CloudBaseFileBuilder.dart';
 
 typedef ProgressIndicatorBuilder = Widget Function(
     BuildContext, DownloadProgress);
-typedef PlaceholderWidgetBuilder = Widget Function(BuildContext);
 typedef CachedNetworkImageChildBuilder(
     BuildContext context, ImageProvider image);
 
 class _Payload {
   final String rule;
-  final PlaceholderWidgetBuilder placeholderBuilder;
   final ProgressIndicatorBuilder progressIndicatorBuilder;
   final cache.ImageWidgetBuilder builder;
   final CloudBaseDocErrorBuilder errorBuilder;
@@ -27,7 +25,6 @@ class _Payload {
 
   const _Payload({
     this.rule,
-    this.placeholderBuilder,
     this.progressIndicatorBuilder,
     this.errorBuilder,
     @required this.builder,
@@ -43,14 +40,6 @@ class _Payload {
 
     return url;
   }
-}
-
-cache.PlaceholderWidgetBuilder _placeholderBuilderBuilder(
-    PlaceholderWidgetBuilder placeholderBuilder) {
-  if (placeholderBuilder is PlaceholderWidgetBuilder) {
-    return (BuildContext context, _) => placeholderBuilder(context);
-  }
-  return null;
 }
 
 cache.ProgressIndicatorBuilder _progressIndicatorBuilder(
@@ -92,7 +81,6 @@ CloudBaseDocChildBuilder<DownloadMetadata> _widgetBuilder(_Payload payload) =>
     (BuildContext context, DownloadMetadata meta) {
       return cache.CachedNetworkImage(
         imageUrl: payload.toUrl(meta.downloadUrl),
-        placeholder: _placeholderBuilderBuilder(payload.placeholderBuilder),
         progressIndicatorBuilder:
             _progressIndicatorBuilder(payload.progressIndicatorBuilder),
         errorWidget: _errorWidgetBuilder(payload.errorBuilder),
@@ -117,7 +105,6 @@ class CachedNetworkImageBuilder extends CloudBaseFileBuilder {
     Key key,
     @required String fileId,
     String rule,
-    PlaceholderWidgetBuilder placeholderBuilder,
     ProgressIndicatorBuilder progressIndicatorBuilder,
     cache.ImageWidgetBuilder builder,
     CloudBaseDocErrorBuilder errorBuilder,
@@ -130,7 +117,6 @@ class CachedNetworkImageBuilder extends CloudBaseFileBuilder {
           builder: _widgetBuilder(
             _Payload(
               rule: rule,
-              placeholderBuilder: placeholderBuilder,
               progressIndicatorBuilder: progressIndicatorBuilder,
               fit: fit,
               width: width,

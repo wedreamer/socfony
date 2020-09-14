@@ -40,6 +40,7 @@ export async function createExpressApp(options: NestApplicationOptions = {}): Pr
 }
 
 export async function createFnApp(event: any, context: any) {
+    console.log(event, context);
     const getRunner = async () => {
         const app = await createExpressApp();
 

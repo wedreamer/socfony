@@ -7,11 +7,6 @@ export class UserController {
 
     @Get(':uid')
     async user(@Param('uid') uid: string) {
-        try {
-            const user = await this.service.find(uid);
-            return user;
-        } catch (e) {
-            console.log(e);
-        }
+        return await this.service.find(uid);
     }
 }

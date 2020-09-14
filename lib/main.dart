@@ -51,15 +51,20 @@ class _AppState extends State<App> {
     try {
       // get CloudBase auth state
       CloudBaseAuthState authState = await CloudBase().auth.getAuthState();
+      // await CloudBase().auth.signOut();
+      // print(authState.accessToken);
+      // CloudBaseAuthState authState = await CloudBase().auth.signInAnonymously();
 
       // If auth state is null, using anonymously login
       if (authState == null) {
-        await CloudBase().auth.signInAnonymously();
+        authState = await CloudBase().auth.signInAnonymously();
 
         // If login user has expired, refresh access token
       } else if (await CloudBase().auth.hasExpiredAuthState()) {
         await CloudBase().auth.refreshAccessToken();
       }
+
+      print(authState.accessToken);
 
       AppAuthProvider.init(false);
 
