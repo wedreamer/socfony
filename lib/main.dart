@@ -64,8 +64,6 @@ class _AppState extends State<App> {
         await CloudBase().auth.refreshAccessToken();
       }
 
-      print(authState.accessToken);
-
       AppAuthProvider.init(false);
 
       // set the widget is initialized

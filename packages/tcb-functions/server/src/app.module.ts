@@ -19,7 +19,7 @@ export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(
                 HttpMiddleware, 
-                TcbAuthMiddleware,
+                // TcbAuthMiddleware, 不使用云接入情况下不启用
             )
             .forRoutes('*');
     }

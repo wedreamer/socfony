@@ -1,6 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:fans/models/BaseModel.dart';
 import 'package:fans/models/media.dart';
 import 'package:fans/models/vote.dart';
 
@@ -8,7 +9,10 @@ import 'serializers.dart';
 
 part 'moment.g.dart';
 
-abstract class Moment implements Built<Moment, MomentBuilder> {
+abstract class Moment
+    with AbstractBaseModel
+    implements Built<Moment, MomentBuilder> {
+  @override
   @BuiltValueField(wireName: '_id')
   String get id;
 

@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:fans/cloudbase/commands/sms/TcbSmsCommand.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:fans/cloudbase/commands/sms/SmsLoginCommand.dart';
-import 'package:fans/cloudbase/commands/sms/SmsSendPhoneCodeCommand.dart';
 import 'package:fans/provider/AppAuthProvider.dart';
 
 import '../cloudbase.dart' hide RegExp;
@@ -144,8 +143,8 @@ class _LoginButton extends StatelessWidget {
       CancelFunc cancel = BotToast.showLoading();
       try {
         // create login ticket.
-        String ticket =
-            await SmsLoginCommand(controller.phone, controller.code).run();
+        String ticket = await TcbSmsCommand.createLoginTicket(
+            controller.phone, controller.code);
 
         // using ticket login.
         await CloudBase().auth.signInWithTicket(ticket);
@@ -157,9 +156,11 @@ class _LoginButton extends StatelessWidget {
         Navigator.of(context).pop(true);
         BotToast.showText(text: '登录成功');
       } on UnimplementedError catch (e) {
+        print(e);
         cancel();
         BotToast.showText(text: e.message);
       } catch (e) {
+        print(e);
         cancel();
         BotToast.showText(text: '登录失败');
       }
@@ -233,7 +234,7 @@ class _LoginPhoneCodeActionButton extends StatelessWidget {
     return () {
       LoginController controller = context.read<LoginController>();
       controller.showSending = true;
-      SmsSendPhoneCodeCommand(controller.phone).run().then((_) {
+      TcbSmsCommand.sendCode(controller.phone).then((_) {
         BotToast.showText(text: '验证码发送成功');
         controller.showTimer = true;
       }).catchError((error) {

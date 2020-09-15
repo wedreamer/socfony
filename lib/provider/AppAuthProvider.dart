@@ -38,7 +38,7 @@ class AppAuthProvider with ChangeNotifier {
     final state = await _auth.getAuthState();
     final user = await QueryCurrentUserCommand().run();
 
-    reset(state, user.uid);
+    reset(state, user.id);
 
     UsersCollection().insertOrUpdate([user]);
 

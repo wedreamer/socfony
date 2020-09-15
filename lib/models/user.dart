@@ -1,17 +1,19 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:fans/models/BaseModel.dart';
 import 'package:fans/models/serializers.dart';
 
 part 'user.g.dart';
 
-abstract class User implements Built<User, UserBuilder> {
+abstract class User with AbstractBaseModel implements Built<User, UserBuilder> {
+  @override
+  @BuiltValueField(wireName: 'uid')
+  String get id;
+
   @nullable
   @BuiltValueField(serialize: false)
   DateTime get createdAt;
-
-  @nullable
-  String get uid;
 
   @nullable
   String get nickName;

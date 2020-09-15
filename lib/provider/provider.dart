@@ -1,3 +1,4 @@
+import 'package:fans/cloudbase/database/TcbDbCollectionsProvider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,7 @@ class RootProvider extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CachedNetworkFileProvider()),
         ChangeNotifierProvider(create: (_) => MomentHasLikedProvider()),
         ChangeNotifierProvider(create: (_) => MomentVoteHasSelectedProvider()),
+        ChangeNotifierProvider.value(value: TcbDbCollectionsProvider()),
       ],
       child: child,
     );

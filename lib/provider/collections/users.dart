@@ -20,7 +20,7 @@ class UsersCollection extends BaseCollectionProvider<String, User> {
   }
 
   @override
-  String toCollectionId(User value) => value.uid;
+  String toCollectionId(User value) => value.id;
 
   @override
   String toDocId(User value) => toCollectionId(value);

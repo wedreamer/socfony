@@ -42,13 +42,10 @@ class _$UserSerializer implements StructuredSerializer<User> {
   @override
   Iterable<Object> serialize(Serializers serializers, User object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[];
-    if (object.uid != null) {
-      result
-        ..add('uid')
-        ..add(serializers.serialize(object.uid,
-            specifiedType: const FullType(String)));
-    }
+    final result = <Object>[
+      'uid',
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
+    ];
     if (object.nickName != null) {
       result
         ..add('nickName')
@@ -82,7 +79,7 @@ class _$UserSerializer implements StructuredSerializer<User> {
       final dynamic value = iterator.current;
       switch (key) {
         case 'uid':
-          result.uid = serializers.deserialize(value,
+          result.id = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'nickName':
@@ -123,9 +120,9 @@ class _$UserGenderSerializer implements PrimitiveSerializer<UserGender> {
 
 class _$User extends User {
   @override
-  final DateTime createdAt;
+  final String id;
   @override
-  final String uid;
+  final DateTime createdAt;
   @override
   final String nickName;
   @override
@@ -136,8 +133,12 @@ class _$User extends User {
   factory _$User([void Function(UserBuilder) updates]) =>
       (new UserBuilder()..update(updates)).build();
 
-  _$User._({this.createdAt, this.uid, this.nickName, this.gender, this.avatar})
-      : super._();
+  _$User._({this.id, this.createdAt, this.nickName, this.gender, this.avatar})
+      : super._() {
+    if (id == null) {
+      throw new BuiltValueNullFieldError('User', 'id');
+    }
+  }
 
   @override
   User rebuild(void Function(UserBuilder) updates) =>
@@ -150,8 +151,8 @@ class _$User extends User {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is User &&
+        id == other.id &&
         createdAt == other.createdAt &&
-        uid == other.uid &&
         nickName == other.nickName &&
         gender == other.gender &&
         avatar == other.avatar;
@@ -161,7 +162,7 @@ class _$User extends User {
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc($jc($jc(0, createdAt.hashCode), uid.hashCode),
+            $jc($jc($jc(0, id.hashCode), createdAt.hashCode),
                 nickName.hashCode),
             gender.hashCode),
         avatar.hashCode));
@@ -170,8 +171,8 @@ class _$User extends User {
   @override
   String toString() {
     return (newBuiltValueToStringHelper('User')
+          ..add('id', id)
           ..add('createdAt', createdAt)
-          ..add('uid', uid)
           ..add('nickName', nickName)
           ..add('gender', gender)
           ..add('avatar', avatar))
@@ -182,13 +183,13 @@ class _$User extends User {
 class UserBuilder implements Builder<User, UserBuilder> {
   _$User _$v;
 
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
+
   DateTime _createdAt;
   DateTime get createdAt => _$this._createdAt;
   set createdAt(DateTime createdAt) => _$this._createdAt = createdAt;
-
-  String _uid;
-  String get uid => _$this._uid;
-  set uid(String uid) => _$this._uid = uid;
 
   String _nickName;
   String get nickName => _$this._nickName;
@@ -206,8 +207,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
 
   UserBuilder get _$this {
     if (_$v != null) {
+      _id = _$v.id;
       _createdAt = _$v.createdAt;
-      _uid = _$v.uid;
       _nickName = _$v.nickName;
       _gender = _$v.gender;
       _avatar = _$v.avatar;
@@ -233,8 +234,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
   _$User build() {
     final _$result = _$v ??
         new _$User._(
+            id: id,
             createdAt: createdAt,
-            uid: uid,
             nickName: nickName,
             gender: gender,
             avatar: avatar);

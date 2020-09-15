@@ -55,8 +55,8 @@ class MomentListTile extends StatelessWidget {
                     radius: 24,
                     fileId: user.avatar,
                   ),
-                  title: Text(
-                      user.nickName ?? "用户" + user.uid.hashCode.toString()),
+                  title:
+                      Text(user.nickName ?? "用户" + user.id.hashCode.toString()),
                   subtitle: Text(moment.createdAt.formNow),
                   trailing: Icon(Icons.more_vert),
                 );
