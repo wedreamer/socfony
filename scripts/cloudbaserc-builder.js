@@ -4,7 +4,7 @@ const path = require('path');
 const functionRoot = 'packages/tcb-functions';
 
 const functions = [
-  require("server/fans.tcb.function.rc"),
+  require('../packages/tcb-functions/server/fans.tcb.function.rc'),
 ];
 
 // CloudBase CLI 配置信息

@@ -1,5 +1,5 @@
-import * as express from 'express';
-import * as  serverless from 'serverless-http';
+import express from 'express';
+import serverless from 'serverless-http';
 import { AbstractHttpAdapter, NestFactory } from "@nestjs/core";
 import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from "./app.module";

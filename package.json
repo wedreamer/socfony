@@ -2,11 +2,9 @@
   "name": "@bytegem/fans",
   "private": true,
   "license": "BSD-2-Clause",
-  "dependencies": {
-    "server": "file:packages/tcb-functions/server"
-  },
   "devDependencies": {
     "@cloudbase/cli": "^1.0.0-1",
+    "@types/node": "^14.10.2",
     "lerna": "^3.22.1"
   },
   "scripts": {

@@ -4,10 +4,11 @@ import { CloudBaseModule } from "./cloudbase/cloudbase.module";
 import { HttpExceptionFilter } from "./http.exception.filter";
 import { HttpMiddleware } from "./middlewares/http.middleware";
 import { TcbAuthMiddleware } from "./middlewares/tcb.auth.middleware";
+import { MomentModule } from "./moments/moment.module";
 import { UserModule } from "./users/user.module";
 
 @Module({
-    imports: [CloudBaseModule, UserModule],
+    imports: [CloudBaseModule, UserModule, MomentModule],
     providers: [
         {
             provide: APP_FILTER,
