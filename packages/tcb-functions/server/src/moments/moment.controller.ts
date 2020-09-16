@@ -9,7 +9,7 @@ export class MomentController {
      */
     @Post()
     @UsePipes(new JoiValidationPipe(CreateMomentValidationSchema))
-    create(@Body() dto) {
+    create(@Body() dto: any) {
         return dto;
     }
 }
