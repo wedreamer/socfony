@@ -74,6 +74,7 @@ export class BusinessMomentController {
                 id: true,
                 createdAt: true,
             })
+            // 聚合搜索条件顺序很重要。。。不想 MySQL 那样限定条件，如 limit 可以随意顺序！必须按步聚合！
             .sort({
                 createdAt: -1,
             })
@@ -130,6 +131,7 @@ export class BusinessMomentController {
                     $.size('$comments'),
                 ]),
             })
+            // 聚合搜索条件顺序很重要。。。不想 MySQL 那样限定条件，如 limit 可以随意顺序！必须按步聚合！
             .sort({
                 total: -1,
                 createdAt: -1,
