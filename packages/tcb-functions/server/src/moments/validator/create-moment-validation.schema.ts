@@ -4,7 +4,7 @@ import { tcbStorageFileIsImageValidator, tcbStorageFileIsVideoValidator } from "
 
 export const CreateMomentValidationSchema = Joi.object({
     text: Joi.string()
-        .alphanum().max(5000)
+        .max(5000)
         .required()
         .label('内容'),
     images: Joi.array().unique().max(9).items(
@@ -18,8 +18,8 @@ export const CreateMomentValidationSchema = Joi.object({
         cover: Joi.string().external(tcbStorageCloudFileIdToPath),
         src: Joi.string().external(tcbStorageFileIsVideoValidator).required(),
     }),
-    vote: Joi.array().unique().items(
-        Joi.string().required().alphanum().min(1).max(20),
+    vote: Joi.array().unique().min(2).max(5).items(
+        Joi.string().required().min(1).max(20),
     ),
     location: Joi.object({
         longitude: Joi.number().required(),
