@@ -1,6 +1,6 @@
 # Fans
 
-<img src="assets/fans.svg" align="right" />
+<img src="assets/fans.svg" align="right" width="120" />
 
 Fans 是一个基于 CloudBase 而开发的 Serverless 云原生一体化产品方案程序，主要致力于开源社交程序。
 
@@ -22,7 +22,7 @@ Fans 是一个基于 CloudBase 而开发的 Serverless 云原生一体化产品�
 
 然后复制项目根的 `.fansrc.example` 文件为 `.fansrc` 文件，文件内容及配置如下：
 
-| Key | 类型 ｜ 描述 |
+| Key | 类型 | 描述 |
 |:----------|:----------:|:------------|
 | TENCENTCLOUD_SECRETID | String | 腾讯云访问 ID，仅本地开发云函数服务代码需要配置 |
 | TENCENTCLOUD_SECRETKEY | String | 腾讯云访问 Key，仅本地开发云函数服务代码需要配置 |
