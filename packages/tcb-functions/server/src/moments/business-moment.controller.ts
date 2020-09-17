@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Query } from "@nestjs/common";
 import { CloudBaseService } from "src/cloudbase/cloudbase.service";
 import { UserService } from "src/users/user.service";
 
@@ -11,8 +11,8 @@ export class BusinessMomentController {
 
     @Get('following')
     async following(
-        @Param('limit') limit: number = 20,
-        @Param('offset') offset: number = 0,
+        @Query('limit') limit: any  = 20,
+        @Query('offset') offset: any = 0,
     ) {
         const db = this.tcb.server.database();
         const _ = db.command;
@@ -74,11 +74,68 @@ export class BusinessMomentController {
                 id: true,
                 createdAt: true,
             })
-            .limit(limit)
-            .skip(offset)
             .sort({
                 createdAt: -1,
             })
+            .skip(parseInt(offset))
+            .limit(parseInt(limit))
+            .end();
+        
+        const result = await query;
+
+        return result.data.map(e => e.id);
+    }
+
+    @Get('recomment')
+    async recomment(
+        @Query('limit') limit: any  = 20,
+        @Query('offset') offset: any = 0,
+    ) {
+        const db = this.tcb.server.database();
+        const _ = db.command;
+        const $ = _.aggregate;
+
+        const weekAgo = Date.now() - 86400000 * 7;
+
+        const query = db.collection('moments')
+            .aggregate()
+            .lookup({
+                from: 'moment-liked-histories',
+                as: 'likes',
+                let: { id: '$_id' },
+                pipeline: $.pipeline().match(_.expr(
+                    $.and([
+                        $.gte(['$createdAt', weekAgo]),
+                        $.eq(['$$id', '$momentId']),
+                    ])
+                )).project({ _id: true, }).done(),
+            })
+            .lookup({
+                from: 'moment-comments',
+                as: 'comments',
+                let: { id: '$_id' },
+                pipeline: $.pipeline().match(_.expr(
+                    $.and([
+                        $.gte(['$createdAt', weekAgo]),
+                        $.eq(['$$id', '$momentId']),
+                    ]),
+                )).project({ _id: true }).done(),
+            })
+            .project({
+                _id: false,
+                id: '$_id',
+                createdAt: true,
+                total: $.sum([
+                    $.size('$likes'),
+                    $.size('$comments'),
+                ]),
+            })
+            .sort({
+                total: -1,
+                createdAt: -1,
+            })
+            .skip(parseInt(offset))
+            .limit(parseInt(limit))
             .end();
         
         const result = await query;
