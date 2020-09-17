@@ -1,22 +1,22 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { CloudBaseService } from "src/cloudbase/cloudbase.service";
-import { UserService } from "src/users/user.service";
+import { Auth } from "src/users/auth.decorator";
+import { UserDto } from "src/users/dtos/user.dto";
 
 @Controller('moment-business')
 export class BusinessMomentController {
     constructor(
         private readonly tcb: CloudBaseService,
-        private readonly userService: UserService,
     ) {}
 
     @Get('following')
     async following(
+        @Auth() user: UserDto,
         @Query('limit') limit: any  = 20,
         @Query('offset') offset: any = 0,
     ) {
         const db = this.tcb.server.database();
         const _ = db.command;
-        const user = await this.userService.current();
         
         const query = db.collection('moments')
             .aggregate()

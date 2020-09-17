@@ -1,12 +1,11 @@
 import { Controller, Get, Param } from "@nestjs/common";
-import { UserService } from "./user.service";
+import { UserDto } from "./dtos/user.dto";
+import { ParseUserPipe } from "./pipes/parse-user.pipe";
 
 @Controller('users')
 export class UserController {
-    constructor(private readonly service: UserService) {}
-
     @Get(':uid')
-    async user(@Param('uid') uid: string) {
-        return await this.service.find(uid);
+    user(@Param('uid', ParseUserPipe) user: UserDto): UserDto {
+        return user;
     }
 }

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { AuthMiddleware } from "src/middlewares/auth.middleware";
 import { UserModule } from "src/users/user.module";
 import { BusinessMomentController } from "./business-moment.controller";
@@ -18,6 +18,7 @@ import { MomentService } from "./moment.service";
 export class MomentModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(AuthMiddleware).forRoutes(MomentController);
-        consumer.apply(AuthMiddleware).forRoutes(BusinessMomentController);
+        consumer.apply(AuthMiddleware).forRoutes('moment-business/following');
+        consumer.apply(AuthMiddleware).forRoutes(LikerMomentController);
     }
 }

@@ -1,6 +1,7 @@
 import { Body, Controller, Post, UsePipes } from "@nestjs/common";
 import { CloudBaseService } from "src/cloudbase/cloudbase.service";
-import { UserService } from "src/users/user.service";
+import { Auth } from "src/users/auth.decorator";
+import { UserDto } from "src/users/dtos/user.dto";
 import { JoiValidationPipe } from "src/validator/joi-validation.pipe";
 import { MomentService } from "./moment.service";
 import { CreateMomentValidationSchema } from "./validator/create-moment-validation.schema";
@@ -9,7 +10,6 @@ import { CreateMomentValidationSchema } from "./validator/create-moment-validati
 export class MomentController {
     constructor(
         private readonly tcb: CloudBaseService,
-        private readonly userService: UserService,
         private readonly service: MomentService,
     ) {}
 
@@ -22,7 +22,10 @@ export class MomentController {
      */
     @Post()
     @UsePipes(new JoiValidationPipe(CreateMomentValidationSchema))
-    async create(@Body() dto: CreateMomentBodyDto) {
+    async create(
+        @Body() dto: CreateMomentBodyDto,
+        @Auth() user: UserDto,
+    ) {
         const doc = dto as unknown as CreateMomentDocDto;
         if (dto.vote && Array.isArray(dto.vote)) {
             doc.vote = dto.vote.map(value => ({
@@ -34,7 +37,7 @@ export class MomentController {
         }
 
         doc.createdAt = new Date();
-        doc.userId = (await this.userService.current()).uid;
+        doc.userId = user.uid;
 
         const docId = await this.service.create(doc);
 
