@@ -36,7 +36,7 @@ export class BusinessMomentController {
             })
             .lookup({
                 from: 'topic-user',
-                as: 'topices',
+                as: 'topics',
                 let: { topicId: '$topicId' },
                 pipeline: _.aggregate.pipeline().match(_.expr(
                     _.aggregate.and([
@@ -59,14 +59,14 @@ export class BusinessMomentController {
                     in: '$$this.targetUserId',
                 }),
                 topices: _.aggregate.map({
-                    input: '$topices',
+                    input: '$topics',
                     in: '$$this.topicId',
                 }),
             })
             .match(_.expr(
                 _.aggregate.or([
                     _.aggregate.in(['$userId', '$follow']),
-                    _.aggregate.in(['$topicId', '$topices']),
+                    _.aggregate.in(['$topicId', '$topics']),
                     _.aggregate.eq(['$userId', user.uid]),
                 ]),
             ))
