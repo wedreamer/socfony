@@ -43,7 +43,7 @@ export class LikerMomentController {
         });
     }
 
-    @Delete()
+    @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async destroy(
         @Param('id') id: string,
