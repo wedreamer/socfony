@@ -26,7 +26,7 @@ Fans 是一个基于 CloudBase 而开发的 Serverless 云原生一体化产品�
 |:----------|:----------:|:------------|
 | TENCENTCLOUD_SECRETID | String | 腾讯云访问 ID，仅本地开发云函数服务代码需要配置 |
 | TENCENTCLOUD_SECRETKEY | String | 腾讯云访问 Key，仅本地开发云函数服务代码需要配置 |
-| ENV_ID ｜ String | 腾讯云 CloudBase 云开发的环境 ID |
+| ENV_ID | String | 腾讯云 CloudBase 云开发的环境 ID |
 | __DEV_MOCK_TCB_UUID | String | 本地开发云函数服务代码时用来模拟已登陆用户的用户 ID |
 
 然后需要在心目中执行如下代码：
