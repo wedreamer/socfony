@@ -1,6 +1,24 @@
 export class MomentDot {
-    constructor(
-        data ?: MomentDot,
-        public readonly _id: string = data._id,
-    ) {}
+    _id: string;
+    userId: string;
+    text: string;
+    audio?: {
+        cover?: string;
+        src: string;
+    };
+    images?: string[];
+    video?: {
+        cover: string;
+        src: string;
+    };
+    location: {
+        type: "Point";
+        coordinates: [number, number];
+    };
+    createdAt: string;
+    count: {
+        like?: number;
+        comment?: number;
+    };
+    topicId?: string;
 }

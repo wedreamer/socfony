@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CloudBaseService } from "src/cloudbase/cloudbase.service";
 import { MomentDot } from "./dtos/moment.dto";
 
@@ -19,8 +19,14 @@ export class MomentService {
         return result.id;
     }
 
-    // async find(id: string): Promise<MomentDot> {
-    //     const db = this.tcb.server.database();
-    //     db.collection('moments').doc(id).get();
-    // }
+    async find(id: string): Promise<MomentDot> {
+        const db = this.tcb.server.database();
+        const moment = await db.collection('moments').doc(id).get();
+        
+        if (moment.code || !moment.data || (Array.isArray(moment.data) && moment.data.length <= 0)) {
+            throw new NotFoundException(moment.message);
+        }
+
+        return moment.data.pop();
+    }
 }

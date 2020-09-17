@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AuthMiddleware } from "src/middlewares/auth.middleware";
 import { UserModule } from "src/users/user.module";
 import { BusinessMomentController } from "./business-moment.controller";
+import { LikerMomentController } from "./liker-moment.controller";
 import { MomentController } from "./moment.controller";
 import { MomentService } from "./moment.service";
 
@@ -9,6 +10,7 @@ import { MomentService } from "./moment.service";
     controllers: [
         MomentController,
         BusinessMomentController,
+        LikerMomentController,
     ],
     imports: [UserModule],
     providers: [MomentService],
