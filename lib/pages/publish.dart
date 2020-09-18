@@ -839,7 +839,7 @@ class _PublishState extends State<PublishPage> {
       loading.text = '正在发布...';
       loading.progress = null;
 
-      await CreateMomentCommand(controller).run();
+      await CreateMomentCommand(controller).send();
 
       cancelFunc();
 

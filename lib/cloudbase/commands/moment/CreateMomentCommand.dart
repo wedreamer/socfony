@@ -1,8 +1,8 @@
-import 'package:flutter/widgets.dart';
-import 'package:geolocator/geolocator.dart' show Position;
-import 'package:fans/cloudbase/commands/ClientApiFunctionCommand.dart';
+import 'dart:convert' show jsonEncode;
 
-import '../../../cloudbase.dart';
+import 'package:fans/cloudbase/function/FunctionMockHttp.dart';
+import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart' show Position;
 
 class CreateMomentCommandVideoItemController {
   final String cover;
@@ -75,21 +75,30 @@ class CreateMomentCommandController {
 
     return data;
   }
+
+  @override
+  String toString() {
+    return jsonEncode(toData());
+  }
 }
 
-class CreateMomentCommand extends ClientApiFunctionCommand<bool> {
-  CreateMomentCommand(CreateMomentCommandController controller)
-      : super(controller.toData());
+class CreateMomentCommand {
+  final CreateMomentCommandController controller;
 
-  @override
-  String get commandName => 'moment:create';
+  const CreateMomentCommand(this.controller);
 
-  @override
-  bool deserializer(data, CloudBaseResponse response) {
-    if (data == true) {
-      return true;
+  Future<String> send() async {
+    final http = FunctionMockHttp(
+      method: 'post',
+      path: '/moments',
+      body: controller.toString(),
+      headers: {'Content-Type': 'application/json'},
+    );
+    final response = await http.send();
+    final result = response.toJsonDecode();
+    if (response.statusCode == 201) {
+      return result['id'];
     }
-
-    throw UnimplementedError(response.message ?? '发布失败');
+    throw UnimplementedError(result['message']);
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UsePipes } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, UsePipes } from "@nestjs/common";
 import { CloudBaseService } from "src/cloudbase/cloudbase.service";
 import { Auth } from "src/users/auth.decorator";
 import { UserDto } from "src/users/dtos/user.dto";
@@ -21,9 +21,9 @@ export class MomentController {
      * Create a moment
      */
     @Post()
-    @UsePipes(new JoiValidationPipe(CreateMomentValidationSchema))
+    @HttpCode(HttpStatus.CREATED)
     async create(
-        @Body() dto: CreateMomentBodyDto,
+        @Body(new JoiValidationPipe(CreateMomentValidationSchema)) dto: CreateMomentBodyDto,
         @Auth() user: UserDto,
     ) {
         const doc = dto as unknown as CreateMomentDocDto;

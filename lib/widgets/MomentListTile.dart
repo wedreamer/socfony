@@ -60,7 +60,9 @@ class MomentListTile extends StatelessWidget {
                     title: Text(
                       (user.nickName?.isNotEmpty ?? false)
                           ? user.nickName
-                          : "用户" + user.id.hashCode.toString(),
+                          : user.id,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     subtitle: Text(moment.createdAt.formNow),
                     trailing: Icon(Icons.more_vert),
