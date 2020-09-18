@@ -1,6 +1,5 @@
+import 'package:fans/cloudbase/function/FunctionMomentQuery.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fans/cloudbase/commands/moment/QueryFollowingMomentsCommand.dart';
-import 'package:fans/provider/AppAuthProvider.dart';
 
 class FollowingMomentsBusiness with ChangeNotifier {
   static FollowingMomentsBusiness _instance;
@@ -8,16 +7,7 @@ class FollowingMomentsBusiness with ChangeNotifier {
   Iterable<String> _ids;
   Iterable<String> get ids => _ids ?? [];
 
-  FollowingMomentsBusiness._() {
-    AppAuthProvider().addListener(() {
-      final userId = AppAuthProvider().uid;
-      if (userId == null || userId.isEmpty) {
-        this
-          .._ids = []
-          ..notifyListeners();
-      }
-    });
-  }
+  FollowingMomentsBusiness._();
 
   factory FollowingMomentsBusiness() {
     if (_instance is! FollowingMomentsBusiness) {
@@ -28,15 +18,16 @@ class FollowingMomentsBusiness with ChangeNotifier {
   }
 
   Future<int> refresh() async {
-    _ids = await QueryFollowingMomentsCommand().run();
+    _ids = await FunctionMomentQuery.queryFollowingMomentIds();
     notifyListeners();
 
     return ids.length;
   }
 
   Future<int> loadMore() async {
-    final ids =
-        await QueryFollowingMomentsCommand(offset: this.ids?.length ?? 0).run();
+    final ids = await FunctionMomentQuery.queryFollowingMomentIds(
+      offset: this.ids?.length ?? 0,
+    );
 
     _ids = this.ids.toList()
       ..addAll(ids)

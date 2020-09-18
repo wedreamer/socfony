@@ -15,9 +15,9 @@ class RootProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AppAuthProvider()),
-        ChangeNotifierProvider(create: (_) => MomentHasLikedProvider()),
-        ChangeNotifierProvider(create: (_) => MomentVoteHasSelectedProvider()),
+        ChangeNotifierProvider.value(value: AppAuthProvider()),
+        ChangeNotifierProvider.value(value: MomentHasLikedProvider()),
+        ChangeNotifierProvider.value(value: MomentVoteHasSelectedProvider()),
         ChangeNotifierProvider.value(value: TcbDbCollectionsProvider()),
       ],
       child: child,

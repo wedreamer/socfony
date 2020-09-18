@@ -25,7 +25,7 @@ class FunctionMockHttpResponse {
     return convert.base64Decode(body).toString();
   }
 
-  dynamic toJsonDecode() {
+  T toJsonDecode<T>() {
     return convert.jsonDecode(toBase64Decode());
   }
 
@@ -68,6 +68,8 @@ class FunctionMockHttp {
   /// 传输的内容字符串
   final String body;
 
+  final Map<String, dynamic> query;
+
   String get fnName => 'server';
 
   const FunctionMockHttp({
@@ -76,6 +78,7 @@ class FunctionMockHttp {
     this.body,
     this.headers = const {},
     this.isBase64Encoded = false,
+    this.query = const {},
   });
 
   Future<FunctionMockHttpResponse> send() async {
@@ -84,6 +87,8 @@ class FunctionMockHttp {
       'httpMethod': method.toUpperCase(),
       'isBase64Encoded': isBase64Encoded,
       'body': body,
+      'headers': headers,
+      'queryStringParameters': query,
     });
 
     if (response.data is Map) {

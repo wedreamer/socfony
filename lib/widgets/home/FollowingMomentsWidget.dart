@@ -39,6 +39,7 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
       await business.refresh();
       refreshController.refreshCompleted(resetFooterState: true);
     } catch (e) {
+      print(e);
       refreshController.refreshFailed();
     }
   }

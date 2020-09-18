@@ -1,5 +1,5 @@
-import 'package:flutter/widgets.dart';
-import 'package:fans/cloudbase/commands/moment/QueryRecommendMomentsCommand.dart';
+import 'package:fans/cloudbase/function/FunctionMomentQuery.dart';
+import 'package:flutter/foundation.dart';
 
 class HomeRecommendMomentsBusiness with ChangeNotifier {
   static HomeRecommendMomentsBusiness _instance;
@@ -20,7 +20,7 @@ class HomeRecommendMomentsBusiness with ChangeNotifier {
   bool get isEmpty => ids?.isEmpty ?? true;
 
   Future<int> refresh() async {
-    _ids = await QueryRecommendMomentsCommand().run();
+    _ids = await FunctionMomentQuery.queryRecommendMomentIds();
 
     notifyListeners();
 
@@ -28,8 +28,9 @@ class HomeRecommendMomentsBusiness with ChangeNotifier {
   }
 
   Future<int> loadMore() async {
-    final ids =
-        await QueryRecommendMomentsCommand(offset: this.ids?.length ?? 0).run();
+    final ids = await FunctionMomentQuery.queryRecommendMomentIds(
+      offset: this.ids?.length ?? 0,
+    );
 
     _ids = this.ids.toList()
       ..addAll(ids)
