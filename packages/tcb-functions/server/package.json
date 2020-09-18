@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "server",
-  "version": "0.0.2-2",
+  "version": "0.0.2-3",
   "description": "Fans App client APIs server",
   "author": "Seven Du <shiweidu@outlook.com>",
   "homepage": "https://bytegem.net",
