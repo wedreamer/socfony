@@ -3,6 +3,8 @@ import { AuthMiddleware } from "src/middlewares/auth.middleware";
 import { UserModule } from "src/users/user.module";
 import { BusinessMomentController } from "./business-moment.controller";
 import { LikerMomentController } from "./liker-moment.controller";
+import { MomentVoteController } from "./moment-vote.controller";
+import { MomentVoteService } from "./moment-vote.service";
 import { MomentController } from "./moment.controller";
 import { MomentService } from "./moment.service";
 
@@ -11,14 +13,18 @@ import { MomentService } from "./moment.service";
         MomentController,
         BusinessMomentController,
         LikerMomentController,
+        MomentVoteController,
     ],
     imports: [UserModule],
-    providers: [MomentService],
+    providers: [MomentService, MomentVoteService],
 })
 export class MomentModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(AuthMiddleware).forRoutes(MomentController);
-        consumer.apply(AuthMiddleware).forRoutes('moment-business/following');
-        consumer.apply(AuthMiddleware).forRoutes(LikerMomentController);
+        consumer.apply(AuthMiddleware).forRoutes(
+            'moment-business/following',
+            MomentController,
+            LikerMomentController,
+            MomentVoteController,
+        );
     }
 }

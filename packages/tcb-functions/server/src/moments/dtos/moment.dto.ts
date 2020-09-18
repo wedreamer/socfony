@@ -21,4 +21,8 @@ export class MomentDot {
         comment?: number;
     };
     topicId?: string;
+    vote?: {
+        name: string;
+        count?: number;
+    }[]
 }
