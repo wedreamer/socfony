@@ -1,5 +1,5 @@
 import 'package:fans/cloudbase/database/TcbDbCollectionsProvider.dart';
-import 'package:fans/cloudbase/function/function-mock-http.dart';
+import 'package:fans/cloudbase/function/FunctionMockHttp.dart';
 import 'package:fans/models/user.dart';
 
 const String kCloudUserHttpMockDbCollectionName = 'mock://users';

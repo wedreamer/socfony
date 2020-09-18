@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:fans/cloudbase/function/function-mock-http.dart';
+import 'package:fans/cloudbase/function/FunctionMockHttp.dart';
 
 class FunctionSmsMockHttp extends FunctionMockHttp {
   @override

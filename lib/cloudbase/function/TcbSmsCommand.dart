@@ -1,5 +1,5 @@
-import 'package:fans/cloudbase/commands/sms/FunctionSmsMockHttp.dart';
-import 'package:fans/cloudbase/function/function-mock-http.dart';
+import 'package:fans/cloudbase/function/FunctionSmsMockHttp.dart';
+import 'package:fans/cloudbase/function/FunctionMockHttp.dart';
 
 class TcbSmsCommand {
   const TcbSmsCommand._();

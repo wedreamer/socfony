@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:fans/cloudbase/commands/sms/TcbSmsCommand.dart';
+import 'package:fans/cloudbase/function/TcbSmsCommand.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fans/provider/AppAuthProvider.dart';
