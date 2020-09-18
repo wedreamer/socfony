@@ -1,5 +1,9 @@
 import 'package:cloudbase/cloudbase.dart' as cloudbase
-    show CloudBase, CloudBaseCoreCredentials, CloudBaseCoreSecurityCredentials;
+    show
+        CloudBase,
+        CloudBaseCoreCredentials,
+        CloudBaseCoreSecurityCredentials,
+        CloudBaseAuth;
 import 'package:fans/config.dart';
 
 export 'package:cloudbase/cloudbase.dart' hide CloudBase;
