@@ -31,11 +31,11 @@ class TcbStorageFileMockDbQuery {
   /// query the file.
   static void register() {
     TcbDbCollectionsProvider.registerQuery<TcbStorageFileMockDbQueryModel>(
-        mockCollectionName, query);
+        mockCollectionName, (_, String fileId) async => await query(fileId));
   }
 
   /// Query TCB storage file, return a [TcbStorageFileMockDbQueryModel]
-  static Future<TcbStorageFileMockDbQueryModel> query(_, String fileId) async {
+  static Future<TcbStorageFileMockDbQueryModel> query(String fileId) async {
     CloudBaseStorageRes<List<DownloadMetadata>> response =
         await CloudBase().storage.getFileDownloadURL([fileId]);
     Iterable<TcbStorageFileMockDbQueryModel> files = response.data

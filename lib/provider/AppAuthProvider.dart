@@ -1,7 +1,7 @@
+import 'package:fans/cloudbase/database/TcbDbCollectionsProvider.dart';
+import 'package:fans/cloudbase/database/TcbUserMockDbDocQuery.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fans/cloudbase.dart';
-import 'package:fans/cloudbase/commands/user/QueryCurrentUserCommand.dart';
-import 'package:fans/provider/collections/users.dart';
 
 final _cloudbase = CloudBase();
 final _auth = _cloudbase.auth;
@@ -35,12 +35,14 @@ class AppAuthProvider with ChangeNotifier {
   }
 
   Future<AppAuthProvider> fetch() async {
+    final stateUser = await _auth.getUserInfo();
     final state = await _auth.getAuthState();
-    final user = await QueryCurrentUserCommand().run();
+    final user = await TcbUserMockDbDocQuery.query(stateUser.uuid);
 
     reset(state, user.id);
 
-    UsersCollection().insertOrUpdate([user]);
+    TcbDbCollectionsProvider()
+        .updateDocs(kCloudUserHttpMockDbCollectionName, [user]);
 
     return this;
   }

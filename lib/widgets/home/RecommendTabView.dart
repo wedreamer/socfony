@@ -1,9 +1,9 @@
+import 'package:fans/widgets/cloudbase/database/collections/TcbDbMomentDocBuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:fans/cloudbase/database/businesses/HomeRecommendMomentsBusiness.dart';
 import 'package:fans/models/moment.dart';
-import 'package:fans/widgets/docs/MomentDocBuilder.dart';
 
 import '../MomentListTile.dart';
 import '../scroll-back-top-button.dart';
@@ -114,11 +114,17 @@ class _RecommendTabViewState extends State<RecommendTabView>
   bool get wantKeepAlive => true;
 
   Widget childBuilder(BuildContext context, int index) {
-    final id = business.ids.toList()[index];
-    return MomentDocBuilder(
-        id: id,
-        builder: (BuildContext context, Moment moment) {
-          return MomentListTile(moment);
-        });
+    final id = business.ids.elementAt(index);
+    return TcbDbMomentDocBuilder(
+      momentId: id,
+      builder: (BuildContext context, AsyncSnapshot<Moment> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          return MomentListTile(snapshot.data);
+        }
+
+        return SizedBox.shrink();
+      },
+    );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:fans/utils/cache-managers/file-cache-manager.dart';
-import 'package:fans/widgets/CachedNetworkImageBuilder.dart';
+import 'package:fans/widgets/cloudbase/storage/TcbStorageImageFileBuilder.dart';
+import 'package:flutter/material.dart';
 
 class UserAvatarWidget extends StatelessWidget {
   final String fileId;
@@ -34,12 +34,12 @@ class UserAvatarWidget extends StatelessWidget {
     if (fileId == null || fileId.isEmpty) {
       return defaultAvatarWidget;
     } else if (hasCloudFileId) {
-      return CachedNetworkImageBuilder(
+      return TcbStorageImageFileBuilder(
         fileId: fileId,
         rule: rule,
         builder: _avatarBuilder,
-        progressIndicatorBuilder: (_, __) => defaultAvatarWidget,
-        errorBuilder: (_, __) => defaultAvatarWidget,
+        progressIndicatorBuilder: (_, __, ___) => defaultAvatarWidget,
+        errorBuilder: (_, __, ___) => defaultAvatarWidget,
       );
     }
 

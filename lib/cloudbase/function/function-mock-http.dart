@@ -4,13 +4,13 @@ import '../../cloudbase.dart';
 
 class FunctionMockHttpResponse {
   /// 内容是否经过 Base64 编码
-  final bool isBase64Encoded;
+  bool isBase64Encoded;
 
   /// 响应的 Http 状态码
-  final int statusCode;
+  int statusCode;
 
   /// 响应的请求头内容
-  final Map<String, dynamic> headers;
+  Map<String, dynamic> headers;
 
   /// 响应的内容
   String body;
@@ -39,15 +39,15 @@ class FunctionMockHttpResponse {
     if (rawResponse['body'] is String && this.body == null) {
       this.body = rawResponse['body'];
     }
-    if (rawResponse['headers'] is String && this.headers == null) {
-      this.body = rawResponse['headers'];
+    if (rawResponse['headers'] is Map && this.headers == null) {
+      this.headers = rawResponse['headers'];
     }
-    if (rawResponse['isBase64Encoded'] is String &&
+    if (rawResponse['isBase64Encoded'] is bool &&
         this.isBase64Encoded == null) {
-      this.body = rawResponse['isBase64Encoded'];
+      this.isBase64Encoded = rawResponse['isBase64Encoded'];
     }
-    if (rawResponse['statusCode'] is String && this.statusCode == null) {
-      this.body = rawResponse['statusCode'];
+    if (rawResponse['statusCode'] is int && this.statusCode == null) {
+      this.statusCode = rawResponse['statusCode'];
     }
   }
 }

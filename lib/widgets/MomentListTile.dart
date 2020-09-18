@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:fans/cloudbase/database/TcbDbCollectionsProvider.dart';
+import 'package:fans/cloudbase/storage/TcbStorageFileMockDbQuery.dart';
+import 'package:fans/widgets/cloudbase/storage/TcbStorageImageFileBuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:provider/provider.dart';
@@ -11,19 +14,15 @@ import 'package:fans/models/MomentVoteUserSelected.dart';
 import 'package:fans/models/media.dart';
 import 'package:fans/models/moment-like-history.dart';
 import 'package:fans/models/moment.dart';
-import 'package:fans/models/user.dart' hide UserBuilder;
 import 'package:fans/models/vote.dart';
 import 'package:fans/pages/login.dart';
 import 'package:fans/provider/MomentVoteHasSelectedProvider.dart';
-import 'package:fans/provider/cached-network-file.dart';
 import 'package:fans/widgets/ToastLoadingWidget.dart';
 import 'package:fans/widgets/UserAvatarWidget.dart';
 import 'package:fans/widgets/docs/MomentVoteUserSelectedDocBuilder.dart';
 
-import '../cloudbase.dart';
-import 'CachedNetworkImageBuilder.dart';
+import 'cloudbase/database/collections/TcbDbUserDocBuilder.dart';
 import 'docs/MomentLikedHistoryDocBuilder.dart';
-import 'docs/UserDocBuilder.dart';
 import '../utils/date-time-extension.dart';
 import '../utils/number-extension.dart';
 
@@ -46,20 +45,29 @@ class MomentListTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            UserDocBuilder(
-              id: moment.userId,
-              builder: (BuildContext context, User user) {
-                return ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: UserAvatarWidget(
-                    radius: 24,
-                    fileId: user.avatar,
-                  ),
-                  title:
-                      Text(user.nickName ?? "用户" + user.id.hashCode.toString()),
-                  subtitle: Text(moment.createdAt.formNow),
-                  trailing: Icon(Icons.more_vert),
-                );
+            TcbDbUserDocBuilder(
+              userId: moment.userId,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  final user = snapshot.data;
+                  return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: UserAvatarWidget(
+                      radius: 24,
+                      fileId: user.avatar,
+                    ),
+                    title: Text(
+                      (user.nickName?.isNotEmpty ?? false)
+                          ? user.nickName
+                          : "用户" + user.id.hashCode.toString(),
+                    ),
+                    subtitle: Text(moment.createdAt.formNow),
+                    trailing: Icon(Icons.more_vert),
+                  );
+                }
+
+                return SizedBox.shrink();
               },
             ),
             buildText(moment),
@@ -352,19 +360,13 @@ class _MomentAudioCardState extends State<MomentAudioCard> {
 
   _createAudioPlayer([bool autoStart = false]) async {
     AssetsAudioPlayer.allPlayers().values.forEach((element) => element.stop());
-    final provider = context.read<CachedNetworkFileProvider>();
-    DownloadMetadata meta = provider[audio.src];
-    if (meta == null || !provider.containsKey(audio.src)) {
-      CloudBaseStorageRes<List<DownloadMetadata>> result =
-          await CloudBase().storage.getFileDownloadURL([audio.src]);
-      provider.originInsertOrUpdate(result.data);
-
-      meta = provider[audio.src];
-    }
+    TcbStorageFileMockDbQueryModel meta = await context
+        .read<TcbDbCollectionsProvider>()
+        .queryDoc(kTcbStorageFileMockCollectionName, audio.src);
     setState(() {
       _player = AssetsAudioPlayer.withId(audio.src)
         ..open(
-          Audio.network(meta.downloadUrl),
+          Audio.network(meta.uri.toString()),
           autoStart: autoStart,
           loopMode: LoopMode.none,
         );
@@ -380,11 +382,11 @@ class _MomentAudioCardState extends State<MomentAudioCard> {
     final ImageProvider defaultImage = AssetImage('assets/audio-bg.jpg');
     final defaultChild = builder(context, defaultImage);
     if (audio.cover != null && audio.cover.isNotEmpty) {
-      return CachedNetworkImageBuilder(
+      return TcbStorageImageFileBuilder(
         fileId: audio.cover,
         builder: builder,
-        progressIndicatorBuilder: (BuildContext context, _) => defaultChild,
-        errorBuilder: (BuildContext context, _) => defaultChild,
+        progressIndicatorBuilder: (_, __, ___) => defaultChild,
+        errorBuilder: (_, __, ___) => defaultChild,
       );
     }
 
@@ -615,11 +617,11 @@ class MomentVideoCard extends StatelessWidget {
             fit: StackFit.expand,
             children: <Widget>[
               Positioned.fill(
-                child: CachedNetworkImageBuilder(
+                child: TcbStorageImageFileBuilder(
                   fileId: video.cover,
                   fit: BoxFit.cover,
                   rule:
-                      "imageMogr2/scrop/854x480/cut/854x480/gravity/center/format/yjpeg",
+                      r'imageMogr2/scrop/854x480/cut/854x480/gravity/center/format/yjpeg',
                 ),
               ),
               Positioned.fill(
@@ -716,8 +718,8 @@ class MomentImageCard extends StatelessWidget {
       ),
       itemBuilder: (BuildContext context, int index) {
         return ClipRRect(
-          child: CachedNetworkImageBuilder(
-            fileId: images[index],
+          child: TcbStorageImageFileBuilder(
+            fileId: images.elementAt(index),
             fit: BoxFit.cover,
             rule: rule,
           ),

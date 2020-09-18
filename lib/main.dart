@@ -1,4 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:fans/cloudbase/database/TcbUserMockDbDocQuery.dart';
+import 'package:fans/cloudbase/storage/TcbStorageFileMockDbQuery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fans/cloudbase.dart';
@@ -10,6 +12,8 @@ import 'package:fans/routes.dart';
 import 'package:fans/theme.dart';
 
 void main() {
+  TcbStorageFileMockDbQuery.register();
+  TcbUserMockDbDocQuery.register();
   App.run();
 }
 
