@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, HttpCode, HttpStatus, Query } from "@nestjs/common";
 import { CloudBaseService } from "src/cloudbase/cloudbase.service";
 import { Auth } from "src/users/auth.decorator";
 import { UserDto } from "src/users/dtos/user.dto";
@@ -10,6 +10,7 @@ export class BusinessMomentController {
     ) {}
 
     @Get('following')
+    @HttpCode(HttpStatus.OK)
     async following(
         @Auth() user: UserDto,
         @Query('limit') limit: any  = 20,
@@ -58,7 +59,7 @@ export class BusinessMomentController {
                     input: '$follow',
                     in: '$$this.targetUserId',
                 }),
-                topices: _.aggregate.map({
+                topics: _.aggregate.map({
                     input: '$topics',
                     in: '$$this.topicId',
                 }),
@@ -88,6 +89,7 @@ export class BusinessMomentController {
     }
 
     @Get('recomment')
+    @HttpCode(HttpStatus.OK)
     async recomment(
         @Query('limit') limit: any  = 20,
         @Query('offset') offset: any = 0,
