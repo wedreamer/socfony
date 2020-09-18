@@ -5,7 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:fans/cloudbase/database/businesses/HomeGeoNearMomentsBusiness.dart';
+import 'package:fans/cloudbase/businesses/HomeGeoNearMomentsBusiness.dart';
 import 'package:fans/models/moment.dart';
 import 'package:fans/widgets/empty.dart';
 

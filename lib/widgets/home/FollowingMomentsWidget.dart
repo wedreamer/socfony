@@ -2,7 +2,7 @@ import 'package:fans/widgets/cloudbase/database/collections/TcbDbMomentDocBuilde
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:fans/cloudbase/database/businesses/FollowingMomentsBusiness.dart';
+import 'package:fans/cloudbase/businesses/FollowingMomentsBusiness.dart';
 import 'package:fans/models/moment.dart';
 import 'package:fans/widgets/MomentListTile.dart';
 
