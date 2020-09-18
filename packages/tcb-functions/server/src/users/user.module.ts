@@ -1,9 +1,10 @@
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { Global, MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AuthMiddleware } from "src/middlewares/auth.middleware";
 import { AuthController } from "./auth.controller";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 
+@Global()
 @Module({
     controllers: [AuthController,  UserController],
     providers: [UserService ],
