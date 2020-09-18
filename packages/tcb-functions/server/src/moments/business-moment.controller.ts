@@ -88,9 +88,9 @@ export class BusinessMomentController {
         return result.data.map(e => e.id);
     }
 
-    @Get('recomment')
+    @Get('recommend')
     @HttpCode(HttpStatus.OK)
-    async recomment(
+    async recommend(
         @Query('limit') limit: any  = 20,
         @Query('offset') offset: any = 0,
     ) {
