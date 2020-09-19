@@ -1,7 +1,7 @@
-import 'package:fans/cloudbase/commands/ClientApiFunctionCommand.dart';
-import 'package:fans/models/Topic.dart';
+import 'dart:convert' show jsonEncode;
 
-import '../../../cloudbase.dart';
+import 'package:fans/cloudbase/function/FunctionMockHttp.dart';
+import 'package:fans/models/Topic.dart';
 
 class CreateTopicCommandController {
   String cover;
@@ -21,21 +21,31 @@ class CreateTopicCommandController {
       'postType': postType.name,
     };
   }
+
+  @override
+  String toString() {
+    return jsonEncode(toData());
+  }
 }
 
-class CreateTopicCommand extends ClientApiFunctionCommand<String> {
-  CreateTopicCommand(CreateTopicCommandController controller)
-      : super(controller.toData());
+class CreateTopicCommand {
+  final CreateTopicCommandController controller;
 
-  @override
-  String get commandName => 'topic:create';
+  const CreateTopicCommand(this.controller);
 
-  @override
-  String deserializer(data, CloudBaseResponse response) {
-    if (data is Map && data['success'] == true) {
-      return data['docId'];
+  Future<String> send() async {
+    final http = FunctionMockHttp(
+      method: 'post',
+      path: '/topics',
+      body: controller.toString(),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    final response = await http.send();
+    final result = response.toJsonDecode();
+    if (response.statusCode == 201) {
+      return result['id'];
     }
-
-    throw UnimplementedError(response.message ?? '创建失败');
+    throw UnimplementedError(result['message']);
   }
 }

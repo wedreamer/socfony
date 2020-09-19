@@ -142,7 +142,7 @@ class _TopicSubmitButton extends StatelessWidget {
         value.postType = controller.postType;
 
         loading.text = '正在创建话题...';
-        await CreateTopicCommand(value).run();
+        await CreateTopicCommand(value).send();
 
         cancelFunc();
 
