@@ -57,6 +57,67 @@ class TcbDbCollectionsProvider extends ChangeNotifier {
     return null;
   }
 
+  T whereFindDoc<T extends AbstractBaseModel>(
+    String collectionName,
+    Map<String, dynamic> where,
+  ) {
+    if (where == null || where.isEmpty) {
+      return null;
+    }
+    Iterable<T> collection = findCollection<T>(collectionName).values;
+
+    if (collection.isEmpty) {
+      return null;
+    }
+
+    try {
+      return collection.firstWhere((element) {
+        final object = element.toJson();
+        return where
+            .map((key, value) => MapEntry(key, object[key] == value))
+            .values
+            .where((element) => !element)
+            .isEmpty;
+      });
+    } catch (_e) {
+      return null;
+    }
+  }
+
+  Future<T> whereQueryDoc<T extends AbstractBaseModel>(
+    String collectionName,
+    Map<String, dynamic> where,
+  ) async {
+    T doc = whereFindDoc(collectionName, where);
+    if (doc is T) {
+      return doc;
+    }
+
+    String futureKey = '$collectionName/${where.toString()}';
+    if (_futures.containsKey(futureKey)) {
+      return await _futures[futureKey];
+    }
+
+    Completer<T> completer = Completer<T>();
+    CloudBase().database.collection(collectionName).where(where).watch(
+      onChange: (Snapshot snapshot) {
+        _onDocsChange<T>(collectionName, snapshot);
+        if (!completer.isCompleted) {
+          completer.complete(whereFindDoc(collectionName, where));
+        }
+      },
+      onError: (error) {
+        if (!completer.isCompleted) {
+          completer.completeError(error);
+        }
+      },
+    );
+
+    _futures[futureKey] = completer.future;
+
+    return await _futures[futureKey];
+  }
+
   Future<T> queryDoc<T extends AbstractBaseModel>(
       String collectionName, String docId) async {
     String futureKey = '$collectionName/$docId';
@@ -93,7 +154,7 @@ class TcbDbCollectionsProvider extends ChangeNotifier {
 
     _futures[futureKey] = completer.future;
 
-    return await completer.future;
+    return await _futures[futureKey];
   }
 
   void updateDocs<T extends AbstractBaseModel>(
@@ -111,10 +172,31 @@ class TcbDbCollectionsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeDocs<T extends AbstractBaseModel>(
+    String collectionName,
+    Iterable<String> ids,
+  ) {
+    if (ids.isEmpty) {
+      return null;
+    }
+    ids.forEach((element) {
+      _collections[collectionName].remove(element);
+    });
+
+    notifyListeners();
+  }
+
   void _onDocsChange<T extends AbstractBaseModel>(
       String collectionName, Snapshot snapshot) {
-    Iterable<T> docs = snapshot.docChanges.map<T>(
-        (e) => serializers.deserialize(e.doc, specifiedType: FullType(T)));
+    Iterable<T> docs = snapshot.docChanges
+        .where((element) => element.dataType != 'remove')
+        .map<T>(
+          (e) => serializers.deserialize(e.doc, specifiedType: FullType(T)),
+        );
+    Iterable<String> needRemoveIds = snapshot.docChanges
+        .where((element) => element.dataType == 'remove')
+        .map((e) => e.docId);
     updateDocs<T>(collectionName, docs);
+    removeDocs(collectionName, needRemoveIds);
   }
 }

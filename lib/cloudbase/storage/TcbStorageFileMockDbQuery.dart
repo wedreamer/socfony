@@ -16,6 +16,14 @@ class TcbStorageFileMockDbQueryModel implements AbstractBaseModel {
   /// Mock [AbstractBaseModel] id.
   @override
   String get id => fileId;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'url': uri.toString(),
+      'fileId': fileId,
+    };
+  }
 }
 
 const kTcbStorageFileMockCollectionName = 'mock://storage/files';

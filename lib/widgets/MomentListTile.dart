@@ -3,13 +3,14 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fans/cloudbase/database/TcbDbCollectionsProvider.dart';
+import 'package:fans/cloudbase/function/FunctionMomentQuery.dart';
 import 'package:fans/cloudbase/storage/TcbStorageFileMockDbQuery.dart';
+import 'package:fans/widgets/cloudbase/database/collections/TcbDbMomentLikeStatusBuilder.dart';
 import 'package:fans/widgets/cloudbase/storage/TcbStorageImageFileBuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:provider/provider.dart';
 import 'package:fans/cloudbase/commands/moment/TapMomentVoteItemCommand.dart';
-import 'package:fans/cloudbase/commands/moment/ToggleLikeMomentCommand.dart';
 import 'package:fans/models/MomentVoteUserSelected.dart';
 import 'package:fans/models/media.dart';
 import 'package:fans/models/moment-like-history.dart';
@@ -22,7 +23,6 @@ import 'package:fans/widgets/UserAvatarWidget.dart';
 import 'package:fans/widgets/docs/MomentVoteUserSelectedDocBuilder.dart';
 
 import 'cloudbase/database/collections/TcbDbUserDocBuilder.dart';
-import 'docs/MomentLikedHistoryDocBuilder.dart';
 import '../utils/date-time-extension.dart';
 import '../utils/number-extension.dart';
 
@@ -152,9 +152,9 @@ class _MomentCardToolBar extends StatelessWidget {
   }
 
   Widget buildLikeButton(BuildContext context) {
-    Widget childBuilder(hasLiked) {
+    Widget childBuilder(bool hasLiked) {
       return FlatButton.icon(
-        onPressed: () => onLikeToggle(context),
+        onPressed: () => onLikeToggle(context, hasLiked),
         icon: Icon(
           hasLiked == true ? Icons.favorite : Icons.favorite_border,
           size: 18.0,
@@ -169,28 +169,37 @@ class _MomentCardToolBar extends StatelessWidget {
       );
     }
 
-    return MomentLikedHistoryDocBuilder(
-      id: moment.id,
-      builder: (BuildContext context, MomentLikeHistory history) =>
-          childBuilder(history != null),
-      loadingBuilder: (_) => childBuilder(false),
-      errorBuilder: (_, __) => childBuilder(false),
+    return TcbDbMomentLikeStatusBuilder(
+      momentId: moment.id,
+      builder:
+          (BuildContext context, AsyncSnapshot<MomentLikeHistory> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          return childBuilder(true);
+        }
+
+        return childBuilder(false);
+      },
     );
   }
 
-  onLikeToggle(BuildContext context) async {
+  onLikeToggle(BuildContext context, bool status) async {
     final hasLogin = await LoginPage.route(context);
     if (!hasLogin) {
       return BotToast.showText(text: '请先登录');
+    } else if (status) {
+      FunctionMomentQuery.currentUserUnlikeMoment(moment.id);
+      return;
     }
-    CancelFunc cancel = ToastLoadingWidget.show();
-    try {
-      await ToggleLikeMomentCommand(moment.id).run();
-    } catch (e) {
-      BotToast.showText(text: e.message ?? '操作失败');
-    } finally {
-      cancel();
-    }
+    FunctionMomentQuery.currentUserLikeMoment(moment.id);
+    // CancelFunc cancel = ToastLoadingWidget.show();
+    // try {
+    //   await ToggleLikeMomentCommand(moment.id).run();
+    // } catch (e) {
+    //   BotToast.showText(text: e.message ?? '操作失败');
+    // } finally {
+    //   cancel();
+    // }
   }
 }
 

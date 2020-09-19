@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'AppAuthProvider.dart';
-import 'MomentHasLikedProvider.dart';
 import 'MomentVoteHasSelectedProvider.dart';
 
 class RootProvider extends StatelessWidget {
@@ -16,7 +15,6 @@ class RootProvider extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: AppAuthProvider()),
-        ChangeNotifierProvider.value(value: MomentHasLikedProvider()),
         ChangeNotifierProvider.value(value: MomentVoteHasSelectedProvider()),
         ChangeNotifierProvider.value(value: TcbDbCollectionsProvider()),
       ],

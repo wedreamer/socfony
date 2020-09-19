@@ -1,11 +1,13 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:fans/models/BaseModel.dart';
 
 import 'serializers.dart';
 
 part 'moment-like-history.g.dart';
 
 abstract class MomentLikeHistory
+    with AbstractBaseModel
     implements Built<MomentLikeHistory, MomentLikeHistoryBuilder> {
   @BuiltValueField(wireName: "_id")
   String get id;

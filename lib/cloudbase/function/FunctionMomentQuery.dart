@@ -42,4 +42,20 @@ class FunctionMomentQuery {
 
     throw UnimplementedError(response.toJsonDecode()['message']);
   }
+
+  static Future<void> currentUserLikeMoment(String momentId) async {
+    final http = FunctionMockHttp(
+      path: '/user/liked/moments/$momentId',
+      method: 'put',
+    );
+    await http.send();
+  }
+
+  static Future<void> currentUserUnlikeMoment(String momentId) async {
+    final http = FunctionMockHttp(
+      path: '/user/liked/moments/$momentId',
+      method: 'delete',
+    );
+    await http.send();
+  }
 }
