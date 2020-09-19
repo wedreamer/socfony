@@ -12,10 +12,9 @@ export class TopicController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    @UsePipes(new JoiValidationPipe(CreateTopicValicationSchema))
     async create(
         @Auth() user: UserDto,
-        @Body() dto: TopicDto,
+        @Body(new JoiValidationPipe(CreateTopicValicationSchema)) dto: TopicDto,
     ) {
         dto.coratorId = user.uid;
         dto.createdAt = new Date;
