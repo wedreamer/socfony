@@ -96,55 +96,60 @@ class _PublishState extends State<PublishPage> {
       onWillPop: () async {
         return true;
       },
-      child: Scaffold(
-        appBar: buildAppBar(context),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            buildSelectTopic(context),
-            Expanded(
-              child: ListView(
-                shrinkWrap: false,
-                padding: const EdgeInsets.symmetric(horizontal: 16)
-                    .copyWith(bottom: 24),
-                children: <Widget>[
-                  TextField(
-                    autofocus: true,
-                    minLines: 5,
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.newline,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "耳机一戴，谁都不爱！",
-                      contentPadding: const EdgeInsets.only(
-                        bottom: 12,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          appBar: buildAppBar(context),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              buildSelectTopic(context),
+              Expanded(
+                child: ListView(
+                  shrinkWrap: false,
+                  padding: const EdgeInsets.symmetric(horizontal: 16)
+                      .copyWith(bottom: 24),
+                  children: <Widget>[
+                    TextField(
+                      autofocus: true,
+                      minLines: 5,
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.newline,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "耳机一戴，谁都不爱！",
+                        contentPadding: const EdgeInsets.only(
+                          bottom: 12,
+                        ),
+                      ),
+                      onChanged: onTextChanged,
+                    ),
+                    buildImagesGridView(),
+                    buildVideoGridView(),
+                    buildAudioCard(context),
+                    buildVoteWidget(),
+                    GFListTile(
+                      padding: EdgeInsets.zero,
+                      margin: EdgeInsets.symmetric(vertical: 12),
+                      color: Theme.of(context).splashColor,
+                      title: Text('发布到同城'),
+                      icon: Switch(
+                        value: usingPosition,
+                        onChanged: onChangePositionSwitch,
+                        activeColor: Theme.of(context).primaryColor,
                       ),
                     ),
-                    onChanged: onTextChanged,
-                  ),
-                  GFListTile(
-                    padding: EdgeInsets.zero,
-                    margin: EdgeInsets.symmetric(vertical: 12),
-                    color: Theme.of(context).splashColor,
-                    title: Text('发布到同城'),
-                    icon: Switch(
-                      value: usingPosition,
-                      onChanged: onChangePositionSwitch,
-                      activeColor: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  buildImagesGridView(),
-                  buildVideoGridView(),
-                  buildAudioCard(context),
-                  buildVoteWidget(),
-                ],
+                  ],
+                ),
               ),
-            ),
-            buildBottomAppBar(),
-          ],
+              buildBottomAppBar(),
+            ],
+          ),
         ),
       ),
     );
@@ -653,6 +658,7 @@ class _PublishState extends State<PublishPage> {
         };
       });
     } catch (e) {
+      BotToast.closeAllLoading();
       print(e);
     }
     FocusScope.of(context).requestFocus();

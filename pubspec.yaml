@@ -34,7 +34,7 @@ dependencies:
   intl: ^0.16.1
   built_value: ^7.1.0
   getwidget: ^1.1.0
-  wechat_assets_picker: ^3.0.0+1
+  wechat_assets_picker: ^4.2.1
   image_picker: ^0.6.7+4
   image_cropper: ^1.2.3
   video_thumbnail: ^0.2.2
