@@ -58,4 +58,16 @@ class FunctionMomentQuery {
     );
     await http.send();
   }
+
+  static Future<void> currentUserSelectVote(
+    String momentId,
+    String vote,
+  ) async {
+    final http = FunctionMockHttp(
+        path: '/moments/$momentId/vote',
+        method: 'put',
+        body: '{"vote": "$vote"}',
+        headers: {"content-type": "application/json"});
+    await http.send();
+  }
 }

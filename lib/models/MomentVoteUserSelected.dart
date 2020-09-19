@@ -1,11 +1,13 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:fans/models/BaseModel.dart';
 
 import 'serializers.dart';
 
 part 'MomentVoteUserSelected.g.dart';
 
 abstract class MomentVoteUserSelected
+    with AbstractBaseModel
     implements Built<MomentVoteUserSelected, MomentVoteUserSelectedBuilder> {
   @BuiltValueField(wireName: '_id')
   String get id;

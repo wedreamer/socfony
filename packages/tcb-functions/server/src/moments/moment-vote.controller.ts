@@ -20,6 +20,7 @@ export class MomentVoteController {
         @Param('id', ParseMomentPipe) moment: MomentDot,
         @Body('vote') vote: string,
     ) {
+        console.log(moment.vote, vote);
         const hasInclude = (moment.vote ?? []).map(e => e.name).includes(vote);
         if (!hasInclude) {
             throw new BadRequestException('选择的投票内容选项不存在');

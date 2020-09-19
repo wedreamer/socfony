@@ -10,18 +10,14 @@ import 'package:fans/widgets/cloudbase/storage/TcbStorageImageFileBuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:provider/provider.dart';
-import 'package:fans/cloudbase/commands/moment/TapMomentVoteItemCommand.dart';
-import 'package:fans/models/MomentVoteUserSelected.dart';
 import 'package:fans/models/media.dart';
 import 'package:fans/models/moment-like-history.dart';
 import 'package:fans/models/moment.dart';
 import 'package:fans/models/vote.dart';
 import 'package:fans/pages/login.dart';
-import 'package:fans/provider/MomentVoteHasSelectedProvider.dart';
-import 'package:fans/widgets/ToastLoadingWidget.dart';
 import 'package:fans/widgets/UserAvatarWidget.dart';
-import 'package:fans/widgets/docs/MomentVoteUserSelectedDocBuilder.dart';
 
+import 'cloudbase/database/collections/TcbDbMomentVoteStatusBuilder.dart';
 import 'cloudbase/database/collections/TcbDbUserDocBuilder.dart';
 import '../utils/date-time-extension.dart';
 import '../utils/number-extension.dart';
@@ -252,13 +248,17 @@ class MomentVoteCard extends StatelessWidget {
           fit: StackFit.expand,
           children: <Widget>[
             ClipRRect(
-              child: MomentVoteUserSelectedDocBuilder(
-                id: moment.id,
-                builder: (BuildContext context, MomentVoteUserSelected vote) {
-                  return createProgress(context, value, vote.vote == item.name);
+              child: TcbDbMomentVoteStatusBuilder(
+                momentId: moment.id,
+                builder: (_, sn) {
+                  if (sn.connectionState == ConnectionState.done &&
+                      sn.hasData &&
+                      sn.data.vote == item.name) {
+                    return createProgress(context, value, true);
+                  }
+
+                  return defaultProgress;
                 },
-                loadingBuilder: (_) => defaultProgress,
-                errorBuilder: (_, __) => defaultProgress,
               ),
               borderRadius: BorderRadius.circular(32.0),
             ),
@@ -313,15 +313,14 @@ class MomentVoteCard extends StatelessWidget {
     );
   }
 
-  onSelectVote(BuildContext context, String text) {
-    if (context.read<MomentVoteHasSelectedProvider>().containsKey(moment.id)) {
+  onSelectVote(BuildContext context, String text) async {
+    final logged = await LoginPage.route(context);
+    if (!logged) {
+      BotToast.showText(text: '请先登录哦');
       return;
     }
-    CancelFunc cancel = ToastLoadingWidget.show();
 
-    TapMomentVoteItemCommand(moment.id, text).run().catchError((e) {
-      BotToast.showText(text: e.message ?? '操作失败');
-    }).whenComplete(cancel);
+    FunctionMomentQuery.currentUserSelectVote(moment.id, text);
   }
 }
 
