@@ -21,7 +21,7 @@ class Launch extends StatelessWidget {
         Center(
           child: ClipRRect(
             child: Image.asset(
-              'assets/ios_launcher.png',
+              'assets/fans.jpg',
               width: mediaQueryData.size.width * 0.4,
             ),
             borderRadius: BorderRadius.circular(mediaQueryData.size.width),

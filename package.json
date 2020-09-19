@@ -10,6 +10,7 @@
   "scripts": {
     "lerna": "lerna",
     "tcb": "tcb",
+    "app:launcher_generator": "flutter pub run flutter_launcher_icons:main",
     "server:build": "lerna run --scope server build",
     "server:deploy": "npm run server:build && tcb fn deploy server",
     "server:only-deploy": "tcb fn deploy server",

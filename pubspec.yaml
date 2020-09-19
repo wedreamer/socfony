@@ -56,7 +56,7 @@ dev_dependencies:
   intl_translation: any
   build_runner: ^1.10.0
   built_value_generator: ^7.1.0
-  flutter_launcher_icons: ^0.7.5
+  flutter_launcher_icons: ^0.8.0
 
 flutter_icons:
   image_path: "assets/fans.jpg"
