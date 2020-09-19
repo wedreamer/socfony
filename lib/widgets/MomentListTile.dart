@@ -639,6 +639,7 @@ class MomentVideoCard extends StatelessWidget {
                     child: Icon(
                       Icons.play_arrow,
                       size: 36.0,
+                      color: Colors.white,
                     ),
                   ),
                   color: Colors.transparent,
