@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { tcbStorageCloudFileIdToPath } from "src/utils/cloudbase.util";
-import { tcbStorageFileIsImageValidator, tcbStorageFileIsVideoValidator } from "src/validator/tcb-storage-file.validator";
+import { tcbStorageFileIsAudioValidator, tcbStorageFileIsImageValidator, tcbStorageFileIsVideoValidator } from "src/validator/tcb-storage-file.validator";
 
 export const CreateMomentValidationSchema = Joi.object({
     text: Joi.string()
@@ -16,7 +16,7 @@ export const CreateMomentValidationSchema = Joi.object({
     }),
     audio: Joi.object({
         cover: Joi.string().external(tcbStorageCloudFileIdToPath),
-        src: Joi.string().external(tcbStorageFileIsVideoValidator).required(),
+        src: Joi.string().external(tcbStorageFileIsAudioValidator).required(),
     }),
     vote: Joi.array().unique().min(2).max(5).items(
         Joi.string().required().min(1).max(20),
