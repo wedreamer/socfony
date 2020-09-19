@@ -1,4 +1,5 @@
 //import 'package:fans/widgets/bottom-navigation-bar/bottom-navigation-bar.dart';
+import 'package:fans/widgets/MainMeTabView.dart';
 import 'package:fans/widgets/MainMessageTabView.dart';
 import 'package:fans/widgets/explore/layout.dart';
 import 'package:fans/widgets/home/layout.dart';
@@ -30,6 +31,7 @@ class _MainPageState extends State<MainPage> {
           const MainHomeLayout(),
           const MainExploreLayout(),
           const MainMessageTabView(),
+          const MainMeTabView(),
         ],
       ),
       bottomNavigationBar: _NavigationBar(controller: controller),
