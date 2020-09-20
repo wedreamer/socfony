@@ -43,6 +43,47 @@ class _MainMeTabViewState extends State<MainMeTabView>
             ),
           ),
         ),
+        SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: 12.0),
+          sliver: SliverGrid(
+            delegate: SliverChildListDelegate.fixed([
+              Card(
+                elevation: 0,
+                child: ListTile(
+                  title: Text(
+                    '12',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  subtitle: Text('粉丝'),
+                ),
+              ),
+              Card(
+                elevation: 0,
+                child: ListTile(
+                  title: Text(
+                    '4',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  subtitle: Text('关注'),
+                ),
+              ),
+              Card(
+                elevation: 0,
+                child: ListTile(
+                  title: Text(
+                    '421',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  subtitle: Text('帖子'),
+                ),
+              ),
+            ]),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 1.8,
+            ),
+          ),
+        ),
         // 其他服务页面网格
         SliverToBoxAdapter(
           child: Card(
@@ -65,27 +106,44 @@ class _MainMeTabViewState extends State<MainMeTabView>
                   ),
                   ListTile(
                     leading: Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                    ),
-                    title: Text('我喜欢的'),
-                    trailing: Icon(Icons.chevron_right),
-                  ),
-                  ListTile(
-                    leading: Icon(
                       Icons.tag_faces,
                       color: Colors.teal,
                     ),
                     title: Text('话题管理'),
                     trailing: Icon(Icons.chevron_right),
                   ),
+                ],
+              ).toList(),
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Card(
+            elevation: 0,
+            margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              physics: const NeverScrollableScrollPhysics(),
+              children: ListTile.divideTiles(
+                context: context,
+                tiles: [
                   ListTile(
                     leading: Icon(
                       Icons.brightness_4,
                       color: Colors.indigoAccent,
                     ),
                     title: Text('夜间模式'),
-                    trailing: Switch(value: false, onChanged: (_) {}),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '跟随系统',
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                        Icon(Icons.chevron_right),
+                      ],
+                    ),
                   ),
                   ListTile(
                     leading: Icon(
@@ -93,7 +151,16 @@ class _MainMeTabViewState extends State<MainMeTabView>
                       color: Colors.indigoAccent,
                     ),
                     title: Text('语言设置'),
-                    trailing: Text('中文简体'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '中文简体',
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                        Icon(Icons.chevron_right),
+                      ],
+                    ),
                   ),
                   ListTile(
                     leading: Icon(
