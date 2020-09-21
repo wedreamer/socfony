@@ -1,8 +1,8 @@
 {
     "$schema": "https://bytegem.github.io/schemas/tcb-database.json#",
-    "collectionName": "moment-comments",
+    "collectionName": "moment-vote-user-selected",
+    "description": "动态投票记录",
     "aclTag": "ADMINWRITE",
-    "description": "动态评论",
     "createIndexes": [
         {
             "name": "userIdIndex",
@@ -25,15 +25,15 @@
             ]
         },
         {
-            "name": "UserAndMomentIdIndex",
-            "unique": false,
+            "name": "UserMomentIdUniqueIndex",
+            "unique": true,
             "keys": [
                 {
-                    "name": "momentId",
+                    "name": "userId",
                     "direction": "1"
                 },
                 {
-                    "name": "userId",
+                    "name": "momentId",
                     "direction": "1"
                 }
             ]
