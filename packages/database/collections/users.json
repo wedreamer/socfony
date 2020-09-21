@@ -1,0 +1,6 @@
+{
+    "$schema": "https://bytegem.github.io/schemas/tcb-database.json#",
+    "collectionName": "users",
+    "aclTag": "ADMINONLY",
+    "description": "用户集合"
+}
