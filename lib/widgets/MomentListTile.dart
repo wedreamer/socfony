@@ -5,6 +5,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:fans/cloudbase/database/TcbDbCollectionsProvider.dart';
 import 'package:fans/cloudbase/function/FunctionMomentQuery.dart';
 import 'package:fans/cloudbase/storage/TcbStorageFileMockDbQuery.dart';
+import 'package:fans/pages/MomentProfile.dart';
 import 'package:fans/widgets/cloudbase/database/collections/TcbDbMomentLikeStatusBuilder.dart';
 import 'package:fans/widgets/cloudbase/storage/TcbStorageImageFileBuilder.dart';
 import 'package:flutter/material.dart';
@@ -729,10 +730,22 @@ class MomentImageCard extends StatelessWidget {
       ),
       itemBuilder: (BuildContext context, int index) {
         return ClipRRect(
-          child: TcbStorageImageFileBuilder(
-            fileId: images.elementAt(index),
-            fit: BoxFit.cover,
-            rule: rule,
+          child: GestureDetector(
+            onTap: () {
+              final controller = MomentProfileController(
+                moment.id,
+                pageController: PageController(initialPage: index),
+              );
+              Navigator.of(context).pushNamed(
+                'MomentProfile',
+                arguments: controller,
+              );
+            },
+            child: TcbStorageImageFileBuilder(
+              fileId: images.elementAt(index),
+              fit: BoxFit.cover,
+              rule: rule,
+            ),
           ),
           borderRadius: BorderRadius.circular(6),
         );

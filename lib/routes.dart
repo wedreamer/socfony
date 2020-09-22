@@ -2,6 +2,7 @@ import 'package:fans/pages/EditUserCard.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/CreateTopicPage.dart';
+import 'pages/MomentProfile.dart';
 import 'pages/TopicSquare.dart';
 import 'pages/main.dart';
 import 'pages/vote-setter.dart';
@@ -14,4 +15,5 @@ final Map<String, WidgetBuilder> routes = {
   "TopicSquare": (_) => TopicSquare(),
   "CreateTopicPage": (_) => CreateTopicPage(),
   'EdgeUserCard': (_) => EditUserCard(),
+  'MomentProfile': (_) => MomentProfile(),
 };

@@ -1,4 +1,3 @@
-//import 'package:fans/widgets/bottom-navigation-bar/bottom-navigation-bar.dart';
 import 'package:fans/widgets/MainMeTabView.dart';
 import 'package:fans/widgets/MainMessageTabView.dart';
 import 'package:fans/widgets/explore/layout.dart';
