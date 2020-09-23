@@ -103,7 +103,17 @@ class MomentProfile extends StatelessWidget {
   }
 
   _PanelWidgetBuilder panelBuilder(BuildContext context) {
-    return (ScrollController controller) => _MomentProfilePanel(controller);
+    return (ScrollController controller) {
+      return MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: Padding(
+          padding: EdgeInsets.only(
+              top: _MomentProfilePanelSettings.tapBarContainerHeight),
+          child: _MomentProfilePanel(controller),
+        ),
+      );
+    };
   }
 
   AppBar appBarBuilder(BuildContext context) {
