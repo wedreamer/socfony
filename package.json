@@ -16,6 +16,7 @@
     "server:only-deploy": "tcb fn deploy server",
     "server:dev": "lerna run --scope server dev --stream",
     "publish": "lerna publish",
-    "fansrc": "node scripts/cloudbaserc-builder.js"
+    "fansrc": "node scripts/cloudbaserc-builder.js",
+    "version": "lerna version --no-git-tag-version && node scripts/change-flutter-app-version.js"
   }
 }
