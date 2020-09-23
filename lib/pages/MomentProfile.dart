@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fans/models/moment.dart';
 import 'package:fans/models/user.dart';
 import 'package:fans/routes.dart';
@@ -418,10 +420,38 @@ class _MomentProfilePageView extends StatelessWidget {
         );
       },
       builder: (context, image) {
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned.fill(
+              child: Image(
+                image: image,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                child: PhotoView(
+                  imageProvider: image,
+                  backgroundDecoration: BoxDecoration(
+                    color: Colors.transparent,
+                  ),
+                  initialScale: PhotoViewComputedScale.contained,
+                  minScale: PhotoViewComputedScale.contained,
+                  maxScale: PhotoViewComputedScale.contained * 4.0,
+                  enableRotation: false,
+                  tightMode: false,
+                  gaplessPlayback: true,
+                ),
+              ),
+            ),
+          ],
+        );
         return PhotoView(
           imageProvider: image,
           backgroundDecoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: Colors.transparent,
           ),
           initialScale: PhotoViewComputedScale.contained,
           minScale: PhotoViewComputedScale.contained,
@@ -454,9 +484,62 @@ class _MomentProfilePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return Scaffold(
+      body: Text('1'),
+    );
+    return CustomScrollView(
       controller: controller,
-      itemBuilder: (_, index) => Text('$index'),
+      slivers: [
+        SliverToBoxAdapter(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  GFIconButton(
+                    icon: Icon(Icons.share),
+                    onPressed: () {},
+                    shape: GFIconButtonShape.circle,
+                    size: GFSize.LARGE,
+                  ),
+                  Text('分享'),
+                ],
+              ),
+              Column(
+                children: [
+                  GFIconButton(
+                    icon: Icon(Icons.star_border),
+                    onPressed: () {},
+                    shape: GFIconButtonShape.circle,
+                  ),
+                  Text('收藏'),
+                ],
+              ),
+              Column(
+                children: [
+                  GFIconButton(
+                    icon: Icon(Icons.favorite_border),
+                    onPressed: () {},
+                    shape: GFIconButtonShape.circle,
+                  ),
+                  Text('喜欢'),
+                ],
+              ),
+              Column(
+                children: [
+                  GFIconButton(
+                    icon: Icon(Icons.more_horiz),
+                    onPressed: () {},
+                    shape: GFIconButtonShape.circle,
+                  ),
+                  Text('更多'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
