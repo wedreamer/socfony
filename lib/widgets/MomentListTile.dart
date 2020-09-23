@@ -86,7 +86,93 @@ class MomentListTile extends StatelessWidget {
               moment: moment,
               margin: EdgeInsets.symmetric(vertical: 6),
             ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 6.0),
+              padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withOpacity(.24),
+                borderRadius: BorderRadius.circular(36.0),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  UserAvatarWidget(radius: 14.0),
+                  SizedBox(width: 6.0),
+                  LimitedBox(
+                    child: Text(
+                      '王者荣耀 · 上官玩儿',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    maxWidth: MediaQuery.of(context).size.width * .5,
+                  ),
+                  SizedBox(width: 6.0),
+                ],
+              ),
+            ),
             _MomentCardToolBar(moment: moment),
+            SizedBox(height: 6.0),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    UserAvatarWidget(radius: 18.0),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12.0),
+                        margin: EdgeInsets.only(left: 12.0),
+                        height: 36.0,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).hoverColor,
+                          borderRadius: BorderRadius.circular(38.0),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit),
+                            SizedBox(width: 6.0),
+                            Text('据说评论会变瘦～'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.0),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 2.0),
+                  child: Text.rich(TextSpan(children: [
+                    TextSpan(
+                      text: 'Seven的代码太渣',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    TextSpan(text: '：'),
+                    TextSpan(text: '真的吗？'),
+                  ])),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 2.0),
+                  child: Text.rich(TextSpan(children: [
+                    TextSpan(
+                      text: '田可爱',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    TextSpan(text: '：'),
+                    TextSpan(text: '我知道个鬼哦～'),
+                  ])),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 2.0),
+                  child: Text(
+                    '查看全部157条评论',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 14.0),
           ],
         ),
       ),
@@ -114,55 +200,91 @@ class _MomentCardToolBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        FlatButton.icon(
-          onPressed: () {},
-          icon: Icon(
-            Icons.share,
-            size: 18.0,
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.share),
+          Expanded(
+            child: SizedBox.shrink(),
           ),
-          label: Text(
-            '分享',
-            style: TextStyle(fontWeight: FontWeight.normal),
+          GestureDetector(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(Icons.star_border),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 2.0,
+                    bottom: 10.0,
+                  ),
+                  child: Text(
+                    '收藏',
+                    style: Theme.of(context).textTheme.button,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        FlatButton.icon(
-          onPressed: () {},
-          icon: Icon(
-            Icons.forum,
-            size: 18.0,
+          SizedBox(width: 24.0),
+          GestureDetector(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(Icons.forum),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 2.0,
+                    bottom: 10.0,
+                  ),
+                  child: Text(
+                    (moment.count?.comment ?? 0) > 0
+                        ? moment.count.comment.compact
+                        : '评论',
+                    style: Theme.of(context).textTheme.button,
+                  ),
+                ),
+              ],
+            ),
           ),
-          label: Text(
-            (moment.count?.comment ?? 0) > 0
-                ? moment.count.comment.compact
-                : '评论',
-            style: TextStyle(fontWeight: FontWeight.normal),
-          ),
-        ),
-        buildLikeButton(context),
-      ],
+          SizedBox(width: 24.0),
+          buildLikeButton(context),
+        ],
+      ),
     );
   }
 
   Widget buildLikeButton(BuildContext context) {
     Widget childBuilder(bool hasLiked) {
-      return FlatButton.icon(
-        onPressed: () => onLikeToggle(context, hasLiked),
-        icon: Icon(
-          hasLiked == true ? Icons.favorite : Icons.favorite_border,
-          size: 18.0,
+      return GestureDetector(
+        onTap: () => onLikeToggle(context, hasLiked),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(hasLiked == true ? Icons.favorite : Icons.favorite_border),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 2.0,
+                bottom: 10.0,
+              ),
+              child: Text(
+                (moment.count?.like ?? 0) > 0
+                    ? moment.count.like.compact
+                    : '喜欢',
+                style: Theme.of(context)
+                    .textTheme
+                    .button
+                    .copyWith(color: hasLiked == true ? Colors.red : null),
+              ),
+            ),
+          ],
         ),
-        label: Text(
-          (moment.count?.like ?? 0) > 0 ? moment.count.like.compact : '喜欢',
-          style: TextStyle(
-            fontWeight: FontWeight.normal,
-          ),
-        ),
-        textColor: hasLiked == true ? Colors.red : null,
       );
     }
 

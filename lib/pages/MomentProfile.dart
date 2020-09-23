@@ -122,7 +122,7 @@ class MomentProfile extends StatelessWidget {
     return AppBar(
       elevation: 0,
       backgroundColor: Theme.of(context).appBarTheme.color.withOpacity(0.12),
-      leading: CloseButton(
+      leading: BackButton(
         onPressed: () {
           final navigator = Navigator.of(context);
           if (navigator.canPop()) {
@@ -132,10 +132,11 @@ class MomentProfile extends StatelessWidget {
           navigator.pushReplacementNamed(R_initialRoute);
         },
       ),
-      centerTitle: true,
+      centerTitle: false,
       title: _ProgressIndicator(),
       actions: [
         _MomentProfileHeaderUserAction(),
+        IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
       ],
     );
   }
@@ -214,7 +215,7 @@ class _MomentProfileHeaderUserAction extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: UnconstrainedBox(
         child: Container(
-          constraints: BoxConstraints(maxWidth: 160.0),
+          constraints: BoxConstraints(maxWidth: 140.0),
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white24
@@ -222,15 +223,17 @@ class _MomentProfileHeaderUserAction extends StatelessWidget {
             borderRadius: BorderRadius.circular(36.0),
           ),
           height: 36.0,
-          margin: EdgeInsets.only(right: 14.0),
-          padding: EdgeInsets.only(right: 6.0),
+          // margin: EdgeInsets.only(right: 14.0),
+          padding: EdgeInsets.only(left: 12.0),
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            textDirection: TextDirection.rtl,
             children: [
               UserAvatarWidget(
                 radius: 18.0,
               ),
-              SizedBox(width: 8.0),
               Expanded(
                 child: Text(
                   user.nickName.isNotEmpty ? user.nickName : user.id,
@@ -408,7 +411,6 @@ class _MomentProfilePageView extends StatelessWidget {
   Widget mediaImagesChildBuilder(String fileId) {
     return TcbStorageImageFileBuilder(
       fileId: fileId,
-      fit: BoxFit.fitHeight,
       progressIndicatorBuilder: (context, _, __) {
         return UnconstrainedBox(
           child: CircularProgressIndicator(
@@ -448,18 +450,18 @@ class _MomentProfilePageView extends StatelessWidget {
             ),
           ],
         );
-        return PhotoView(
-          imageProvider: image,
-          backgroundDecoration: BoxDecoration(
-            color: Colors.transparent,
-          ),
-          initialScale: PhotoViewComputedScale.contained,
-          minScale: PhotoViewComputedScale.contained,
-          maxScale: PhotoViewComputedScale.contained * 4.0,
-          enableRotation: false,
-          tightMode: false,
-          gaplessPlayback: true,
-        );
+        // return PhotoView(
+        //   imageProvider: image,
+        //   backgroundDecoration: BoxDecoration(
+        //     color: Colors.transparent,
+        //   ),
+        //   initialScale: PhotoViewComputedScale.contained,
+        //   minScale: PhotoViewComputedScale.contained,
+        //   maxScale: PhotoViewComputedScale.contained * 4.0,
+        //   enableRotation: false,
+        //   tightMode: false,
+        //   gaplessPlayback: true,
+        // );
       },
     );
   }
@@ -485,61 +487,110 @@ class _MomentProfilePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('1'),
-    );
-    return CustomScrollView(
-      controller: controller,
-      slivers: [
-        SliverToBoxAdapter(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children: [
-                  GFIconButton(
-                    icon: Icon(Icons.share),
-                    onPressed: () {},
-                    shape: GFIconButtonShape.circle,
-                    size: GFSize.LARGE,
-                  ),
-                  Text('分享'),
-                ],
+      backgroundColor: Theme.of(context).cardColor,
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: ListTile(
+              leading: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                    'https://cdn.learnku.com/uploads/avatars/7973_1481866546.png!/both/400x400'),
               ),
-              Column(
-                children: [
-                  GFIconButton(
-                    icon: Icon(Icons.star_border),
-                    onPressed: () {},
-                    shape: GFIconButtonShape.circle,
-                  ),
-                  Text('收藏'),
-                ],
+              title: Text('#王者荣耀#'),
+              subtitle: Text('上官婉儿 · 7564664个脑残儿'),
+              trailing: OutlineButton(
+                onPressed: () {},
+                child: Text('去看看'),
+                shape: StadiumBorder(),
+                textColor: Theme.of(context).primaryColor,
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
-              Column(
-                children: [
-                  GFIconButton(
-                    icon: Icon(Icons.favorite_border),
-                    onPressed: () {},
-                    shape: GFIconButtonShape.circle,
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        // color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          bottom: true,
+          child: ConstrainedBox(
+            constraints: BoxConstraints.expand(
+              width: MediaQuery.of(context).size.width,
+              height: kBottomNavigationBarHeight,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 8.0,
+                      horizontal: 12.0,
+                    ),
+                    margin: EdgeInsets.only(left: 16.0, right: 16.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).highlightColor,
+                      borderRadius: BorderRadius.circular(24.0),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.forum),
+                        SizedBox(width: 6.0),
+                        Text('喜欢Ta就评论下吧！'),
+                      ],
+                    ),
                   ),
-                  Text('喜欢'),
-                ],
-              ),
-              Column(
-                children: [
-                  GFIconButton(
-                    icon: Icon(Icons.more_horiz),
-                    onPressed: () {},
-                    shape: GFIconButtonShape.circle,
+                ),
+                GestureDetector(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.favorite_border),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 2.0,
+                          bottom: 10.0,
+                        ),
+                        child: Text(
+                          '14.2k',
+                          style: Theme.of(context)
+                              .textTheme
+                              .caption
+                              .copyWith(color: Colors.red),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text('更多'),
-                ],
-              ),
-            ],
+                ),
+                SizedBox(width: 12.0),
+                GestureDetector(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.share),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 2.0,
+                          bottom: 10.0,
+                        ),
+                        child: Text(
+                          '分享',
+                          style: Theme.of(context).textTheme.caption.copyWith(
+                              color: Theme.of(context).textTheme.button.color),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 12.0),
+              ],
+            ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
