@@ -1,6 +1,9 @@
 import 'package:fans/models/moment.dart';
+import 'package:fans/models/user.dart';
 import 'package:fans/routes.dart';
+import 'package:fans/widgets/UserAvatarWidget.dart';
 import 'package:fans/widgets/cloudbase/database/collections/TcbDbMomentDocBuilder.dart';
+import 'package:fans/widgets/cloudbase/database/collections/TcbDbUserDocBuilder.dart';
 import 'package:fans/widgets/cloudbase/storage/TcbStorageImageFileBuilder.dart';
 import 'package:fans/widgets/empty.dart';
 import 'package:flutter/material.dart';
@@ -120,8 +123,114 @@ class MomentProfile extends StatelessWidget {
       centerTitle: true,
       title: _ProgressIndicator(),
       actions: [
-        IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+        _MomentProfileHeaderUserAction(),
       ],
+    );
+  }
+}
+
+class _MomentProfileSelector extends StatelessWidget {
+  final AsyncWidgetBuilder<Moment> builder;
+
+  const _MomentProfileSelector({
+    @required this.builder,
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<MomentProfileController, String>(
+      builder: (BuildContext context, String momentId, _) {
+        return TcbDbMomentDocBuilder(momentId: momentId, builder: builder);
+      },
+      selector: selector,
+    );
+  }
+
+  String selector(BuildContext context, MomentProfileController controller) {
+    return controller.momentId;
+  }
+}
+
+class _MomentProfileUserSelector extends StatelessWidget {
+  final AsyncWidgetBuilder<User> builder;
+  const _MomentProfileUserSelector({
+    Key key,
+    @required this.builder,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return _MomentProfileSelector(builder: userChildBuilder);
+  }
+
+  Widget userChildBuilder(
+      BuildContext context, AsyncSnapshot<Moment> snapshot) {
+    if (snapshot.hasError) {
+      return builder(
+        context,
+        AsyncSnapshot.withError(snapshot.connectionState, snapshot.error),
+      );
+    } else if (snapshot.connectionState == ConnectionState.done &&
+        snapshot.hasData) {
+      return TcbDbUserDocBuilder(
+          userId: snapshot.data.userId, builder: builder);
+    }
+
+    return builder(
+      context,
+      AsyncSnapshot.withData(snapshot.connectionState, null),
+    );
+  }
+}
+
+class _MomentProfileHeaderUserAction extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return _MomentProfileUserSelector(builder: builder);
+  }
+
+  Widget builder(BuildContext context, AsyncSnapshot<User> snapshot) {
+    if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+      return childBuilder(context, snapshot.data);
+    }
+
+    return SizedBox.shrink();
+  }
+
+  Widget childBuilder(BuildContext context, User user) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: UnconstrainedBox(
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 160.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white24
+                : Colors.black12,
+            borderRadius: BorderRadius.circular(36.0),
+          ),
+          height: 36.0,
+          margin: EdgeInsets.only(right: 14.0),
+          padding: EdgeInsets.only(right: 6.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              UserAvatarWidget(
+                radius: 18.0,
+              ),
+              SizedBox(width: 8.0),
+              Expanded(
+                child: Text(
+                  user.nickName.isNotEmpty ? user.nickName : user.id,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.button,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

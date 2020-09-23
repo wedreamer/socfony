@@ -608,7 +608,7 @@ class _PublishState extends State<PublishPage> {
         maxAssets: 1,
         filterOptions: videoFilterOptions,
       );
-      if (entities is! List<AssetEntity> || entities == null) {
+      if (entities == null || entities.isEmpty) {
         return;
       }
 
