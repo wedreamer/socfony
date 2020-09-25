@@ -69,7 +69,7 @@ class MomentListTile extends StatelessWidget {
                 return SizedBox.shrink();
               },
             ),
-            buildText(moment),
+            buildText(context, moment),
             MomentImageCard(
               moment: moment,
               margin: EdgeInsets.symmetric(vertical: 6),
@@ -143,14 +143,19 @@ class MomentListTile extends StatelessWidget {
                 SizedBox(height: 8.0),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.0),
-                  child: Text.rich(TextSpan(children: [
+                  child: Text.rich(
                     TextSpan(
-                      text: 'Seven的代码太渣',
-                      style: Theme.of(context).textTheme.subtitle2,
+                      children: [
+                        TextSpan(
+                          text: 'Seven的代码太渣',
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                        TextSpan(text: '：'),
+                        TextSpan(text: '真的吗？'),
+                      ],
+                      style: Theme.of(context).textTheme.bodyText2,
                     ),
-                    TextSpan(text: '：'),
-                    TextSpan(text: '真的吗？'),
-                  ])),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.0),
@@ -167,7 +172,8 @@ class MomentListTile extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 2.0),
                   child: Text(
                     '查看全部157条评论',
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        color: Theme.of(context).textTheme.caption.color),
                   ),
                 ),
               ],
@@ -179,13 +185,16 @@ class MomentListTile extends StatelessWidget {
     );
   }
 
-  Widget buildText(Moment moment) {
+  Widget buildText(BuildContext context, Moment moment) {
     if (moment.audio is MediaAudio) {
       return SizedBox();
     }
     return Padding(
       padding: EdgeInsets.only(bottom: 6),
-      child: Text(moment.text),
+      child: Text(
+        moment.text,
+        style: Theme.of(context).textTheme.bodyText1,
+      ),
     );
   }
 }
