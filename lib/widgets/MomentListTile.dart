@@ -6,6 +6,7 @@ import 'package:fans/cloudbase/database/TcbDbCollectionsProvider.dart';
 import 'package:fans/cloudbase/function/FunctionMomentQuery.dart';
 import 'package:fans/cloudbase/storage/TcbStorageFileMockDbQuery.dart';
 import 'package:fans/pages/MomentProfile.dart';
+import 'package:fans/widgets/buttons/RowBadgeButton.dart';
 import 'package:fans/widgets/cloudbase/database/collections/TcbDbMomentLikeStatusBuilder.dart';
 import 'package:fans/widgets/cloudbase/storage/TcbStorageImageFileBuilder.dart';
 import 'package:flutter/material.dart';
@@ -270,30 +271,15 @@ class _MomentCardToolBar extends StatelessWidget {
 
   Widget buildLikeButton(BuildContext context) {
     Widget childBuilder(bool hasLiked) {
-      return GestureDetector(
-        onTap: () => onLikeToggle(context, hasLiked),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(hasLiked == true ? Icons.favorite : Icons.favorite_border),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 2.0,
-                bottom: 10.0,
-              ),
-              child: Text(
-                (moment.count?.like ?? 0) > 0
-                    ? moment.count.like.compact
-                    : '喜欢',
-                style: Theme.of(context)
-                    .textTheme
-                    .button
-                    .copyWith(color: hasLiked == true ? Colors.red : null),
-              ),
-            ),
-          ],
+      Color color = hasLiked ? Colors.red : null;
+      return RowBadgeButton(
+        icon: Icon(
+          hasLiked ? Icons.favorite : Icons.favorite_border,
+          color: color,
         ),
+        text: (moment.count?.like ?? 0) > 0 ? moment.count.like.compact : '喜欢',
+        badgeColor: color,
+        onTap: () => onLikeToggle(context, hasLiked),
       );
     }
 
@@ -320,14 +306,6 @@ class _MomentCardToolBar extends StatelessWidget {
       return;
     }
     FunctionMomentQuery.currentUserLikeMoment(moment.id);
-    // CancelFunc cancel = ToastLoadingWidget.show();
-    // try {
-    //   await ToggleLikeMomentCommand(moment.id).run();
-    // } catch (e) {
-    //   BotToast.showText(text: e.message ?? '操作失败');
-    // } finally {
-    //   cancel();
-    // }
   }
 }
 

@@ -1,10 +1,15 @@
 import 'dart:ui';
 
+import 'package:bot_toast/bot_toast.dart';
+import 'package:fans/cloudbase/function/FunctionMomentQuery.dart';
 import 'package:fans/models/moment.dart';
 import 'package:fans/models/user.dart';
 import 'package:fans/routes.dart';
+import 'package:fans/utils/number-extension.dart';
 import 'package:fans/widgets/UserAvatarWidget.dart';
+import 'package:fans/widgets/buttons/RowBadgeButton.dart';
 import 'package:fans/widgets/cloudbase/database/collections/TcbDbMomentDocBuilder.dart';
+import 'package:fans/widgets/cloudbase/database/collections/TcbDbMomentLikeStatusBuilder.dart';
 import 'package:fans/widgets/cloudbase/database/collections/TcbDbUserDocBuilder.dart';
 import 'package:fans/widgets/cloudbase/storage/TcbStorageImageFileBuilder.dart';
 import 'package:fans/widgets/empty.dart';
@@ -13,6 +18,8 @@ import 'package:getwidget/getwidget.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import 'login.dart';
 
 typedef Widget _PanelWidgetBuilder(ScrollController controller);
 
@@ -489,6 +496,7 @@ class _MomentProfilePanel extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       body: CustomScrollView(
+        controller: controller,
         slivers: [
           SliverToBoxAdapter(
             child: ListTile(
@@ -510,87 +518,126 @@ class _MomentProfilePanel extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        // color: Theme.of(context).scaffoldBackgroundColor,
-        child: SafeArea(
-          bottom: true,
-          child: ConstrainedBox(
-            constraints: BoxConstraints.expand(
-              width: MediaQuery.of(context).size.width,
-              height: kBottomNavigationBarHeight,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 8.0,
-                      horizontal: 12.0,
-                    ),
-                    margin: EdgeInsets.only(left: 16.0, right: 16.0),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).highlightColor,
-                      borderRadius: BorderRadius.circular(24.0),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.forum),
-                        SizedBox(width: 6.0),
-                        Text('喜欢Ta就评论下吧！'),
-                      ],
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(Icons.favorite_border),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 2.0,
-                          bottom: 10.0,
-                        ),
-                        child: Text(
-                          '14.2k',
-                          style: Theme.of(context)
-                              .textTheme
-                              .caption
-                              .copyWith(color: Colors.red),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 12.0),
-                GestureDetector(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.share),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 2.0,
-                          bottom: 10.0,
-                        ),
-                        child: Text(
-                          '分享',
-                          style: Theme.of(context).textTheme.caption.copyWith(
-                              color: Theme.of(context).textTheme.button.color),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 12.0),
-              ],
+          SliverToBoxAdapter(
+            child: ListTile(
+              title: Text(
+                '当前共12条评论',
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
+              trailing: FlatButton.icon(
+                onPressed: () {},
+                icon: Icon(Icons.sort),
+                label: Text('最新'),
+              ),
             ),
           ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return Text('$index');
+              },
+            ),
+          )
+        ],
+      ),
+      bottomNavigationBar: _PanelBottomAppBar(),
+    );
+  }
+}
+
+class _PanelBottomAppBar extends StatelessWidget {
+  const _PanelBottomAppBar({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    return Container(
+      width: media.size.width,
+      height: kBottomNavigationBarHeight + media.padding.bottom,
+      child: BottomAppBar(
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 12.0,
+                ),
+                margin: EdgeInsets.only(left: 16.0, right: 16.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).highlightColor,
+                  borderRadius: BorderRadius.circular(24.0),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.forum),
+                    SizedBox(width: 6.0),
+                    Text('喜欢Ta就评论下吧！'),
+                  ],
+                ),
+              ),
+            ),
+            momentLikeButtonBuilder(),
+            SizedBox(width: 12.0),
+            RowBadgeButton(
+              icon: Icon(Icons.share),
+              text: '分享',
+            ),
+            SizedBox(width: 12.0),
+          ],
         ),
       ),
     );
+  }
+
+  Widget momentLikeButtonBuilder() {
+    return _MomentProfileSelector(
+        builder: (BuildContext context, AsyncSnapshot<Moment> snapshot) {
+      String text = '喜欢';
+      if (snapshot.hasData && snapshot.data is Moment) {
+        final moment = snapshot.data;
+        if (moment.count.like != null && moment.count.like > 0) {
+          text = moment.count.like.compact;
+        }
+        return TcbDbMomentLikeStatusBuilder(
+          momentId: moment.id,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return RowBadgeButton(
+                icon: Icon(
+                  Icons.favorite,
+                  color: Colors.red,
+                ),
+                text: text,
+                badgeColor: Colors.red,
+                onTap: () => onLikeToggle(context, true, moment.id),
+              );
+            }
+            return RowBadgeButton(
+              icon: Icon(Icons.favorite_border),
+              text: text,
+              onTap: () => onLikeToggle(context, false, moment.id),
+            );
+          },
+        );
+      }
+      return RowBadgeButton(
+        icon: Icon(Icons.favorite_border),
+        text: text,
+      );
+    });
+  }
+
+  onLikeToggle(BuildContext context, bool status, String momentId) async {
+    final hasLogin = await LoginPage.route(context);
+    if (!hasLogin) {
+      return BotToast.showText(text: '请先登录');
+    } else if (status) {
+      FunctionMomentQuery.currentUserUnlikeMoment(momentId);
+      return;
+    }
+    FunctionMomentQuery.currentUserLikeMoment(momentId);
   }
 }
