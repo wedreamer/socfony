@@ -87,6 +87,7 @@ class MomentProfile extends StatelessWidget {
     return ChangeNotifierProvider<MomentProfileController>.value(
       value: controller,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
         appBar: appBarBuilder(context),
         body: bodyBuilder(context),
@@ -520,15 +521,24 @@ class _MomentProfilePanel extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: ListTile(
-              title: Text(
-                '当前共12条评论',
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
-              trailing: FlatButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.sort),
-                label: Text('最新'),
-              ),
+              title: _MomentProfileSelector(builder: (context, snapshot) {
+                String number = '0';
+                if (snapshot.data is Moment &&
+                    snapshot.data.count.comment != null &&
+                    snapshot.data.count.comment > 0) {
+                  number = snapshot.data.count.comment.compact;
+                }
+                return Text(
+                  '当前共$number条评论',
+                  style: Theme.of(context).textTheme.subtitle2,
+                );
+              }),
+              // TODO: 暂不增加该功能
+              // trailing: FlatButton.icon(
+              //   onPressed: () {},
+              //   icon: Icon(Icons.sort),
+              //   label: Text('最新'),
+              // ),
             ),
           ),
           SliverList(
@@ -560,22 +570,51 @@ class _PanelBottomAppBar extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: 8.0,
-                  horizontal: 12.0,
-                ),
-                margin: EdgeInsets.only(left: 16.0, right: 16.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).highlightColor,
-                  borderRadius: BorderRadius.circular(24.0),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.forum),
-                    SizedBox(width: 6.0),
-                    Text('喜欢Ta就评论下吧！'),
-                  ],
+              child: GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (BuildContext context) {
+                      return SingleChildScrollView(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              TextField(
+                                keyboardType: TextInputType.text,
+                                autofocus: true,
+                                maxLines: 3,
+                                minLines: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 12.0,
+                  ),
+                  margin: EdgeInsets.only(left: 16.0, right: 16.0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).highlightColor,
+                    borderRadius: BorderRadius.circular(24.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.forum),
+                      SizedBox(width: 6.0),
+                      Text('喜欢Ta就评论下吧！'),
+                    ],
+                  ),
                 ),
               ),
             ),
