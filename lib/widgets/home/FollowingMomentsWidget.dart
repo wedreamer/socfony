@@ -1,7 +1,7 @@
 import 'package:fans/widgets/cloudbase/database/collections/TcbDbMomentDocBuilder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:fans/cloudbase/businesses/FollowingMomentsBusiness.dart';
 import 'package:fans/models/moment.dart';
 import 'package:fans/widgets/MomentListTile.dart';
@@ -16,12 +16,12 @@ class FollowingMomentsWidget extends StatefulWidget {
 class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
     with AutomaticKeepAliveClientMixin<FollowingMomentsWidget> {
   ScrollController scrollController;
-  RefreshController refreshController;
+  EasyRefreshController refreshController;
   FollowingMomentsBusiness business;
 
   @override
   void initState() {
-    refreshController = RefreshController(initialRefresh: true);
+    refreshController = EasyRefreshController();
     scrollController = ScrollController();
     business = FollowingMomentsBusiness();
     business.addListener(setState);
@@ -36,22 +36,23 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
 
   Future<void> onRefresh() async {
     try {
-      await business.refresh();
-      refreshController.refreshCompleted(resetFooterState: true);
+      final int length = await business.refresh();
+      refreshController.finishRefreshCallBack(
+        success: true,
+        noMore: length <= 0,
+      );
     } catch (e) {
       print(e);
-      refreshController.refreshFailed();
+      refreshController.finishRefreshCallBack(success: false);
     }
   }
 
   Future<void> onLoadMore() async {
     try {
       final length = await business.loadMore();
-      length > 0
-          ? refreshController.loadComplete()
-          : refreshController.loadNoData();
+      refreshController.finishLoadCallBack(success: true, noMore: length <= 0);
     } catch (e) {
-      refreshController.loadFailed();
+      refreshController.finishLoadCallBack(success: false);
     }
   }
 
@@ -80,13 +81,12 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
     return Scaffold(
       body: Scrollbar(
         controller: scrollController,
-        child: SmartRefresher(
-          controller: refreshController,
+        child: EasyRefresh(
           scrollController: scrollController,
+          controller: refreshController,
           onRefresh: onRefresh,
-          onLoading: onLoadMore,
-          enablePullDown: true,
-          enablePullUp: true,
+          onLoad: onLoadMore,
+          firstRefresh: true,
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
@@ -94,17 +94,44 @@ class _FollowingMomentsWidgetState extends State<FollowingMomentsWidget>
                 padding: EdgeInsets.only(
                     top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
               ),
-              SliverStaggeredGrid.countBuilder(
-                itemCount: business.ids?.length ?? 1,
-                itemBuilder: childBuilder,
-                crossAxisCount: 6,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
-                staggeredTileBuilder: (int index) => staggeredTile,
-              ),
+              if (business.ids?.length is int && business.ids.length > 0)
+                SliverStaggeredGrid.countBuilder(
+                  itemCount: business.ids.length,
+                  itemBuilder: childBuilder,
+                  crossAxisCount: 6,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing:
+                      staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
+                  staggeredTileBuilder: (int index) => staggeredTile,
+                ),
             ],
           ),
         ),
+        // child: SmartRefresher(
+        //   controller: refreshController,
+        //   scrollController: scrollController,
+        //   onRefresh: onRefresh,
+        //   onLoading: onLoadMore,
+        //   enablePullDown: true,
+        //   enablePullUp: true,
+        //   child: CustomScrollView(
+        //     controller: scrollController,
+        //     slivers: <Widget>[
+        //       SliverPadding(
+        //         padding: EdgeInsets.only(
+        //             top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
+        //       ),
+        //       SliverStaggeredGrid.countBuilder(
+        //         itemCount: business.ids?.length ?? 1,
+        //         itemBuilder: childBuilder,
+        //         crossAxisCount: 6,
+        //         crossAxisSpacing: 12,
+        //         mainAxisSpacing: staggeredTile.crossAxisCellCount == 6 ? 8 : 12,
+        //         staggeredTileBuilder: (int index) => staggeredTile,
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ),
       floatingActionButton: Container(
         child: ScrollBackTopButton(scrollController),

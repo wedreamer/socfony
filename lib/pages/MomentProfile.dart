@@ -524,7 +524,7 @@ class _MomentProfilePanel extends StatelessWidget {
               title: _MomentProfileSelector(builder: (context, snapshot) {
                 String number = '0';
                 if (snapshot.data is Moment &&
-                    snapshot.data.count.comment != null &&
+                    snapshot.data.count?.comment != null &&
                     snapshot.data.count.comment > 0) {
                   number = snapshot.data.count.comment.compact;
                 }
@@ -637,7 +637,7 @@ class _PanelBottomAppBar extends StatelessWidget {
       String text = '喜欢';
       if (snapshot.hasData && snapshot.data is Moment) {
         final moment = snapshot.data;
-        if (moment.count.like != null && moment.count.like > 0) {
+        if (moment.count?.like != null && moment.count.like > 0) {
           text = moment.count.like.compact;
         }
         return TcbDbMomentLikeStatusBuilder(

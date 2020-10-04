@@ -1,10 +1,9 @@
 import 'package:fans/widgets/cloudbase/database/collections/TcbDbMomentDocBuilder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:fans/cloudbase/businesses/HomeGeoNearMomentsBusiness.dart';
 import 'package:fans/models/moment.dart';
 import 'package:fans/widgets/empty.dart';
@@ -19,21 +18,15 @@ class CityMomentsTabView extends StatefulWidget {
 class _CityMomentsTabViewState extends State<CityMomentsTabView>
     with AutomaticKeepAliveClientMixin<CityMomentsTabView> {
   ScrollController scrollController;
-  RefreshController refreshController;
+  EasyRefreshController refreshController;
   HomeGeoNearMomentsBusiness business;
   Position position;
-  bool showGeoLocator;
-  bool noPositioningPermission;
 
   @override
   void initState() {
-    showGeoLocator = true;
     scrollController = ScrollController();
-    refreshController = RefreshController(initialRefresh: true);
+    refreshController = refreshController = EasyRefreshController();
     business = HomeGeoNearMomentsBusiness();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      geoLocator();
-    });
     super.initState();
   }
 
@@ -45,13 +38,16 @@ class _CityMomentsTabViewState extends State<CityMomentsTabView>
 
   Future<void> onRefresh() async {
     try {
-      await business.refresh(position);
-      setState(() {
-        refreshController.refreshCompleted(resetFooterState: true);
-      });
+      position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+      final int length = await business.refresh(position);
+      refreshController.finishRefreshCallBack(
+        success: true,
+        noMore: length <= 0,
+      );
     } catch (e) {
       setState(() {
-        refreshController.refreshFailed();
+        refreshController.finishRefreshCallBack(success: false);
       });
     }
   }
@@ -59,45 +55,10 @@ class _CityMomentsTabViewState extends State<CityMomentsTabView>
   Future<void> onLoadMore() async {
     try {
       final length = await business.loadMore(position);
-      setState(() {
-        length > 0
-            ? refreshController.loadComplete()
-            : refreshController.loadNoData();
-      });
+      refreshController.finishLoadCallBack(success: true, noMore: length <= 0);
     } catch (e) {
       setState(() {
-        refreshController.loadFailed();
-      });
-    }
-  }
-
-  Future<void> geoLocator() async {
-    setState(() {
-      showGeoLocator = true;
-    });
-    try {
-      final Position value = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
-      setState(() {
-        position = value;
-      });
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        setState(() {
-          noPositioningPermission = true;
-        });
-      } else {
-        setState(() {
-          position = null;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        position = null;
-      });
-    } finally {
-      setState(() {
-        showGeoLocator = false;
+        refreshController.finishLoadCallBack(success: false);
       });
     }
   }
@@ -124,24 +85,16 @@ class _CityMomentsTabViewState extends State<CityMomentsTabView>
   Widget build(BuildContext context) {
     super.build(context);
 
-    if (showGeoLocator == true) {
-      return geoLocatorWidgetBuilder(context);
-    } else if (noPositioningPermission == true) {
-      return noPositioningPermissionWidgetBuilder(context);
-    } else if (position == null) {
-      return noPositionWidgetBuilder(context);
-    }
-
     return Scaffold(
       body: Scrollbar(
         controller: scrollController,
-        child: SmartRefresher(
+        child: EasyRefresh(
           controller: refreshController,
           scrollController: scrollController,
-          enablePullDown: true,
-          enablePullUp: true,
+          emptyWidget: buildSliverEmptyCard(context),
           onRefresh: onRefresh,
-          onLoading: onLoadMore,
+          onLoad: onLoadMore,
+          firstRefresh: false,
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
@@ -149,9 +102,9 @@ class _CityMomentsTabViewState extends State<CityMomentsTabView>
                 padding: EdgeInsets.only(
                     top: staggeredTile.crossAxisCellCount == 6 ? 0 : 12),
               ),
-              if (business.isEmpty) buildSliverEmptyCard(context),
+              // if (business.ids?.length is int && business.ids.length > 0)
               SliverStaggeredGrid.countBuilder(
-                itemCount: business.ids?.length ?? 0,
+                itemCount: business.ids?.length ?? 1,
                 itemBuilder: childBuilder,
                 crossAxisCount: 6,
                 crossAxisSpacing: 12,
@@ -180,40 +133,38 @@ class _CityMomentsTabViewState extends State<CityMomentsTabView>
     );
   }
 
-  SliverToBoxAdapter buildSliverEmptyCard(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Card(
-        elevation: 0,
-        margin: EdgeInsets.symmetric(vertical: 24, horizontal: 12),
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 12),
-            ListTile(
-              title: Text('当前城市还没有动态哦'),
-              subtitle: Text('你可以下拉刷新检查是否有新动态，或者来成为这个城市的开拓者吧'),
-            ),
-            ButtonBar(
-              children: <Widget>[
-                RaisedButton.icon(
-                  shape: StadiumBorder(),
-                  onPressed: refreshController.requestRefresh,
-                  icon: Icon(Icons.refresh),
-                  label: Text('刷新'),
+  Widget buildSliverEmptyCard(BuildContext context) {
+    return Card(
+      elevation: 0,
+      margin: EdgeInsets.symmetric(vertical: 24, horizontal: 12),
+      child: Column(
+        children: <Widget>[
+          SizedBox(height: 12),
+          ListTile(
+            title: Text('当前城市还没有动态哦'),
+            subtitle: Text('你可以下拉刷新检查是否有新动态，或者来成为这个城市的开拓者吧'),
+          ),
+          ButtonBar(
+            children: <Widget>[
+              RaisedButton.icon(
+                shape: StadiumBorder(),
+                onPressed: refreshController.callRefresh,
+                icon: Icon(Icons.refresh),
+                label: Text('刷新'),
+              ),
+              RaisedButton.icon(
+                color: Theme.of(context).primaryColor,
+                shape: StadiumBorder(),
+                onPressed: refreshController.callRefresh,
+                icon: Transform.rotate(
+                  child: Icon(Icons.send),
+                  angle: 125.0,
                 ),
-                RaisedButton.icon(
-                  color: Theme.of(context).primaryColor,
-                  shape: StadiumBorder(),
-                  onPressed: refreshController.requestRefresh,
-                  icon: Transform.rotate(
-                    child: Icon(Icons.send),
-                    angle: 125.0,
-                  ),
-                  label: Text('发动态'),
-                ),
-              ],
-            ),
-          ],
-        ),
+                label: Text('发动态'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -258,7 +209,7 @@ class _CityMomentsTabViewState extends State<CityMomentsTabView>
           ),
           SizedBox(height: 12),
           RaisedButton.icon(
-            onPressed: geoLocator,
+            onPressed: refreshController.callRefresh,
             icon: Icon(Icons.refresh),
             label: Text('重新获取'),
             shape: StadiumBorder(),
@@ -284,7 +235,7 @@ class _CityMomentsTabViewState extends State<CityMomentsTabView>
           ),
           SizedBox(height: 12),
           RaisedButton.icon(
-            onPressed: geoLocator,
+            onPressed: refreshController.callRefresh,
             icon: Icon(Icons.refresh),
             label: Text('重新获取'),
             shape: StadiumBorder(),

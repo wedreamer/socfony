@@ -74,19 +74,19 @@ class __NavigationBarState extends State<_NavigationBar> {
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.camera),
-          title: Text('Fans'),
+          label: 'Fans',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.explore),
-          title: Text('发现'),
+          label: '发现',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications),
-          title: Text('消息'),
+          label: '消息',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
-          title: Text('我的'),
+          label: '我的',
         ),
       ],
     );

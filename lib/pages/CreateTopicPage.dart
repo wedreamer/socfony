@@ -321,7 +321,7 @@ class _TopicDescField extends StatelessWidget {
       maxLength: 200,
       onChanged: _createFieldChangedHandler(context),
       validator: validator,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.always,
     );
   }
 
@@ -360,7 +360,7 @@ class _TopicTitleTextField extends StatelessWidget {
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.text,
       validator: validator,
       onChanged: _createFieldChangedHandler(context),
@@ -404,7 +404,7 @@ class _TopicNameTextField extends StatelessWidget {
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.text,
       validator: validator,
       onChanged: _createFieldChangedHandler(context),
