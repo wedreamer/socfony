@@ -575,11 +575,17 @@ class _PanelBottomAppBar extends StatelessWidget {
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
                     builder: (BuildContext context) {
                       return SingleChildScrollView(
                         child: Container(
                           padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            // borderRadius: BorderRadius.vertical(
+                            //     top: Radius.circular(24.0)),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -589,7 +595,11 @@ class _PanelBottomAppBar extends StatelessWidget {
                                 keyboardType: TextInputType.text,
                                 autofocus: true,
                                 maxLines: 3,
-                                minLines: 2,
+                                minLines: 1,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(12.0),
+                                  border: InputBorder.none,
+                                ),
                               ),
                             ],
                           ),
