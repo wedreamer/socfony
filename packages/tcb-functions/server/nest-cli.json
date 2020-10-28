@@ -1,6 +1,0 @@
-{
-  "collection": "@nestjs/schematics",
-  "monorepo": false,
-  "sourceRoot": "src",
-  "entryFile": "__dev__server"
-}

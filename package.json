@@ -1,22 +1,15 @@
 {
-  "name": "@bytegem/fans",
   "private": true,
-  "license": "BSD-2-Clause",
-  "devDependencies": {
-    "@cloudbase/cli": "^1.0.0-1",
-    "@types/node": "^14.10.2",
-    "lerna": "^3.22.1"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bytegem/fans.git"
   },
-  "scripts": {
-    "lerna": "lerna",
-    "tcb": "tcb",
-    "app:launcher_generator": "flutter pub run flutter_launcher_icons:main",
-    "server:build": "lerna run --scope server build",
-    "server:deploy": "npm run server:build && tcb fn deploy server",
-    "server:only-deploy": "tcb fn deploy server",
-    "server:dev": "lerna run --scope server dev --stream",
-    "publish": "lerna publish",
-    "fansrc": "node scripts/cloudbaserc-builder.js",
-    "version": "lerna version --no-git-tag-version && node scripts/change-flutter-app-version.js"
+  "author": "Seven Du <shiweidu@outlook.com>",
+  "bugs": {
+    "url": "https://github.com/bytegem/fans/issues"
+  },
+  "homepage": "https://github.com/bytegem/fans#readme",
+  "devDependencies": {
+    "lerna": "^3.22.1"
   }
 }
