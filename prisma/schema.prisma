@@ -7,9 +7,15 @@ datasource database {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["uncheckedScalarInputs"]
 }
 
 model User {
-  id String @id @default(cuid())
+  id        String   @id
+  name      String   @unique
+  email     String?  @unique
+  phone     String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 }

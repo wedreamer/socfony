@@ -1,7 +1,7 @@
 {
   "name": "fans",
   "version": "1.0.0",
-  "description": "",
+  "description": "Fans server",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bytegem/fans.git"
@@ -16,19 +16,22 @@
     "@nestjs/cli": "^7.5.3",
     "@nestjs/schematics": "^7.2.2",
     "@prisma/cli": "^2.12.1",
-    "@types/socket.io": "^2.1.11",
     "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
     "typescript": "^4.1.2"
   },
   "dependencies": {
     "@nestjs/common": "^7.5.5",
     "@nestjs/core": "^7.5.5",
+    "@nestjs/graphql": "^7.9.1",
     "@nestjs/platform-express": "^7.5.5",
-    "@nestjs/platform-socket.io": "^7.5.5",
-    "@nestjs/websockets": "^7.5.5",
     "@prisma/client": "^2.12.1",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2"
+    "apollo-server-express": "^2.19.0",
+    "class-transformer": "^0.3.1",
+    "class-validator": "^0.12.2",
+    "graphql": "^15.4.0",
+    "graphql-tools": "^7.0.2",
+    "reflect-metadata": "^0.1.13"
   },
   "scripts": {
     "prebuild": "rimraf dist",
