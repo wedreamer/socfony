@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from './graphql';
 import { LoggerModule } from './logger';
-import { UsersModule } from './users/users.module';
+import { AuthorizationModule } from './authorization/authorization.module';
 
 /**
  * Application module.
@@ -10,7 +10,7 @@ import { UsersModule } from './users/users.module';
   imports: [
     GraphQLModule,
     LoggerModule,
-    UsersModule,
+    AuthorizationModule,
   ],
 })
 export class AppModule {}

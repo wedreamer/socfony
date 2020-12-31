@@ -1,24 +1,10 @@
-import { ClassProvider, Injectable, Logger, Module } from '@nestjs/common';
-
-/**
- * Logger service.
- */
-@Injectable()
-class LoggerService extends Logger {}
-
-/**
- * Create logger provider
- */
-const provider: ClassProvider<Logger> = {
-  provide: Logger,
-  useClass: LoggerService,
-};
+import { Logger, Module } from '@nestjs/common';
 
 /**
  * Logger module.
  */
 @Module({
-  providers: [provider],
-  exports: [provider],
+  providers: [Logger],
+  exports: [Logger],
 })
 export class LoggerModule {}

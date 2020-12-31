@@ -19,7 +19,10 @@ async function bootstrap() {
 
   await app.listen(3000);
 
-  logger.log(`Application listening http://127.0.0.1:3000`, 'Bootstrap');
+  const listeningURL = await app.getUrl();
+
+  logger.log(`Application HTTP listening ${listeningURL}`, 'Bootstrap');
+  logger.log(`Application WebSocket listening ${listeningURL.replace("http", "ws")}`, 'Bootstrap');
 }
 
 // Application run.
