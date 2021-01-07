@@ -4,10 +4,6 @@ import { Request } from "express";
 
 @Injectable()
 export class GraphQLOptionService {
-    getHttpContext(request: Request): Record<string, any> {
-        return {}
-    }
-
     public async getOptions(): Promise<GqlModuleOptions>  {
         return {
             autoSchemaFile: true,
@@ -16,9 +12,6 @@ export class GraphQLOptionService {
             playground: true,
             path: "/",
             context: this.context,
-            subscriptions: {
-                // onConnect()
-            }
         }
     }
 
