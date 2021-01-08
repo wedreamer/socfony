@@ -23,6 +23,9 @@ export class GqlOptionsFactory implements GqlOptionsFactoryInterface {
   private context(context: any) {
     const { req: request } = context;
 
-    return Object.assign(context, this.authoriztionService.resolveHttpContext(request));
+    return Object.assign(
+      context,
+      this.authoriztionService.resolveHttpContext(request),
+    );
   }
 }

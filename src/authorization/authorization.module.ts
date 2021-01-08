@@ -12,11 +12,7 @@ const _AuthGuardProvider: ClassProvider<AuthGuard> = {
 
 @Module({
   imports: [PrismaModule],
-  providers: [
-    _AuthGuardProvider,
-    AuthorizationService,
-    AuthorizationResolver,
-  ],
+  providers: [_AuthGuardProvider, AuthorizationService, AuthorizationResolver],
   exports: [AuthorizationService],
 })
 export class AuthorizationModule {}
