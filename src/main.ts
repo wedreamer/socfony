@@ -13,16 +13,21 @@ async function bootstrap() {
   const logger = app.get(Logger);
 
   app.useLogger(logger);
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   await app.listen(3000);
 
   const listeningURL = await app.getUrl();
 
   logger.log(`Application HTTP listening ${listeningURL}`, 'Bootstrap');
-  logger.log(`Application WebSocket listening ${listeningURL.replace("http", "ws")}`, 'Bootstrap');
+  logger.log(
+    `Application WebSocket listening ${listeningURL.replace('http', 'ws')}`,
+    'Bootstrap',
+  );
 }
 
 // Application run.

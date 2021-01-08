@@ -11,13 +11,28 @@ generator client {
   previewFeatures = ["uncheckedScalarInputs"]
 }
 
+/// 用户
 model User {
-  id        String   @id
-  login     String   @unique
-  email     String   @unique
-  phone     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id        String   @id // User ID
+  login     String   @unique // User-defined login name
+  email     String   @unique // User bound E-Mail address
+  phone     String   @unique // User bound phone number
+  password  String? // Encrypted password
+  createdAt DateTime @default(now()) // User account created date
 
-  @@map(name: "users")
+  authorizationTokens AuthorizationToken[] // The user authorization tokens
+  @@index([createdAt])
+}
+
+/// Authorization Token
+model AuthorizationToken {
+  userId           String // User ID
+  token            String   @id
+  expiredAt        DateTime // Token expired date.
+  refreshExpiredAt DateTime // Use the token refresh expired data.
+
+  user User @relation(fields: [userId]) // The token bound user
+  @@index([userId])
+  @@index([expiredAt])
+  @@index([refreshExpiredAt])
 }
