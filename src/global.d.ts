@@ -2,7 +2,7 @@ import { AuthorizationToken, Prisma, User } from '@prisma/client';
 import { Request } from 'express';
 
 export type AuthorizationTokenPrismaClient<
-  T = Prisma.AuthorizationTokenArgs
+  T extends Prisma.AuthorizationTokenArgs = Prisma.AuthorizationTokenArgs
 > = (
   args?: T,
 ) => Prisma.CheckSelect<
@@ -11,7 +11,7 @@ export type AuthorizationTokenPrismaClient<
   Prisma.Prisma__AuthorizationTokenClient<Prisma.AuthorizationTokenGetPayload<T> | null>
 >;
 
-export type UserPrismaClient<T = Prisma.UserArgs> = (
+export type UserPrismaClient<T extends Prisma.UserArgs = Prisma.UserArgs> = (
   args?: T,
 ) => Prisma.CheckSelect<
   T,
@@ -19,16 +19,16 @@ export type UserPrismaClient<T = Prisma.UserArgs> = (
   Prisma.Prisma__UserClient<Prisma.UserGetPayload<T> | null>
 >;
 
-export interface AppExecutionContext {
+export class AppExecutionContext {
   /**
    * Authenticated user token
    */
-  authorizationToken?: AuthorizationTokenPrismaClient;
+  authorizationTokenClient?: AuthorizationTokenPrismaClient;
 
   /**
    * Authenticated user
    */
-  user?: UserPrismaClient;
+  userClient?: UserPrismaClient;
 
   /**
    * Has user logged

@@ -1,5 +1,13 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { AuthorizationToken, Prisma, PrismaClient } from '@prisma/client';
+import { UserUnion } from 'src/users';
 import {
   AuthorizationDecorator,
   AuthorizationTokenDecorator,
@@ -15,6 +23,13 @@ export class AuthorizationResolver {
     private readonly prisma: PrismaClient,
   ) {}
 
+  @ResolveField((returns) => UserUnion)
+  user(@Parent() authorizationToken: AuthorizationToken) {
+    return this.prisma.user.findUnique({
+      where: { id: authorizationToken.userId },
+    });
+  }
+
   @Mutation((returns) => AuthorizationTokenEntity)
   login(
     @Args({
@@ -27,14 +42,25 @@ export class AuthorizationResolver {
     if (type === LoginType.PASSWORD) {
       return this.authorizationService.loginWithPassword(account, encrypted);
     }
+
+    return this.authorizationService.loginWithSecurityCode(account, encrypted);
   }
 
   @Query((returns) => AuthorizationTokenEntity)
-  @AuthorizationDecorator(true)
+  @AuthorizationDecorator({ hasAuthorization: true, type: 'auth' })
   authorization(
     @AuthorizationTokenDecorator()
     client: Prisma.Prisma__AuthorizationTokenClient<AuthorizationToken>,
   ) {
     return client;
+  }
+
+  @Mutation((returns) => AuthorizationTokenEntity)
+  @AuthorizationDecorator({ hasAuthorization: true, type: 'refresh' })
+  refreshAuthorization(
+    @AuthorizationTokenDecorator()
+    client: Prisma.Prisma__AuthorizationTokenClient<AuthorizationToken>,
+  ) {
+    return this.authorizationService.refreshAuthorizationToken(client);
   }
 }

@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
+import { UNAUTHENTICATION } from 'src/constants';
 import { resolveAppExecutionContext } from 'src/helper';
 import { AuthorizationService } from './authorization.service';
 
@@ -12,7 +13,6 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    let request = context.switchToHttp().getRequest<Request>();
     if (context.getType() === 'http') {
       this.authorizationService.resolveHttpContext(
         context.switchToHttp().getRequest<Request>(),
@@ -28,10 +28,18 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const hasTokenExpired = await this.authorizationService.hasTokenExpired(
-      appContext.authorizationToken,
-      'auth',
+    const type = this.reflector.get<'auth' | 'refresh'>(
+      'validate-authorization-type',
+      context.getHandler(),
     );
+    const hasTokenExpired = await this.authorizationService.hasTokenExpired(
+      appContext.authorizationTokenClient,
+      type,
+    );
+    if (hasTokenExpired) {
+      throw new Error(UNAUTHENTICATION);
+    }
+
     appContext.hasLogged = !hasTokenExpired;
     appContext.request.hasLogged = appContext.hasLogged;
 

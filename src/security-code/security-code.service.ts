@@ -23,11 +23,16 @@ export class SecurityCodeService {
         },
       },
     });
+    const defaultArgs = ['#code#', '#expired#'];
     const value = setting?.value as any;
     const { templateId, args = ['#code#', '#expired#'], expiredIn = 300 } =
       value || {};
 
-    return { templateId, args, expiredIn };
+    return {
+      templateId,
+      args: Array.isArray(args) ? defaultArgs : [],
+      expiredIn: Number.parseInt(expiredIn),
+    };
   }
 
   async send(
@@ -46,6 +51,27 @@ export class SecurityCodeService {
     this._sendSecurityCodeForTencentCloud(security);
 
     return security;
+  }
+
+  findFirst(account: string, code: string = undefined) {
+    return this.prisma.securityCode.findFirst({
+      where: { account, code },
+    });
+  }
+
+  async validateSecurity(security: SecurityCode) {
+    if (!security || security.disabledAt) return true;
+    const { expiredIn } = await this.getPhoneSecurityCodeOptions();
+    const value = (Date.now() - security.createdAt.getTime()) / 1000;
+    return value > expiredIn;
+  }
+
+  async disableSecurity(security: SecurityCode) {
+    if (!security || security.disabledAt) return security;
+    return await this.prisma.securityCode.update({
+      where: { id: security.id },
+      data: { disabledAt: new Date() },
+    });
   }
 
   private async _sendSecurityCodeForTencentCloud(security: SecurityCode) {

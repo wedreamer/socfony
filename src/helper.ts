@@ -11,11 +11,10 @@ export function resolveAppExecutionContext(
     const appContext = GqlExecutionContext.create(
       context,
     ).getContext<AppExecutionContext>();
+    appContext.hasLogged =
+      appContext.request?.hasLogged || appContext.hasLogged;
 
-    return {
-      ...appContext,
-      hasLogged: appContext.request?.hasLogged || appContext.hasLogged,
-    };
+    return appContext;
   }
 
   return context.switchToHttp().getRequest<Request & AppExecutionContext>();

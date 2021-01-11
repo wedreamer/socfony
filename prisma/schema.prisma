@@ -14,9 +14,9 @@ generator client {
 /// 用户
 model User {
   id        String   @id // User ID
-  login     String   @unique // User-defined login name
-  email     String   @unique // User bound E-Mail address
-  phone     String   @unique // User bound phone number
+  login     String?  @unique // User-defined login name
+  email     String?  @unique // User bound E-Mail address
+  phone     String?  @unique // User bound phone number
   password  String? // Encrypted password
   createdAt DateTime @default(now()) // User account created date
 
@@ -52,13 +52,20 @@ model Setting {
 
 // Validate code
 model SecurityCode {
-  id             String   @id // ID
+  id             String    @id // ID
   senderId       String? // Sender ID
-  sender         User?    @relation(fields: [senderId], references: [id]) // Sender
+  sender         User?     @relation(fields: [senderId], references: [id]) // Sender
   account        String // To account, E-Mail or phone number
-  secret         String // Temp secret code
   code           String // validate code
-  createdAt      DateTime @default(now()) // created At
+  createdAt      DateTime  @default(now()) // created At
   response       Json? // Service response
   validateSender Boolean // Validate sender
+  disabledAt     DateTime? // Disabled the code datetime.
+
+  @@index([senderId])
+  @@index([account])
+  @@index([code])
+  @@index([createdAt])
+  @@index([validateSender])
+  @@index([disabledAt])
 }

@@ -3,16 +3,11 @@ import { SecurityCode } from '@prisma/client';
 
 @InputType()
 export class SendSecurityCodeInput
-  implements Pick<SecurityCode, 'secret' | 'validateSender' | 'account'> {
+  implements Pick<SecurityCode, 'validateSender' | 'account'> {
   @Field((type) => String, {
     description: '需要发送到的账户',
   })
   account: string;
-
-  @Field((type) => String, {
-    description: '验证码安全值',
-  })
-  secret: string;
 
   @Field((type) => Boolean, {
     description: '验证码发送场景是否要验证发送者（即验证是否登陆）',
