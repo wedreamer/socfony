@@ -1,6 +1,7 @@
 import { ExecutionContext } from '@nestjs/common';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Request } from 'express';
+import { customAlphabet, nanoid } from 'nanoid';
 import { AppExecutionContext } from './global';
 
 export function resolveAppExecutionContext(
@@ -18,4 +19,19 @@ export function resolveAppExecutionContext(
   }
 
   return context.switchToHttp().getRequest<Request & AppExecutionContext>();
+}
+
+export function nanoIdGenerator(length: number): string {
+  return nanoid(length);
+}
+
+export function numberNanoIdGenerator(length: number): string {
+  return customAlphabet('1234567890', length)();
+}
+
+export function readabilityNanoIdGenerator(length: number): string {
+  return customAlphabet(
+    '23456789qwertyupasdfghjklzxcvbnm'.toUpperCase(),
+    length,
+  )();
 }

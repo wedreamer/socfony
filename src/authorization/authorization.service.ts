@@ -13,10 +13,38 @@ import {
   USER_NOT_SET_PASSWORD,
   USER_PASSWORD_NOT_COMPARE,
 } from 'src/constants';
+import { AuthorizationTokenValidityPeriod } from './types';
 
 @Injectable()
 export class AuthorizationService {
   constructor(private readonly prisma: PrismaClient) {}
+
+  /**
+   * Get token expored in validity period.
+   */
+  async getTokenExpiredIn(): Promise<AuthorizationTokenValidityPeriod> {
+    const setting = await this.prisma.setting.findUnique({
+      where: {
+        namespace_name: {
+          namespace: 'system',
+          name: 'authorization-token-validity-period',
+        },
+      },
+    });
+    const { value = {} } = setting || {};
+    const { expiredIn = {}, refreshExpiredIn = {} } = value as any;
+
+    return {
+      expiredIn: {
+        value: expiredIn.value || 1,
+        unit: expiredIn.unit || 'day',
+      },
+      refreshExpiredIn: {
+        value: refreshExpiredIn.value || 7,
+        unit: refreshExpiredIn.unit || 'day',
+      },
+    };
+  }
 
   resolveHttpContext(request: Request): AppExecutionContext {
     if (!request) return { request };
@@ -55,15 +83,20 @@ export class AuthorizationService {
       this.createAuthorizationTokenClient(prisma, token)().user(args);
   }
 
-  createAuthorizationTokenForUser(
+  async createAuthorizationTokenForUser(
     user: User | string,
   ): Promise<AuthorizationToken> {
-    return this.prisma.authorizationToken.create({
+    const setting = await this.getTokenExpiredIn();
+    return await this.prisma.authorizationToken.create({
       data: {
         userId: typeof user === 'string' ? user : user.id,
         token: nanoid(128),
-        expiredAt: dayjs().add(1, 'day').toDate(),
-        refreshExpiredAt: dayjs().add(1, 'day').toDate(),
+        expiredAt: dayjs()
+          .add(setting.expiredIn.value, setting.expiredIn.unit)
+          .toDate(),
+        refreshExpiredAt: dayjs()
+          .add(setting.refreshExpiredIn.value, setting.refreshExpiredIn.unit)
+          .toDate(),
       },
     });
   }

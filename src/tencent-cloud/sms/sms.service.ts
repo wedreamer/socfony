@@ -20,6 +20,7 @@ export class TencentCloudShortMessageService {
     return {
       credential: await this.tencentCloudService.getCredential(),
       region: 'ap-guangzhou',
+      profile: {},
     };
   }
 

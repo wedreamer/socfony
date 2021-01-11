@@ -1,5 +1,6 @@
 import {
   ClassProvider,
+  Global,
   Injectable,
   Logger,
   Module,
@@ -62,6 +63,7 @@ const provider: ClassProvider<PrismaClient> = {
 /**
  * Prisma module.
  */
+@Global()
 @Module({
   imports: [LoggerModule],
   providers: [provider],

@@ -1,18 +1,12 @@
-import { ClassProvider, Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { Global, Module } from '@nestjs/common';
 import { PrismaModule } from 'src/prisma';
-import { AuthGuard } from './auth.guard';
 import { AuthorizationResolver } from './authorization.resolver';
 import { AuthorizationService } from './authorization.service';
 
-const _AuthGuardProvider: ClassProvider<AuthGuard> = {
-  provide: APP_GUARD,
-  useClass: AuthGuard,
-};
-
+@Global()
 @Module({
   imports: [PrismaModule],
-  providers: [_AuthGuardProvider, AuthorizationService, AuthorizationResolver],
+  providers: [AuthorizationService, AuthorizationResolver],
   exports: [AuthorizationService],
 })
 export class AuthorizationModule {}

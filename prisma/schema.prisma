@@ -21,6 +21,7 @@ model User {
   createdAt DateTime @default(now()) // User account created date
 
   authorizationTokens AuthorizationToken[] // The user authorization tokens
+  sentSecurityCodes   SecurityCode[] // Sent security codes
   @@index([createdAt])
 }
 
@@ -40,11 +41,24 @@ model AuthorizationToken {
 /// Setting
 model Setting {
   namespace String // Setting namespace
-  name String // setting name key
-  value Json // setting value
-  updatedAt DateTime @updatedAt @default(now())
+  name      String // setting name key
+  value     Json // setting value
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@id([namespace, name])
   @@index([namespace])
   @@index([name])
+}
+
+// Validate code
+model SecurityCode {
+  id             String   @id // ID
+  senderId       String? // Sender ID
+  sender         User?    @relation(fields: [senderId], references: [id]) // Sender
+  account        String // To account, E-Mail or phone number
+  secret         String // Temp secret code
+  code           String // validate code
+  createdAt      DateTime @default(now()) // created At
+  response       Json? // Service response
+  validateSender Boolean // Validate sender
 }
