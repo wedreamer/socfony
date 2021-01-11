@@ -30,7 +30,9 @@ export class AuthorizationService {
     return { ...context, request };
   }
 
-  resolveContextForAuthorization(token: string): Pick<AppExecutionContext, "authorizationToken" | "user"> {
+  resolveContextForAuthorization(
+    token: string,
+  ): Pick<AppExecutionContext, 'authorizationToken' | 'user'> {
     if (!token) return {};
     return {
       authorizationToken: this.createAuthorizationTokenClient(

@@ -8,6 +8,11 @@ import { UsersModule } from './users/users.module';
  * Application module.
  */
 @Module({
-  imports: [AuthorizationModule, GraphQLModule, LoggerModule, UsersModule],
+  imports: [
+    AuthorizationModule,
+    GraphQLModule,
+    LoggerModule,
+    UsersModule,
+  ],
 })
 export class AppModule {}

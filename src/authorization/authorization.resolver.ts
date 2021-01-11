@@ -1,6 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthorizationToken, Prisma, PrismaClient } from '@prisma/client';
-import { AuthorizationDecorator, AuthorizationTokenDecorator } from './authorization.decorator';
+import {
+  AuthorizationDecorator,
+  AuthorizationTokenDecorator,
+} from './authorization.decorator';
 import { AuthorizationService } from './authorization.service';
 import { LoginInput, LoginType } from './dto/login.input';
 import { AuthorizationTokenEntity } from './entities/authorization-token.entity';
@@ -29,7 +32,8 @@ export class AuthorizationResolver {
   @Query((returns) => AuthorizationTokenEntity)
   @AuthorizationDecorator(true)
   authorization(
-      @AuthorizationTokenDecorator() client: Prisma.Prisma__AuthorizationTokenClient<AuthorizationToken>
+    @AuthorizationTokenDecorator()
+    client: Prisma.Prisma__AuthorizationTokenClient<AuthorizationToken>,
   ) {
     return client;
   }

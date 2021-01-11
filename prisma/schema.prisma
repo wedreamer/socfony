@@ -36,3 +36,15 @@ model AuthorizationToken {
   @@index([expiredAt])
   @@index([refreshExpiredAt])
 }
+
+/// Setting
+model Setting {
+  namespace String // Setting namespace
+  name String // setting name key
+  value Json // setting value
+  updatedAt DateTime @updatedAt @default(now())
+
+  @@id([namespace, name])
+  @@index([namespace])
+  @@index([name])
+}

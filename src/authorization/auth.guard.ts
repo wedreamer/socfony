@@ -11,9 +11,7 @@ export class AuthGuard implements CanActivate {
     private readonly reflector: Reflector,
   ) {}
 
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     let request = context.switchToHttp().getRequest<Request>();
     if (context.getType() === 'http') {
       this.authorizationService.resolveHttpContext(
@@ -34,7 +32,7 @@ export class AuthGuard implements CanActivate {
       appContext.authorizationToken,
       'auth',
     );
-    appContext.hasLogged = !hasTokenExpired
+    appContext.hasLogged = !hasTokenExpired;
     appContext.request.hasLogged = appContext.hasLogged;
 
     return appContext.hasLogged;

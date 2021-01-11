@@ -35,7 +35,8 @@
     "graphql": "^15.4.0",
     "graphql-tools": "^7.0.2",
     "nanoid": "^3.1.20",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "tencentcloud-sdk-nodejs": "^4.0.46"
   },
   "scripts": {
     "prebuild": "rimraf dist",
