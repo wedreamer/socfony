@@ -20,9 +20,22 @@ model User {
   password  String? // Encrypted password
   createdAt DateTime @default(now()) // User account created date
 
+  profile             UserProfile? // the user profile
   authorizationTokens AuthorizationToken[] // The user authorization tokens
   sentSecurityCodes   SecurityCode[] // Sent security codes
   @@index([createdAt])
+}
+
+/// 用户资料
+model UserProfile {
+  id        String   @id // Profile ID
+  userId    String   @unique // The profile owner ID
+  user      User     @relation(fields: [userId], references: [id]) // The profile owner
+  name      String? // user display name
+  avatar    String? // user avatar
+  bio       String? // user bio
+  location  String? // user location
+  updatedAt DateTime @updatedAt // The profile updated datetime
 }
 
 /// Authorization Token

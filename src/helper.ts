@@ -28,6 +28,10 @@ export function numberNanoIdGenerator(length: number): string {
   return customAlphabet('1234567890', length)();
 }
 
+export function alphabetNanoIdGenerator(length: number): string {
+  return customAlphabet('qwertyuiopasdfghjklzxcvbnm'.toUpperCase(), length)();
+}
+
 export function readabilityNanoIdGenerator(length: number): string {
   return customAlphabet(
     '23456789qwertyupasdfghjklzxcvbnm'.toUpperCase(),

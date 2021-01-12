@@ -1,16 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Client } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sms/v20190711/sms_client';
 import { SendSmsRequest } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sms/v20190711/sms_models';
 import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interface';
 import { TencentCloudService } from '../tencent-cloud.service';
 import { PrismaClient } from '@prisma/client';
+import { ModuleRef } from '@nestjs/core';
 
 @Injectable()
-export class TencentCloudShortMessageService {
+export class TencentCloudShortMessageService implements OnModuleInit {
   constructor(
     private readonly tencentCloudService: TencentCloudService,
     private readonly prisma: PrismaClient,
   ) {}
+
+  onModuleInit() {
+    // console.log(this.moduleRef.get(TencentCloudService));
+    // forwardRef(() => TencentCloudModule)
+    // this.tencentCloudService = this.moduleRef.get(TencentCloudService);
+  }
 
   async createClient() {
     return new Client(await this.getClientOptions());
@@ -20,7 +27,11 @@ export class TencentCloudShortMessageService {
     return {
       credential: await this.tencentCloudService.getCredential(),
       region: 'ap-guangzhou',
-      profile: {},
+      profile: {
+        httpProfile: {
+          endpoint: 'sms.tencentcloudapi.com',
+        },
+      },
     };
   }
 

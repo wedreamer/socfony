@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { ProfileModule } from './profile/profile.module';
 
-@Module({})
+@Module({
+  imports: [ProfileModule],
+})
 export class UsersModule {}
