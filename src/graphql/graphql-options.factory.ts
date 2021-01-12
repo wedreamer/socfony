@@ -1,21 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   GqlModuleOptions,
   GqlOptionsFactory as GqlOptionsFactoryInterface,
 } from '@nestjs/graphql';
 import { AuthorizationService } from 'src/authorization/authorization.service';
+import { appConfig, AppConfig } from 'src/config';
 
 @Injectable()
 export class GqlOptionsFactory implements GqlOptionsFactoryInterface {
-  constructor(private readonly authoriztionService: AuthorizationService) {}
+  constructor(
+    private readonly authoriztionService: AuthorizationService,
+    @Inject(appConfig.KEY)
+    private readonly appConfig: AppConfig,
+  ) {}
 
   async createGqlOptions(): Promise<GqlModuleOptions> {
     return {
       autoSchemaFile: true,
       installSubscriptionHandlers: false,
-      debug: true,
-      playground: true,
-      path: '/',
+      debug: !this.appConfig.isProduction,
+      playground: !this.appConfig.isProduction,
+      path: this.appConfig.endpoint,
       context: this.context.bind(this),
     };
   }

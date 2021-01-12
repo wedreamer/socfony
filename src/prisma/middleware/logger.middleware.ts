@@ -8,7 +8,7 @@ import { Prisma } from '@prisma/client';
 export function PrismaLoggerMiddleware(logger: Logger): Prisma.Middleware {
   return function (params, next) {
     logger.debug(
-      `Query ${params.model}.${params.action}, args: ${JSON.stringify(
+      `Query ${params.model}.${params.action}\nArgs: ${JSON.stringify(
         params.args,
         null,
         2,

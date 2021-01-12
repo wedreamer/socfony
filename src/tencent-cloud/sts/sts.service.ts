@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { TencentCloudService } from '../tencent-cloud.service';
+import { Inject, Injectable } from '@nestjs/common';
 import { Client } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sts/v20180813/sts_client';
+import { serviceConfig, ServiceConfig } from 'src/config';
 
 @Injectable()
 export class TencentCloudStsService {
-  constructor(private readonly tencentCloudService: TencentCloudService) {}
+  constructor(
+    @Inject(serviceConfig.KEY)
+    private readonly serviceConfig: ServiceConfig,
+  ) {}
 
-  async createClient(region: string = 'ap-guangzhou'): Promise<Client> {
+  createClient(region: string = 'ap-guangzhou'): Client {
     return new Client({
       region,
-      credential: await this.tencentCloudService.getCredential(),
+      credential: this.serviceConfig.tencentCloud.credential,
       profile: {
         httpProfile: {
           endpoint: 'sts.tencentcloudapi.com',

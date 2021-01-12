@@ -1,6 +1,8 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { AppConfig } from './config';
 
 /**
  * Create application bootstrap.
@@ -19,7 +21,8 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(3000);
+  const { port, endpoint } = app.get(ConfigService).get<AppConfig>('app');
+  await app.listen(port);
 
   const listeningURL = await app.getUrl();
 
@@ -28,6 +31,12 @@ async function bootstrap() {
     `Application WebSocket listening ${listeningURL.replace('http', 'ws')}`,
     'Bootstrap',
   );
+  if (endpoint !== '/') {
+    logger.log(
+      `Application HTTP endpoint ${listeningURL}${endpoint}`,
+      'Bootstrap',
+    );
+  }
 }
 
 // Application run.

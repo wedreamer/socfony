@@ -1,13 +1,15 @@
 import {
   ClassProvider,
   Global,
+  Inject,
   Injectable,
   Logger,
   Module,
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { databaseConfig } from 'src/config';
 import { LoggerModule } from '../logger';
 import { PrismaLoggerMiddleware } from './middleware';
 
@@ -22,8 +24,13 @@ class PrismaService
    * Prisma client constructor
    * @param logger Logger
    */
-  constructor(private readonly logger: Logger) {
-    super();
+  constructor(
+    private readonly logger: Logger,
+    @Inject(databaseConfig.KEY) database: Prisma.Datasource,
+  ) {
+    super({
+      datasources: { database },
+    });
   }
 
   /**

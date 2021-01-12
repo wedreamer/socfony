@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Inject, Injectable } from '@nestjs/common';
+import { serviceConfig, ServiceConfig } from 'src/config';
 import { alphabetNanoIdGenerator } from 'src/helper';
 import { TencentCloudStsService } from '../sts';
 
@@ -7,23 +7,12 @@ import { TencentCloudStsService } from '../sts';
 export class TencentCloudCosService {
   constructor(
     private readonly stsService: TencentCloudStsService,
-    private readonly prisma: PrismaClient,
+    @Inject(serviceConfig.KEY)
+    private readonly serviceConfig: ServiceConfig,
   ) {}
 
-  async getOptions(): Promise<{
-    bucket: string;
-    region: string;
-  }> {
-    const setting = await this.prisma.setting.findUnique({
-      where: {
-        namespace_name: {
-          name: 'cos',
-          namespace: 'tencent-cloud',
-        },
-      },
-    });
-
-    return setting?.value as any;
+  getOptions() {
+    return this.serviceConfig.tencentCloud.cos;
   }
 
   get temporaryCredentialDurationSeconds() {
@@ -31,8 +20,8 @@ export class TencentCloudCosService {
   }
 
   async createTemporaryReadCredential() {
-    const { bucket, region } = await this.getOptions();
-    const stsClient = await this.stsService.createClient(region);
+    const { bucket, region } = this.getOptions();
+    const stsClient = this.stsService.createClient(region);
     const [_, uid] = bucket.split('-');
     return await stsClient.GetFederationToken({
       Name: alphabetNanoIdGenerator(32),
@@ -55,8 +44,8 @@ export class TencentCloudCosService {
   }
 
   async createTemporaryWriteCredential(name: string) {
-    const { bucket, region } = await this.getOptions();
-    const stsClient = await this.stsService.createClient(region);
+    const { bucket, region } = this.getOptions();
+    const stsClient = this.stsService.createClient(region);
     const [_, uid] = bucket.split('-');
     return await stsClient.GetFederationToken({
       Name: alphabetNanoIdGenerator(32),
