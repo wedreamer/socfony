@@ -17,15 +17,27 @@ export enum AllowUploadFileType {
   MP3 = '.mp3',
   WAV = '.wav',
 }
+
+// Register allow upload file type to GraphQL schema.
 registerEnumType(AllowUploadFileType, {
   name: 'AllowUploadFileType',
+  description:
+    'Create Tencent Cloud COS write credential allow upload file type.',
 });
 
+/**
+ * `CosAuthorizationEntity` resolver.
+ */
 @Resolver((of) => CosAuthorizationEntity)
 export class CosAuthorizationResolver {
   constructor(private readonly cosService: TencentCloudCosService) {}
 
-  @Mutation((returns) => CosAuthorizationEntity)
+  /**
+   * Create Tencent Cloud COS temporary read credential.
+   */
+  @Mutation((returns) => CosAuthorizationEntity, {
+    description: 'Create Tencent Cloud COS temporary read credential.',
+  })
   @AuthorizationDecorator({
     hasAuthorization: true,
     type: 'auth',
@@ -35,6 +47,10 @@ export class CosAuthorizationResolver {
     return CosAuthorizationEntity.create(response);
   }
 
+  /**
+   * Create Tencent Cloud COS temporary write credential.
+   * @param type Create Tencent Cloud COS write credential allow upload file type.
+   */
   @Mutation((returns) => CosAuthorizationEntity)
   @AuthorizationDecorator({
     hasAuthorization: true,
@@ -47,9 +63,13 @@ export class CosAuthorizationResolver {
     })
     type: AllowUploadFileType,
   ): Promise<CosAuthorizationEntity> {
+    const resource = nanoIdGenerator(64) + type;
     const response = await this.cosService.createTemporaryWriteCredential(
-      nanoIdGenerator(64) + type,
+      resource,
     );
-    return CosAuthorizationEntity.create(response);
+    const value = CosAuthorizationEntity.create(response);
+    value.resource = resource;
+
+    return value;
   }
 }

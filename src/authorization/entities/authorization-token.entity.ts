@@ -2,7 +2,12 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Prisma, User } from '@prisma/client';
 import { ViewerEntity } from 'src/users';
 
-@ObjectType()
+/**
+ * HTTP endpoint authorization entity.
+ */
+@ObjectType({
+  description: 'HTTP endpoint authorization entity.',
+})
 export class AuthorizationTokenEntity
   implements
     Prisma.AuthorizationTokenGetPayload<{
@@ -10,24 +15,41 @@ export class AuthorizationTokenEntity
         user: true;
       };
     }> {
+  /**
+   * Logged user id.
+   */
   @Field((type) => ID, {
     description: 'Login user ID',
   })
   userId: string;
 
-  @Field((type) => ViewerEntity)
+  /**
+   * Logged User
+   */
+  @Field((type) => ViewerEntity, {
+    description: 'Logged Viewer entity',
+  })
   user: User;
 
+  /**
+   * User API endpoit authorization token.
+   */
   @Field((type) => String, {
-    description: 'Login Token',
+    description: 'User API endpoit authorization token.',
   })
   token: string;
 
+  /**
+   * Token expired date.
+   */
   @Field((type) => Date, {
     description: 'Token expired date',
   })
   expiredAt: Date;
 
+  /**
+   * Token on refresh expired date.
+   */
   @Field((type) => Date, {
     description: 'Token on refresh expired date',
   })

@@ -3,6 +3,9 @@ import { serviceConfig, ServiceConfig } from 'src/config';
 import { alphabetNanoIdGenerator } from 'src/helper';
 import { TencentCloudStsService } from '../sts';
 
+/**
+ * Tencent Cloud COS service.
+ */
 @Injectable()
 export class TencentCloudCosService {
   constructor(
@@ -11,14 +14,23 @@ export class TencentCloudCosService {
     private readonly serviceConfig: ServiceConfig,
   ) {}
 
+  /**
+   * Get Tencent Cloud options.
+   */
   getOptions() {
     return this.serviceConfig.tencentCloud.cos;
   }
 
+  /**
+   * get temporary credential duration seconds.
+   */
   get temporaryCredentialDurationSeconds() {
     return 7200;
   }
 
+  /**
+   * Create Tencent Cloud COS temporary read credential.
+   */
   async createTemporaryReadCredential() {
     const { bucket, region } = this.getOptions();
     const stsClient = this.stsService.createClient(region);
@@ -43,6 +55,10 @@ export class TencentCloudCosService {
     });
   }
 
+  /**
+   * Create Tencent Cloud COS temporary write credential.
+   * @param name Tencent Cloud COS object key.
+   */
   async createTemporaryWriteCredential(name: string) {
     const { bucket, region } = this.getOptions();
     const stsClient = this.stsService.createClient(region);

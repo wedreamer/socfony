@@ -1,5 +1,5 @@
 // 用户未登录
-export const UNAUTHENTICATION = 'UNAUTHENTICATION';
+export const UNAUTHORIZED = 'UNAUTHORIZED';
 
 // 用户没有设置密码
 export const USER_NOT_SET_PASSWORD = 'USER_NOT_SET_PASSWORD';

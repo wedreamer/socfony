@@ -1,16 +1,27 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { SecurityCode } from '@prisma/client';
 
-@InputType()
+/**
+ * Send security code input.
+ */
+@InputType({
+  description: 'Send security code input.',
+})
 export class SendSecurityCodeInput
   implements Pick<SecurityCode, 'validateSender' | 'account'> {
+  /**
+   * Need send security code account.
+   */
   @Field((type) => String, {
-    description: '需要发送到的账户',
+    description: 'Need send security code account.',
   })
   account: string;
 
+  /**
+   * Has sent security code need validate sender.
+   */
   @Field((type) => Boolean, {
-    description: '验证码发送场景是否要验证发送者（即验证是否登陆）',
+    description: 'Has sent security code need validate sender.',
   })
   validateSender: boolean;
 }

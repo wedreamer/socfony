@@ -4,6 +4,9 @@ import { SendSmsRequest } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sm
 import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interface';
 import { serviceConfig, ServiceConfig } from 'src/config';
 
+/**
+ * Tencent Cloud short message service.
+ */
 @Injectable()
 export class TencentCloudShortMessageService {
   constructor(
@@ -11,10 +14,16 @@ export class TencentCloudShortMessageService {
     private readonly serviceConfig: ServiceConfig,
   ) {}
 
+  /**
+   * Create Tencent Cloud SMS client.
+   */
   createClient() {
     return new Client(this.getClientOptions());
   }
 
+  /**
+   * Get Tencent Cloud SMS client options.
+   */
   getClientOptions(): ClientConfig {
     return {
       credential: this.serviceConfig.tencentCloud.credential,
@@ -27,6 +36,9 @@ export class TencentCloudShortMessageService {
     };
   }
 
+  /**
+   * Get Tencent Cloud SMS send options.
+   */
   getShortMessageServiceOptions(): Pick<
     SendSmsRequest,
     'SmsSdkAppid' | 'Sign' | 'ExtendCode' | 'SenderId'
@@ -34,6 +46,10 @@ export class TencentCloudShortMessageService {
     return this.serviceConfig.tencentCloud.sms.base;
   }
 
+  /**
+   * Send SMS.
+   * @param params Send SMS params.
+   */
   async send(
     params: Pick<
       SendSmsRequest,

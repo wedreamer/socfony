@@ -4,6 +4,11 @@ import { AppExecutionContext } from 'src/global';
 import { UserEntity } from './user.entity';
 import { ViewerEntity } from './viewer.entity';
 
+/**
+ * resolve `UserUnion` real type
+ * @param value User object.
+ * @param context Application context.
+ */
 async function resolveType(
   value: User,
   context: AppExecutionContext & { cachedUser: User },
@@ -19,8 +24,12 @@ async function resolveType(
   return UserEntity;
 }
 
+/**
+ * User union type.
+ */
 export const UserUnion = createUnionType({
   name: 'userUnion',
   types: () => [UserEntity, ViewerEntity],
   resolveType,
+  description: 'User union type.',
 });

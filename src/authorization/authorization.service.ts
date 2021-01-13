@@ -17,6 +17,9 @@ import { AuthorizationTokenValidityPeriod } from './types';
 import { SecurityCodeService } from 'src/security-code/security-code.service';
 import { nanoIdGenerator } from 'src/helper';
 
+/**
+ * Authoprization service.
+ */
 @Injectable()
 export class AuthorizationService {
   constructor(
@@ -25,7 +28,7 @@ export class AuthorizationService {
   ) {}
 
   /**
-   * Get token expored in validity period.
+   * Get token expired in validity period.
    */
   async getTokenExpiredIn(): Promise<AuthorizationTokenValidityPeriod> {
     const setting = await this.prisma.setting.findUnique({
@@ -51,6 +54,10 @@ export class AuthorizationService {
     };
   }
 
+  /**
+   * Resolve Http context.
+   * @param request `Express`.`Request` instance.
+   */
   resolveHttpContext(request: Request): AppExecutionContext {
     if (!request) return { request };
     const token = request.header('Authorization');
@@ -63,6 +70,10 @@ export class AuthorizationService {
     return { ...context, request };
   }
 
+  /**
+   * Resolve Application context for token.
+   * @param token HTTP endpoint `Authorization` token.
+   */
   resolveContextForAuthorization(
     token: string,
   ): Pick<AppExecutionContext, 'authorizationTokenClient' | 'userClient'> {
@@ -76,6 +87,11 @@ export class AuthorizationService {
     };
   }
 
+  /**
+   * Create `AuthorizationToken` object Prisma query client.
+   * @param prisma Prisma client.
+   * @param token HTTP endpoint `Authorization` token.
+   */
   createAuthorizationTokenClient(prisma: PrismaClient, token: string) {
     return (args?: Prisma.AuthorizationTokenArgs) =>
       prisma.authorizationToken.findUnique(
@@ -83,11 +99,20 @@ export class AuthorizationService {
       );
   }
 
+  /**
+   * Create `User` object Prisma query client for token.
+   * @param prisma Prisma client.
+   * @param token HTTP endpoint `Authorization` token.
+   */
   createUserClient(prisma: PrismaClient, token: string) {
     return (args?: Prisma.UserArgs) =>
       this.createAuthorizationTokenClient(prisma, token)().user(args);
   }
 
+  /**
+   * Create authorization token object for user.
+   * @param user Create authoprization token object user.
+   */
   async createAuthorizationTokenForUser(
     user: User | string,
   ): Promise<AuthorizationToken> {
@@ -106,6 +131,10 @@ export class AuthorizationService {
     });
   }
 
+  /**
+   * Refresh authorization token object to database.
+   * @param authorizationToken Await refresh authorization token object.
+   */
   async refreshAuthorizationToken(
     authorizationToken:
       | AuthorizationToken
@@ -133,6 +162,11 @@ export class AuthorizationService {
     });
   }
 
+  /**
+   * Using user password login and create authorization token object.
+   * @param where User query where input.
+   * @param password User password string.
+   */
   async loginWithPassword(
     where: Prisma.UserWhereUniqueInput,
     password: string,
@@ -150,6 +184,11 @@ export class AuthorizationService {
     throw new Error(USER_PASSWORD_NOT_COMPARE);
   }
 
+  /**
+   * Using security code login and create authorization token object.
+   * @param where User query where input.
+   * @param code User login security code.
+   */
   async loginWithSecurityCode(
     where: Prisma.UserWhereUniqueInput,
     code: string,
@@ -175,6 +214,11 @@ export class AuthorizationService {
     return this.createAuthorizationTokenForUser(user);
   }
 
+  /**
+   * Has authorization token expired.
+   * @param client `AuthotizationToken` query Prisma client.
+   * @param type Validate type.
+   */
   async hasTokenExpired(
     client: AuthorizationTokenPrismaClient | AuthorizationToken,
     type: 'auth' | 'refresh',

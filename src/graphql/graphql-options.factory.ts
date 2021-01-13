@@ -6,6 +6,9 @@ import {
 import { AuthorizationService } from 'src/authorization/authorization.service';
 import { appConfig, AppConfig } from 'src/config';
 
+/**
+ * GraphQL module options factory.
+ */
 @Injectable()
 export class GqlOptionsFactory implements GqlOptionsFactoryInterface {
   constructor(
@@ -14,6 +17,9 @@ export class GqlOptionsFactory implements GqlOptionsFactoryInterface {
     private readonly appConfig: AppConfig,
   ) {}
 
+  /**
+   * Create GraphQL module options.
+   */
   async createGqlOptions(): Promise<GqlModuleOptions> {
     return {
       autoSchemaFile: true,
@@ -25,6 +31,10 @@ export class GqlOptionsFactory implements GqlOptionsFactoryInterface {
     };
   }
 
+  /**
+   * GraphQL context resolver.
+   * @param context NestJS context or Apollo server context.
+   */
   private context(context: any) {
     const { req: request } = context;
 

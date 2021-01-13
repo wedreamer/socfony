@@ -16,6 +16,9 @@ import { AuthorizationService } from './authorization.service';
 import { LoginInput, LoginType } from './dto/login.input';
 import { AuthorizationTokenEntity } from './entities/authorization-token.entity';
 
+/**
+ * `AuthorizationTokenEntity` GraphQL resolver.
+ */
 @Resolver((of) => AuthorizationTokenEntity)
 export class AuthorizationResolver {
   constructor(
@@ -23,6 +26,10 @@ export class AuthorizationResolver {
     private readonly prisma: PrismaClient,
   ) {}
 
+  /**
+   * Resolve `AuthorizationTokenEntity`.`user` field.
+   * @param authorizationToken parent object.
+   */
   @ResolveField((returns) => UserUnion)
   user(@Parent() authorizationToken: AuthorizationToken) {
     return this.prisma.user.findUnique({
@@ -30,7 +37,13 @@ export class AuthorizationResolver {
     });
   }
 
-  @Mutation((returns) => AuthorizationTokenEntity)
+  /**
+   * User login or using phone register.
+   * @param data User create Authorization login type.
+   */
+  @Mutation((returns) => AuthorizationTokenEntity, {
+    description: 'User login or using phone register.',
+  })
   login(
     @Args({
       name: 'data',
@@ -46,7 +59,13 @@ export class AuthorizationResolver {
     return this.authorizationService.loginWithSecurityCode(account, encrypted);
   }
 
-  @Query((returns) => AuthorizationTokenEntity)
+  /**
+   * Query HTTP endpoint authorization token entity.
+   * @param client token query Prisma client.
+   */
+  @Query((returns) => AuthorizationTokenEntity, {
+    description: 'Query HTTP endpoint authorization token entity.',
+  })
   @AuthorizationDecorator({ hasAuthorization: true, type: 'auth' })
   authorization(
     @AuthorizationTokenDecorator()
@@ -55,7 +74,13 @@ export class AuthorizationResolver {
     return client;
   }
 
-  @Mutation((returns) => AuthorizationTokenEntity)
+  /**
+   * Refresh HTTP endpoint authorization token entity.
+   * @param client token query Prisma client.
+   */
+  @Mutation((returns) => AuthorizationTokenEntity, {
+    description: 'Refresh HTTP endpoint authorization token entity.',
+  })
   @AuthorizationDecorator({ hasAuthorization: true, type: 'refresh' })
   refreshAuthorization(
     @AuthorizationTokenDecorator()

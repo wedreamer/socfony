@@ -1,20 +1,58 @@
 import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
 import { GetFederationTokenResponse } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sts/v20180813/sts_models';
 
-@ObjectType()
+/**
+ * Tencent Cloud COS endpoint authorization entity.
+ */
+@ObjectType({
+  description: 'Tencent Cloud COS endpoint authorization entity.',
+})
 export class CosAuthorizationEntity {
-  @Field((type) => String)
+  /**
+   * Tencent Cloud COS http endpoit authorization token.
+   */
+  @Field((type) => String, {
+    description: 'Tencent Cloud COS http endpoit authorization token.',
+  })
   token: string;
 
-  @Field((type) => String)
+  /**
+   * Tencent Cloud COS bucket temporary secret ID
+   */
+  @Field((type) => String, {
+    description: 'Tencent Cloud COS bucket temporary secret ID',
+  })
   secretId: string;
 
-  @Field((type) => String)
+  /**
+   * Tencent Cloud COS bucket temporary secret KEY
+   */
+  @Field((type) => String, {
+    description: 'Tencent Cloud COS bucket temporary secret KEY',
+  })
   secretKey: string;
 
-  @Field((type) => GraphQLISODateTime)
+  /**
+   * token expired at.
+   */
+  @Field((type) => GraphQLISODateTime, {
+    description: 'token expired at.',
+  })
   expiredAt: Date;
 
+  /**
+   * Only write credentials exist in the resource field.
+   */
+  @Field((type) => String, {
+    nullable: true,
+    description: 'Only write credentials exist in the resource field.',
+  })
+  resource?: string;
+
+  /**
+   * Create a `CosAuthorizationEntity` using response.
+   * @param response Tencent Cloud STS federation token response.
+   */
   static create(response: GetFederationTokenResponse): CosAuthorizationEntity {
     const value = new CosAuthorizationEntity();
     value.token = response.Credentials.Token;

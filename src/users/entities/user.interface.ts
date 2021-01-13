@@ -1,17 +1,36 @@
 import { Field, GraphQLISODateTime, ID, InterfaceType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/client';
 
-@InterfaceType()
+/**
+ * User interface.
+ */
+@InterfaceType({
+  description: 'User interface.',
+})
 export class UserInterface
   implements Omit<Prisma.UserGetPayload<{}>, 'phone' | 'email' | 'password'> {
-  @Field((type) => ID)
+  /**
+   * User ID
+   */
+  @Field((type) => ID, {
+    description: 'User ID',
+  })
   id: string;
 
+  /**
+   * User login name
+   */
   @Field((type) => String, {
     nullable: true,
+    description: 'User login name',
   })
   login: string;
 
-  @Field((type) => GraphQLISODateTime)
+  /**
+   * User registered date at.
+   */
+  @Field((type) => GraphQLISODateTime, {
+    description: 'User registered date at.',
+  })
   createdAt: Date;
 }

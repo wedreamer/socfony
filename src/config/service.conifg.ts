@@ -1,7 +1,11 @@
 import { ConfigType, registerAs } from '@nestjs/config';
 
+/**
+ * The application services configuration.
+ */
 export const serviceConfig = registerAs('service', function () {
   return {
+    // Tencent Cloud configuration.
     tencentCloud: {
       credential: {
         secretId: process.env.TENCENT_CLOUD_SECRET_ID,

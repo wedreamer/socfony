@@ -9,6 +9,12 @@ import { Prisma } from '@prisma/client';
 import { resolveAppExecutionContext } from 'src/helper';
 import { AuthGuard } from './auth.guard';
 
+/**
+ * Need validate HTTP endpoint `Authorization` token decorator.
+ * @param param validate HTTP endpoit `Authorization` token options.
+ * @param param.hasAuthorization Has need validate
+ * @param param.type validate token type.
+ */
 export function AuthorizationDecorator({
   hasAuthorization = true,
   type = 'auth',
@@ -23,6 +29,9 @@ export function AuthorizationDecorator({
   );
 }
 
+/**
+ * Get HTTP endpoint `Authorization` token Prisma client decorator.
+ */
 export const AuthorizationTokenDecorator = createParamDecorator(function (
   args: Prisma.AuthorizationTokenArgs,
   context: ExecutionContext,
@@ -33,6 +42,9 @@ export const AuthorizationTokenDecorator = createParamDecorator(function (
   }
 });
 
+/**
+ * Get HTTP endpoint `Authorization` token bound user Prisma client decorator.
+ */
 export const UserDecorator = createParamDecorator(function (
   args: Prisma.UserArgs,
   context: ExecutionContext,

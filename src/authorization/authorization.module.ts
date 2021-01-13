@@ -6,6 +6,9 @@ import { AuthorizationResolver } from './authorization.resolver';
 import { AuthorizationService } from './authorization.service';
 import { CosAuthorizationResolver } from './cos.resolver';
 
+/**
+ * Application authorization module.
+ */
 @Global()
 @Module({
   imports: [PrismaModule, SecurityCodeModule, TencentCloudCosModule],
