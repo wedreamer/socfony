@@ -36,7 +36,7 @@ export class TencentCloudCosService {
               'name/cos:HeadObject',
               'name/cos:OptionsObject',
             ],
-            resource: [`qcs:cos:${region}/uid/${uid}:${bucket}/*`],
+            resource: [`qcs::cos:${region}:uid/${uid}:${bucket}/*`],
           },
         ],
       }),
@@ -73,7 +73,7 @@ export class TencentCloudCosService {
               //取消分块上传操作
               'name/cos:AbortMultipartUpload',
             ],
-            resource: [`qcs:cos:${region}/uid/${uid}:${bucket}/${name}`],
+            resource: [`qcs::cos:${region}:uid/${uid}:${bucket}/${name}`],
           },
         ],
       }),
