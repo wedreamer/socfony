@@ -1,5 +1,7 @@
 // 用户未登录
 export const UNAUTHORIZED = 'UNAUTHORIZED';
+// Authorization Token Not Found.
+export const AUTHORIZATION_TOKEN_NOT_FOUND = 'AUTHORIZATION_TOKEN_NOT_FOUND';
 
 // 用户没有设置密码
 export const USER_NOT_SET_PASSWORD = 'USER_NOT_SET_PASSWORD';

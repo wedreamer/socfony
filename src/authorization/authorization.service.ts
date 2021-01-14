@@ -8,6 +8,7 @@ import {
 import bcrypt from 'bcrypt';
 import dayjs = require('dayjs');
 import {
+  AUTHORIZATION_TOKEN_NOT_FOUND,
   SECURITY_VALIDATE_ERROR,
   USER_NOT_FOUND,
   USER_NOT_SET_PASSWORD,
@@ -141,25 +142,67 @@ export class AuthorizationService {
       | string
       | Promise<AuthorizationToken>,
   ): Promise<AuthorizationToken> {
-    const authorization = await authorizationToken;
     const setting = await this.getTokenExpiredIn();
-    return this.prisma.authorizationToken.update({
-      where: {
-        token:
-          typeof authorization === 'string'
-            ? authorization
-            : authorization.token,
-      },
-      data: {
-        token: nanoIdGenerator(128),
-        expiredAt: dayjs()
-          .add(setting.expiredIn.value, setting.expiredIn.unit)
-          .toDate(),
-        refreshExpiredAt: dayjs()
-          .add(setting.refreshExpiredIn.value, setting.refreshExpiredIn.unit)
-          .toDate(),
-      },
-    });
+    const authorization = await this.resolveAuthorizationToken(
+      authorizationToken,
+    );
+    // If authorization token not found, throw `not found` error.
+    if (!authorization) {
+      throw new Error(AUTHORIZATION_TOKEN_NOT_FOUND);
+
+      // If token is expired, update to new token.
+    } else if (authorization.expiredAt.getTime() <= Date.now()) {
+      return await this.prisma.authorizationToken.update({
+        where: { token: authorization.token },
+        data: {
+          token: nanoIdGenerator(128),
+          expiredAt: dayjs()
+            .add(setting.expiredIn.value, setting.expiredIn.unit)
+            .toDate(),
+          refreshExpiredAt: dayjs()
+            .add(setting.refreshExpiredIn.value, setting.refreshExpiredIn.unit)
+            .toDate(),
+        },
+      });
+    }
+
+    // If the token validity period is greater than 5 minutes,
+    // set it to expire in three minutes, and then create a new token
+    const fiveMinutesDate = dayjs().add(5, 'minutes').toDate();
+    if (authorization.expiredAt.getTime() > fiveMinutesDate.getTime()) {
+      const [value] = await this.prisma.$transaction([
+        this.createAuthorizationTokenForUser(authorization.userId),
+        this.prisma.authorizationToken.update({
+          where: { token: authorization.token },
+          data: {
+            expiredAt: fiveMinutesDate,
+            refreshExpiredAt: new Date(),
+          },
+        }),
+      ]);
+      return value;
+    }
+
+    return this.createAuthorizationTokenForUser(authorization.userId);
+  }
+
+  /**
+   * resolve authorization token
+   * @param authorizationToken Await refresh authorization token object.
+   */
+  async resolveAuthorizationToken(
+    authorizationToken:
+      | AuthorizationToken
+      | string
+      | Promise<AuthorizationToken>,
+  ): Promise<AuthorizationToken> {
+    if (typeof authorizationToken === 'string') {
+      return this.prisma.authorizationToken.findUnique({
+        where: { token: authorizationToken },
+      });
+    }
+
+    return await authorizationToken;
   }
 
   /**
