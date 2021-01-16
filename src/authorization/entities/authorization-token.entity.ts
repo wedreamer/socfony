@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Prisma, User } from '@prisma/client';
-import { ViewerEntity } from 'src/users';
+import { ViewerEntity } from 'src/user/entities/viewer.entity';
 
 /**
  * HTTP endpoint authorization entity.

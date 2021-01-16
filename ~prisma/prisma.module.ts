@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { databaseConfig } from 'src/config';
-import { LoggerModule } from '../logger';
+import { LoggerModule } from '../src/logger';
 import { PrismaLoggerMiddleware } from './middleware';
 
 /**

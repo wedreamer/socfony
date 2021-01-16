@@ -1,6 +1,6 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/client';
-import { UserWhereUniqueInput } from 'src/users/dto/user-where-unique.input';
+import { UserWhereUniqueInput } from 'src/user/dto/user-where-unique.input';
 
 /**
  * User create Authorization login type.

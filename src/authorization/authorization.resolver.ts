@@ -7,7 +7,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { AuthorizationToken, Prisma, PrismaClient } from '@prisma/client';
-import { UserUnion } from 'src/users';
+import { ViewerEntity } from 'src/user';
 import {
   AuthorizationDecorator,
   AuthorizationTokenDecorator,
@@ -30,7 +30,7 @@ export class AuthorizationResolver {
    * Resolve `AuthorizationTokenEntity`.`user` field.
    * @param authorizationToken parent object.
    */
-  @ResolveField((returns) => UserUnion)
+  @ResolveField((returns) => ViewerEntity)
   user(@Parent() authorizationToken: AuthorizationToken) {
     return this.prisma.user.findUnique({
       where: { id: authorizationToken.userId },

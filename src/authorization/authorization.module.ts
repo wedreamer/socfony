@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { PrismaModule } from 'src/prisma';
+import { PrismaModule } from '~prisma';
 import { SecurityCodeModule } from 'src/security-code/security-code.module';
 import { TencentCloudCosModule } from 'src/tencent-cloud';
 import { AuthorizationResolver } from './authorization.resolver';

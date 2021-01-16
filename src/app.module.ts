@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from './graphql';
+import { AppGraphQLModule } from './graphql';
 import { LoggerModule } from './logger';
 import { AuthorizationModule } from './authorization/authorization.module';
-import { UsersModule } from './users/users.module';
 import { SecurityCodeModule } from './security-code/security-code.module';
 import { ConfigModule } from './config';
+import { UserModule } from './user';
 
 /**
  * Application module.
@@ -13,10 +13,10 @@ import { ConfigModule } from './config';
   imports: [
     AuthorizationModule,
     ConfigModule,
-    GraphQLModule,
+    AppGraphQLModule,
     LoggerModule,
-    UsersModule,
     SecurityCodeModule,
+    UserModule,
   ],
 })
 export class AppModule {}

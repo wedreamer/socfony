@@ -1,10 +1,10 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import { GraphQLModule as _graphql } from '@nestjs/graphql';
+import { DynamicModule, Global, Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
 import { AuthorizationModule } from 'src/authorization';
 import { GqlOptionsFactory } from './graphql-options.factory';
 
 // create GraphQL dynamic module.
-const _GraphQLDynamicModule: DynamicModule = _graphql.forRootAsync({
+const _GraphQLDynamicModule: DynamicModule = GraphQLModule.forRootAsync({
   imports: [AuthorizationModule],
   useClass: GqlOptionsFactory,
 });
@@ -15,4 +15,4 @@ const _GraphQLDynamicModule: DynamicModule = _graphql.forRootAsync({
 @Module({
   imports: [_GraphQLDynamicModule],
 })
-export class GraphQLModule {}
+export class AppGraphQLModule {}
