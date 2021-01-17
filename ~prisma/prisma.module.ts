@@ -1,6 +1,5 @@
 import {
   ClassProvider,
-  Global,
   Inject,
   Injectable,
   Logger,
@@ -9,8 +8,9 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { databaseConfig } from 'src/config';
-import { LoggerModule } from '../src/logger';
+import { ConfigModule } from '~config';
+import { LoggerModule } from '~logger';
+import { databaseConfig } from './database.config';
 import { PrismaLoggerMiddleware } from './middleware';
 
 /**
@@ -70,9 +70,8 @@ const provider: ClassProvider<PrismaClient> = {
 /**
  * Prisma module.
  */
-@Global()
 @Module({
-  imports: [LoggerModule],
+  imports: [LoggerModule, ConfigModule.forFeature(databaseConfig)],
   providers: [provider],
   exports: [provider],
 })

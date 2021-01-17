@@ -1,10 +1,22 @@
 {
     "collection": "@nestjs/schematics",
-    "sourceRoot": "src",
+    "sourceRoot": ".",
+    "monorepo": true,
     "compilerOptions": {
         "webpack": false
     },
     "generateOptions": {
         "spec": false
+    },
+    "projects": {
+        "client-graphql-server": {
+            "type": "application",
+            "root": "client-graphql-server",
+            "entryFile": "main",
+            "sourceRoot": "client-graphql-server",
+            "compilerOptions": {
+                "tsConfigPath": "tsconfig.build.json"
+            }
+        }
     }
 }
