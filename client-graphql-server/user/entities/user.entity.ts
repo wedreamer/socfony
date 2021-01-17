@@ -1,10 +1,10 @@
-import { NestJS_GraphQL } from '~deps';
+import { NestJS } from '~deps';
 import { UserInterface } from './user.interface';
 
 /**
  * User entity.
  */
-@NestJS_GraphQL.ObjectType({
+@NestJS.GraphQL.ObjectType({
   implements: [UserInterface],
   description: 'User entity',
 })

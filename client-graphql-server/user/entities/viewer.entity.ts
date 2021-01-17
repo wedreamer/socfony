@@ -1,11 +1,11 @@
-import { NestJS_GraphQL } from '~deps';
-import { User } from '~prisma';
+import { NestJS } from '~deps';
+import { User } from 'server-kernel/prisma';
 import { UserInterface } from './user.interface';
 
 /**
  * Viewer entity.
  */
-@NestJS_GraphQL.ObjectType({
+@NestJS.GraphQL.ObjectType({
   implements: [UserInterface],
   description: 'Viewer entity.',
 })
@@ -15,7 +15,7 @@ export class ViewerEntity
   /**
    * User bound E-Mail address.
    */
-  @NestJS_GraphQL.Field((type) => String, {
+  @NestJS.GraphQL.Field((type) => String, {
     nullable: true,
     description: 'User bound E-Mail address.',
   })
@@ -24,7 +24,7 @@ export class ViewerEntity
   /**
    * User bound Phone full number.
    */
-  @NestJS_GraphQL.Field((type) => String, {
+  @NestJS.GraphQL.Field((type) => String, {
     nullable: true,
     description: 'User bound Phone full number.',
   })

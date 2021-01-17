@@ -1,17 +1,17 @@
-import { NestJS_GraphQL } from '~deps';
-import { Prisma } from '~prisma';
+import { NestJS } from '~deps';
+import { Prisma } from 'server-kernel/prisma';
 
 /**
  * User wherer unique input
  */
-@NestJS_GraphQL.InputType({
+@NestJS.GraphQL.InputType({
   description: 'User wherer unique input',
 })
 export class UserWhereUniqueInput implements Prisma.UserWhereUniqueInput {
   /**
    * User ID.
    */
-  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.ID, {
+  @NestJS.GraphQL.Field((type) => NestJS.GraphQL.ID, {
     nullable: true,
     description: 'User ID',
   })
@@ -20,7 +20,7 @@ export class UserWhereUniqueInput implements Prisma.UserWhereUniqueInput {
   /**
    * User login name.
    */
-  @NestJS_GraphQL.Field((type) => String, {
+  @NestJS.GraphQL.Field((type) => String, {
     nullable: true,
     description: 'User login name',
   })
@@ -29,7 +29,7 @@ export class UserWhereUniqueInput implements Prisma.UserWhereUniqueInput {
   /**
    * User E-Mail address.
    */
-  @NestJS_GraphQL.Field((type) => String, {
+  @NestJS.GraphQL.Field((type) => String, {
     nullable: true,
     description: 'User E-Mail address',
   })
@@ -38,7 +38,7 @@ export class UserWhereUniqueInput implements Prisma.UserWhereUniqueInput {
   /**
    * user phone number.
    */
-  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.ID, {
+  @NestJS.GraphQL.Field((type) => NestJS.GraphQL.ID, {
     nullable: true,
     description: 'user phone number',
   })

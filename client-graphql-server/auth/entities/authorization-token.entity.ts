@@ -1,11 +1,11 @@
-import { NestJS_GraphQL } from '~deps';
+import { NestJS } from '~deps';
 import { ViewerEntity } from '../../user';
-import { Prisma, User } from '~prisma';
+import { Prisma, User } from 'server-kernel/prisma';
 
 /**
  * HTTP endpoint authorization entity.
  */
-@NestJS_GraphQL.ObjectType({
+@NestJS.GraphQL.ObjectType({
   description: 'HTTP endpoint authorization entity.',
 })
 export class AuthorizationTokenEntity
@@ -18,7 +18,7 @@ export class AuthorizationTokenEntity
   /**
    * Logged user id.
    */
-  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.ID, {
+  @NestJS.GraphQL.Field((type) => NestJS.GraphQL.ID, {
     description: 'Login user ID',
   })
   userId: string;
@@ -26,7 +26,7 @@ export class AuthorizationTokenEntity
   /**
    * Logged User
    */
-  @NestJS_GraphQL.Field((type) => ViewerEntity, {
+  @NestJS.GraphQL.Field((type) => ViewerEntity, {
     description: 'Logged Viewer entity',
   })
   user: User;
@@ -34,7 +34,7 @@ export class AuthorizationTokenEntity
   /**
    * User API endpoit authorization token.
    */
-  @NestJS_GraphQL.Field((type) => String, {
+  @NestJS.GraphQL.Field((type) => String, {
     description: 'User API endpoit authorization token.',
   })
   token: string;
@@ -42,7 +42,7 @@ export class AuthorizationTokenEntity
   /**
    * Token expired date.
    */
-  @NestJS_GraphQL.Field((type) => Date, {
+  @NestJS.GraphQL.Field((type) => Date, {
     description: 'Token expired date',
   })
   expiredAt: Date;
@@ -50,7 +50,7 @@ export class AuthorizationTokenEntity
   /**
    * Token on refresh expired date.
    */
-  @NestJS_GraphQL.Field((type) => Date, {
+  @NestJS.GraphQL.Field((type) => Date, {
     description: 'Token on refresh expired date',
   })
   refreshExpiredAt: Date;

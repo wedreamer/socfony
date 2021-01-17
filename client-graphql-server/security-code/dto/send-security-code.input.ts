@@ -1,10 +1,10 @@
-import { NestJS_GraphQL } from '~deps';
-import { SecurityCode } from '~prisma';
+import { NestJS } from '~deps';
+import { SecurityCode } from 'server-kernel/prisma';
 
 /**
  * Send security code input.
  */
-@NestJS_GraphQL.InputType({
+@NestJS.GraphQL.InputType({
   description: 'Send security code input.',
 })
 export class SendSecurityCodeInput
@@ -12,7 +12,7 @@ export class SendSecurityCodeInput
   /**
    * Need send security code account.
    */
-  @NestJS_GraphQL.Field((type) => String, {
+  @NestJS.GraphQL.Field((type) => String, {
     description: 'Need send security code account.',
   })
   account: string;
@@ -20,7 +20,7 @@ export class SendSecurityCodeInput
   /**
    * Has sent security code need validate sender.
    */
-  @NestJS_GraphQL.Field((type) => Boolean, {
+  @NestJS.GraphQL.Field((type) => Boolean, {
     description: 'Has sent security code need validate sender.',
   })
   validateSender: boolean;

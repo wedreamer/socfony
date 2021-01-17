@@ -1,16 +1,16 @@
-import { NestJS_GraphQL } from '~deps';
+import { NestJS } from '~deps';
 import { ViewerEntity } from '../user';
 import {
   AuthDecorator,
   AuthorizationTokenDecorator,
   AuthService,
   HasTokenExpiredType,
-} from '~auth';
-import { AuthorizationToken, PrismaClient } from '~prisma';
+} from 'server-kernel/auth';
+import { AuthorizationToken, PrismaClient } from 'server-kernel/prisma';
 import { LoginInput, LoginType } from './dto';
 import { AuthorizationTokenEntity } from './entities';
 
-@NestJS_GraphQL.Resolver((of) => AuthorizationTokenEntity)
+@NestJS.GraphQL.Resolver((of) => AuthorizationTokenEntity)
 export class AuthResolver {
   constructor(
     private readonly authService: AuthService,
@@ -21,8 +21,8 @@ export class AuthResolver {
    * Resolve `AuthorizationTokenEntity`.`user` field.
    * @param authorizationToken parent object.
    */
-  @NestJS_GraphQL.ResolveField((returns) => ViewerEntity)
-  user(@NestJS_GraphQL.Parent() authorizationToken: AuthorizationToken) {
+  @NestJS.GraphQL.ResolveField((returns) => ViewerEntity)
+  user(@NestJS.GraphQL.Parent() authorizationToken: AuthorizationToken) {
     return this.prisma.user.findUnique({
       where: { id: authorizationToken.userId },
     });
@@ -32,11 +32,11 @@ export class AuthResolver {
    * User login or using phone register.
    * @param data User create Authorization login type.
    */
-  @NestJS_GraphQL.Mutation((returns) => AuthorizationTokenEntity, {
+  @NestJS.GraphQL.Mutation((returns) => AuthorizationTokenEntity, {
     description: 'User login or using phone register.',
   })
   login(
-    @NestJS_GraphQL.Args({
+    @NestJS.GraphQL.Args({
       name: 'data',
       type: () => LoginInput,
     })
@@ -54,7 +54,7 @@ export class AuthResolver {
    * Query HTTP endpoint authorization token entity.
    * @param client token query Prisma client.
    */
-  @NestJS_GraphQL.Query((returns) => AuthorizationTokenEntity, {
+  @NestJS.GraphQL.Query((returns) => AuthorizationTokenEntity, {
     description: 'Query HTTP endpoint authorization token entity.',
   })
   @AuthDecorator({ hasAuthorization: true, type: HasTokenExpiredType.AUTH })
@@ -69,7 +69,7 @@ export class AuthResolver {
    * Refresh HTTP endpoint authorization token entity.
    * @param client token query Prisma client.
    */
-  @NestJS_GraphQL.Mutation((returns) => AuthorizationTokenEntity, {
+  @NestJS.GraphQL.Mutation((returns) => AuthorizationTokenEntity, {
     description: 'Refresh HTTP endpoint authorization token entity.',
   })
   @AuthDecorator({ hasAuthorization: true, type: HasTokenExpiredType.REFRESH })

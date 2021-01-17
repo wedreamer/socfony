@@ -1,7 +1,7 @@
-import { NestJS_GraphQL } from '~deps';
-import { AuthDecorator, HasTokenExpiredType } from '~auth';
-import { nanoIdGenerator } from '~core';
-import { TencentCloudCosService } from '~sdk/tencent-cloud';
+import { NestJS } from '~deps';
+import { AuthDecorator, HasTokenExpiredType } from 'server-kernel/auth';
+import { nanoIdGenerator } from 'server-kernel/core';
+import { TencentCloudCosService } from 'server-kernel/sdk/tencent-cloud';
 import { CosAuthorizationEntity } from './entities';
 
 // 暂时设置浏览器通用支持的格式
@@ -19,7 +19,7 @@ export enum AllowUploadFileType {
 }
 
 // Register allow upload file type to GraphQL schema.
-NestJS_GraphQL.registerEnumType(AllowUploadFileType, {
+NestJS.GraphQL.registerEnumType(AllowUploadFileType, {
   name: 'AllowUploadFileType',
   description:
     'Create Tencent Cloud COS write credential allow upload file type.',
@@ -28,14 +28,14 @@ NestJS_GraphQL.registerEnumType(AllowUploadFileType, {
 /**
  * `CosAuthorizationEntity` resolver.
  */
-@NestJS_GraphQL.Resolver((of) => CosAuthorizationEntity)
+@NestJS.GraphQL.Resolver((of) => CosAuthorizationEntity)
 export class CosAuthorizationResolver {
   constructor(private readonly cosService: TencentCloudCosService) {}
 
   /**
    * Create Tencent Cloud COS temporary read credential.
    */
-  @NestJS_GraphQL.Mutation((returns) => CosAuthorizationEntity, {
+  @NestJS.GraphQL.Mutation((returns) => CosAuthorizationEntity, {
     description: 'Create Tencent Cloud COS temporary read credential.',
   })
   @AuthDecorator({
@@ -51,13 +51,13 @@ export class CosAuthorizationResolver {
    * Create Tencent Cloud COS temporary write credential.
    * @param type Create Tencent Cloud COS write credential allow upload file type.
    */
-  @NestJS_GraphQL.Mutation((returns) => CosAuthorizationEntity)
+  @NestJS.GraphQL.Mutation((returns) => CosAuthorizationEntity)
   @AuthDecorator({
     hasAuthorization: true,
     type: HasTokenExpiredType.AUTH,
   })
   async createCosTemporaryWriteCredential(
-    @NestJS_GraphQL.Args({
+    @NestJS.GraphQL.Args({
       name: 'type',
       type: () => AllowUploadFileType,
     })

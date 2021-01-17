@@ -1,23 +1,23 @@
-import { NestJS_Core, NestJS_Common, NestJS_Config } from '~deps';
+import { NestJS } from '~deps';
 import { AppConfig } from './app.config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   // create application
-  const app = await NestJS_Core.NestFactory.create(AppModule);
+  const app = await NestJS.Core.NestFactory.create(AppModule);
 
   // get IoC logger
-  const logger = app.get(NestJS_Common.Logger);
+  const logger = app.get(NestJS.Common.Logger);
 
   app.useLogger(logger);
   app.useGlobalPipes(
-    new NestJS_Common.ValidationPipe({
+    new NestJS.Common.ValidationPipe({
       transform: true,
     }),
   );
 
   const { port, endpoint } = app
-    .get(NestJS_Config.ConfigService)
+    .get(NestJS.Config.ConfigService)
     .get<AppConfig>('app');
   await app.listen(port);
 

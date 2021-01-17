@@ -1,18 +1,18 @@
-import { NestJS_Common, NestJS_GraphQL } from '~deps';
-import { ConfigModule } from '~config';
-import { AppContextService, CoreConfig, coreConfig, CoreModule } from '~core';
-import { LoggerModule } from '~logger';
+import { NestJS } from '~deps';
+import { ConfigModule } from 'server-kernel/config';
+import { AppContextService, CoreConfig, coreConfig, CoreModule } from 'server-kernel/core';
+import { LoggerModule } from 'server-kernel/logger';
 import { AppConfig, appConfig } from './app.config';
 import { AuthModule } from './auth';
 import { SecurityCodeModule } from './security-code';
 
-@NestJS_Common.Module({
+@NestJS.Common.Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig],
     }),
-    NestJS_GraphQL.GraphQLModule.forRootAsync({
+    NestJS.GraphQL.GraphQLModule.forRootAsync({
       imports: [CoreModule],
       inject: [coreConfig.KEY, appConfig.KEY, AppContextService],
       useFactory(

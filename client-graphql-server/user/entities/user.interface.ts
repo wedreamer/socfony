@@ -1,11 +1,11 @@
-import { NestJS_GraphQL } from '~deps';
-import { Prisma, UserProfile } from '~prisma';
+import { NestJS } from '~deps';
+import { Prisma, UserProfile } from 'server-kernel/prisma';
 import { UserProfileEntity } from '../profile';
 
 /**
  * User interface.
  */
-@NestJS_GraphQL.InterfaceType({
+@NestJS.GraphQL.InterfaceType({
   description: 'User interface.',
 })
 export class UserInterface
@@ -21,7 +21,7 @@ export class UserInterface
   /**
    * User ID
    */
-  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.ID, {
+  @NestJS.GraphQL.Field((type) => NestJS.GraphQL.ID, {
     description: 'User ID',
   })
   id: string;
@@ -29,7 +29,7 @@ export class UserInterface
   /**
    * User login name
    */
-  @NestJS_GraphQL.Field((type) => String, {
+  @NestJS.GraphQL.Field((type) => String, {
     nullable: true,
     description: 'User login name',
   })
@@ -38,7 +38,7 @@ export class UserInterface
   /**
    * User registered date at.
    */
-  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.GraphQLISODateTime, {
+  @NestJS.GraphQL.Field((type) => NestJS.GraphQL.GraphQLISODateTime, {
     description: 'User registered date at.',
   })
   createdAt: Date;
@@ -46,7 +46,7 @@ export class UserInterface
   /**
    * User profile.
    */
-  @NestJS_GraphQL.Field((type) => UserProfileEntity, {
+  @NestJS.GraphQL.Field((type) => UserProfileEntity, {
     description: 'The user profile',
   })
   profile: UserProfile;
