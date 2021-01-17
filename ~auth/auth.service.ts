@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import dayjs from 'dayjs';
 import bcrypt from 'bcrypt';
 import { nanoIdGenerator } from '~core';
@@ -21,7 +21,7 @@ import {
 } from '~constant';
 import { SecurityCodeService } from '~security-code';
 
-@Injectable()
+@NestJS_Common.Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaClient,

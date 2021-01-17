@@ -1,43 +1,43 @@
-import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import { NestJS_GraphQL } from '~deps';
 import { UserProfile } from '~prisma';
 
-@ObjectType()
+@NestJS_GraphQL.ObjectType()
 export class UserProfileEntity implements UserProfile {
-  @Field((type) => ID, {
+  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.ID, {
     description: 'User profile ID',
   })
   id: string;
 
-  @Field((type) => ID, {
+  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.ID, {
     description: 'Profile owner ID',
   })
   userId: string;
 
-  @Field((type) => String, {
+  @NestJS_GraphQL.Field((type) => String, {
     description: 'User name.',
     nullable: true,
   })
   name: string;
 
-  @Field((type) => String, {
+  @NestJS_GraphQL.Field((type) => String, {
     description: 'User avatar storage path.',
     nullable: true,
   })
   avatar: string;
 
-  @Field((type) => String, {
+  @NestJS_GraphQL.Field((type) => String, {
     description: 'User bio.',
     nullable: true,
   })
   bio: string;
 
-  @Field((type) => String, {
+  @NestJS_GraphQL.Field((type) => String, {
     description: 'User location string.',
     nullable: true,
   })
   location: string;
 
-  @Field((type) => GraphQLISODateTime, {
+  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.GraphQLISODateTime, {
     description: 'User profile updated at.',
     nullable: true,
   })

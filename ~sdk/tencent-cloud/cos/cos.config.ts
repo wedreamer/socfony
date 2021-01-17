@@ -1,6 +1,6 @@
-import { ConfigType, registerAs } from '@nestjs/config';
+import { NestJS_Config } from '~deps';
 
-export const tencentCloudCosConfig = registerAs(
+export const tencentCloudCosConfig = NestJS_Config.registerAs(
   'tencent-cloud:cos',
   function () {
     return {
@@ -10,4 +10,6 @@ export const tencentCloudCosConfig = registerAs(
   },
 );
 
-export type TencentCloudCosConfig = ConfigType<typeof tencentCloudCosConfig>;
+export type TencentCloudCosConfig = NestJS_Config.ConfigType<
+  typeof tencentCloudCosConfig
+>;

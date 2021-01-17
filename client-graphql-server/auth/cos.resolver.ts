@@ -1,4 +1,4 @@
-import { Args, Mutation, registerEnumType, Resolver } from '@nestjs/graphql';
+import { NestJS_GraphQL } from '~deps';
 import { AuthDecorator, HasTokenExpiredType } from '~auth';
 import { nanoIdGenerator } from '~core';
 import { TencentCloudCosService } from '~sdk/tencent-cloud';
@@ -19,7 +19,7 @@ export enum AllowUploadFileType {
 }
 
 // Register allow upload file type to GraphQL schema.
-registerEnumType(AllowUploadFileType, {
+NestJS_GraphQL.registerEnumType(AllowUploadFileType, {
   name: 'AllowUploadFileType',
   description:
     'Create Tencent Cloud COS write credential allow upload file type.',
@@ -28,14 +28,14 @@ registerEnumType(AllowUploadFileType, {
 /**
  * `CosAuthorizationEntity` resolver.
  */
-@Resolver((of) => CosAuthorizationEntity)
+@NestJS_GraphQL.Resolver((of) => CosAuthorizationEntity)
 export class CosAuthorizationResolver {
   constructor(private readonly cosService: TencentCloudCosService) {}
 
   /**
    * Create Tencent Cloud COS temporary read credential.
    */
-  @Mutation((returns) => CosAuthorizationEntity, {
+  @NestJS_GraphQL.Mutation((returns) => CosAuthorizationEntity, {
     description: 'Create Tencent Cloud COS temporary read credential.',
   })
   @AuthDecorator({
@@ -51,13 +51,13 @@ export class CosAuthorizationResolver {
    * Create Tencent Cloud COS temporary write credential.
    * @param type Create Tencent Cloud COS write credential allow upload file type.
    */
-  @Mutation((returns) => CosAuthorizationEntity)
+  @NestJS_GraphQL.Mutation((returns) => CosAuthorizationEntity)
   @AuthDecorator({
     hasAuthorization: true,
     type: HasTokenExpiredType.AUTH,
   })
   async createCosTemporaryWriteCredential(
-    @Args({
+    @NestJS_GraphQL.Args({
       name: 'type',
       type: () => AllowUploadFileType,
     })

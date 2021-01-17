@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { Client } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sts/v20180813/sts_client';
 import {
   TencentCloudConfig,
@@ -8,10 +8,10 @@ import {
 /**
  * Tencent Cloud STS service.
  */
-@Injectable()
+@NestJS_Common.Injectable()
 export class TencentCloudStsService {
   constructor(
-    @Inject(tencentCloudConfig.KEY)
+    @NestJS_Common.Inject(tencentCloudConfig.KEY)
     private readonly tencentCloudConfig: TencentCloudConfig,
   ) {}
 

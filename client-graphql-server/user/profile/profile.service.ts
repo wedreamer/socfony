@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { nanoIdGenerator } from '~core';
 import { PrismaClient, User, UserProfile } from '~prisma';
 
-@Injectable()
+@NestJS_Common.Injectable()
 export class UserProfileService {
   constructor(private readonly prisma: PrismaClient) {}
 

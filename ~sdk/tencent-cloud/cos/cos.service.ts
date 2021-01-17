@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { alphabetNanoIdGenerator } from '~core';
 import { TencentCloudStsService } from '../sts';
 import { TencentCloudCosConfig, tencentCloudCosConfig } from './cos.config';
@@ -6,11 +6,11 @@ import { TencentCloudCosConfig, tencentCloudCosConfig } from './cos.config';
 /**
  * Tencent Cloud COS service.
  */
-@Injectable()
+@NestJS_Common.Injectable()
 export class TencentCloudCosService {
   constructor(
     private readonly stsService: TencentCloudStsService,
-    @Inject(tencentCloudCosConfig.KEY)
+    @NestJS_Common.Inject(tencentCloudCosConfig.KEY)
     private readonly tencentCloudCosConfig: TencentCloudCosConfig,
   ) {}
 

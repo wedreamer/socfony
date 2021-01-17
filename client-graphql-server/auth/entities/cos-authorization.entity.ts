@@ -1,17 +1,17 @@
-import { Field, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
+import { NestJS_GraphQL } from '~deps';
 import { GetFederationTokenResponse } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sts/v20180813/sts_models';
 
 /**
  * Tencent Cloud COS endpoint authorization entity.
  */
-@ObjectType({
+@NestJS_GraphQL.ObjectType({
   description: 'Tencent Cloud COS endpoint authorization entity.',
 })
 export class CosAuthorizationEntity {
   /**
    * Tencent Cloud COS http endpoit authorization token.
    */
-  @Field((type) => String, {
+  @NestJS_GraphQL.Field((type) => String, {
     description: 'Tencent Cloud COS http endpoit authorization token.',
   })
   token: string;
@@ -19,7 +19,7 @@ export class CosAuthorizationEntity {
   /**
    * Tencent Cloud COS bucket temporary secret ID
    */
-  @Field((type) => String, {
+  @NestJS_GraphQL.Field((type) => String, {
     description: 'Tencent Cloud COS bucket temporary secret ID',
   })
   secretId: string;
@@ -27,7 +27,7 @@ export class CosAuthorizationEntity {
   /**
    * Tencent Cloud COS bucket temporary secret KEY
    */
-  @Field((type) => String, {
+  @NestJS_GraphQL.Field((type) => String, {
     description: 'Tencent Cloud COS bucket temporary secret KEY',
   })
   secretKey: string;
@@ -35,7 +35,7 @@ export class CosAuthorizationEntity {
   /**
    * token expired at.
    */
-  @Field((type) => GraphQLISODateTime, {
+  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.GraphQLISODateTime, {
     description: 'token expired at.',
   })
   expiredAt: Date;
@@ -43,7 +43,7 @@ export class CosAuthorizationEntity {
   /**
    * Only write credentials exist in the resource field.
    */
-  @Field((type) => String, {
+  @NestJS_GraphQL.Field((type) => String, {
     nullable: true,
     description: 'Only write credentials exist in the resource field.',
   })

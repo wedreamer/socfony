@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { nanoIdGenerator, numberNanoIdGenerator } from '~core';
 import { Prisma, PrismaClient, SecurityCode } from '~prisma';
 import { TencentCloudShortMessageService } from '~sdk/tencent-cloud';
@@ -10,12 +10,12 @@ import {
 /**
  * Security code service.
  */
-@Injectable()
+@NestJS_Common.Injectable()
 export class SecurityCodeService {
   constructor(
     private readonly prisma: PrismaClient,
     private readonly smsService: TencentCloudShortMessageService,
-    @Inject(securityCodeSmsConfig.KEY)
+    @NestJS_Common.Inject(securityCodeSmsConfig.KEY)
     private readonly smsConfig: SecurityCodeSmsConfig,
   ) {}
 

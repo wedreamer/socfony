@@ -1,12 +1,11 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { NestJS_Common, NestJS_Config } from '~deps';
 import { PrismaModule } from '~prisma';
 import { AppContextService } from './app-context.service';
 import { coreConfig } from './core.config';
 
-const config = ConfigModule.forFeature(coreConfig);
+const config = NestJS_Config.ConfigModule.forFeature(coreConfig);
 
-@Module({
+@NestJS_Common.Module({
   imports: [PrismaModule, config],
   providers: [AppContextService],
   exports: [AppContextService, config],

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { ConfigModule } from '~config';
 import { TencentCloudStsModule } from '../sts';
 import { tencentCloudCosConfig } from './cos.config';
@@ -7,7 +7,7 @@ import { TencentCloudCosService } from './cos.service';
 /**
  * Tencent Cloud COS module.
  */
-@Module({
+@NestJS_Common.Module({
   imports: [
     TencentCloudStsModule,
     ConfigModule.forFeature(tencentCloudCosConfig),

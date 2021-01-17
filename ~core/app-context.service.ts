@@ -1,9 +1,9 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { AuthorizationToken, PrismaClient, User } from '~prisma';
 import { AppContext } from './app.context';
 import { Request } from './express';
 
-@Injectable()
+@NestJS_Common.Injectable()
 export class AppContextService {
   private context: AppContext;
 
@@ -32,7 +32,7 @@ export class AppContextService {
     if (request) return request.header('Authorization');
   }
 
-  resolve(context: ExecutionContext): AppContext {
+  resolve(context: NestJS_Common.ExecutionContext): AppContext {
     return AppContext.resolve(context);
   }
 

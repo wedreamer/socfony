@@ -1,5 +1,4 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { NestJS_Core, NestJS_Common } from '~deps';
 import { AppContext, AppContextService, Request } from '~core';
 import { AuthService } from './auth.service';
 import {
@@ -8,10 +7,10 @@ import {
 } from './constants';
 import { HasTokenExpiredType } from './enums';
 
-@Injectable()
+@NestJS_Common.Injectable()
 export class AuthGuard {
   constructor(
-    private readonly reflector: Reflector,
+    private readonly reflector: NestJS_Core.Reflector,
     private readonly appContextService: AppContextService,
     private readonly authService: AuthService,
   ) {}
@@ -20,7 +19,7 @@ export class AuthGuard {
    * Can activate for HTTP endpoint `Authorization` token.
    * @param context NestJS context
    */
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  async canActivate(context: NestJS_Common.ExecutionContext): Promise<boolean> {
     // If contex is HTTP context, resolve app context.
     if (context.getType() === 'http') {
       this.appContextService.createContext(

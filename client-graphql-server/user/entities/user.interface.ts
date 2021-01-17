@@ -1,11 +1,11 @@
-import { Field, GraphQLISODateTime, ID, InterfaceType } from '@nestjs/graphql';
+import { NestJS_GraphQL } from '~deps';
 import { Prisma, UserProfile } from '~prisma';
 import { UserProfileEntity } from '../profile';
 
 /**
  * User interface.
  */
-@InterfaceType({
+@NestJS_GraphQL.InterfaceType({
   description: 'User interface.',
 })
 export class UserInterface
@@ -21,7 +21,7 @@ export class UserInterface
   /**
    * User ID
    */
-  @Field((type) => ID, {
+  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.ID, {
     description: 'User ID',
   })
   id: string;
@@ -29,7 +29,7 @@ export class UserInterface
   /**
    * User login name
    */
-  @Field((type) => String, {
+  @NestJS_GraphQL.Field((type) => String, {
     nullable: true,
     description: 'User login name',
   })
@@ -38,7 +38,7 @@ export class UserInterface
   /**
    * User registered date at.
    */
-  @Field((type) => GraphQLISODateTime, {
+  @NestJS_GraphQL.Field((type) => NestJS_GraphQL.GraphQLISODateTime, {
     description: 'User registered date at.',
   })
   createdAt: Date;
@@ -46,7 +46,7 @@ export class UserInterface
   /**
    * User profile.
    */
-  @Field((type) => UserProfileEntity, {
+  @NestJS_GraphQL.Field((type) => UserProfileEntity, {
     description: 'The user profile',
   })
   profile: UserProfile;

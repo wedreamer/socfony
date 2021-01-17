@@ -1,6 +1,6 @@
-import { ConfigType, registerAs } from '@nestjs/config';
+import { NestJS_Config } from '~deps';
 
-export const securityCodeSmsConfig = registerAs(
+export const securityCodeSmsConfig = NestJS_Config.registerAs(
   'security-code:sms',
   function () {
     return {
@@ -25,4 +25,6 @@ export const securityCodeSmsConfig = registerAs(
   },
 );
 
-export type SecurityCodeSmsConfig = ConfigType<typeof securityCodeSmsConfig>;
+export type SecurityCodeSmsConfig = NestJS_Config.ConfigType<
+  typeof securityCodeSmsConfig
+>;

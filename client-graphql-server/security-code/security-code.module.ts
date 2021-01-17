@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { AuthModule } from '~auth';
 import { CoreModule } from '~core';
 import { SecurityCodeModule as _ } from '~security-code';
 import { SecurityCodeResolver } from './security-code.resolver';
 
-@Module({
+@NestJS_Common.Module({
   imports: [_, CoreModule, AuthModule],
   providers: [SecurityCodeResolver],
 })

@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { UserProfileResolver } from './profile.resolver';
 import { UserProfileService } from './profile.service';
 
-@Module({
+@NestJS_Common.Module({
   providers: [UserProfileService, UserProfileResolver],
   exports: [UserProfileService],
 })

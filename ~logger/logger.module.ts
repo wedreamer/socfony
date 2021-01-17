@@ -1,9 +1,10 @@
-import { Logger, Module } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
+import { Logger } from './logger';
 
 /**
  * Logger module.
  */
-@Module({
+@NestJS_Common.Module({
   providers: [Logger],
   exports: [Logger],
 })

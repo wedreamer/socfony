@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { Client } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sms/v20190711/sms_client';
 import { SendSmsRequest } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sms/v20190711/sms_models';
 import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interface';
@@ -11,12 +11,12 @@ import { tencentCloudSmsConfig, TencentCloudSmsConfig } from './sms.config';
 /**
  * Tencent Cloud short message service.
  */
-@Injectable()
+@NestJS_Common.Injectable()
 export class TencentCloudShortMessageService {
   constructor(
-    @Inject(tencentCloudConfig.KEY)
+    @NestJS_Common.Inject(tencentCloudConfig.KEY)
     private readonly tencentCloudConfig: TencentCloudConfig,
-    @Inject(tencentCloudSmsConfig.KEY)
+    @NestJS_Common.Inject(tencentCloudSmsConfig.KEY)
     private readonly tencentCloudSmsConfig: TencentCloudSmsConfig,
   ) {}
 

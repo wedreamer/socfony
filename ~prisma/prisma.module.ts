@@ -1,13 +1,5 @@
-import {
-  ClassProvider,
-  Inject,
-  Injectable,
-  Logger,
-  Module,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { NestJS_Common } from '~deps';
+import { Prisma, PrismaClient } from './client';
 import { ConfigModule } from '~config';
 import { LoggerModule } from '~logger';
 import { databaseConfig } from './database.config';
@@ -16,17 +8,17 @@ import { PrismaLoggerMiddleware } from './middleware';
 /**
  * Prisma client NestJS service.
  */
-@Injectable()
+@NestJS_Common.Injectable()
 class PrismaService
   extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy {
+  implements NestJS_Common.OnModuleInit, NestJS_Common.OnModuleDestroy {
   /**
    * Prisma client constructor
    * @param logger Logger
    */
   constructor(
-    private readonly logger: Logger,
-    @Inject(databaseConfig.KEY) database: Prisma.Datasource,
+    private readonly logger: NestJS_Common.Logger,
+    @NestJS_Common.Inject(databaseConfig.KEY) database: Prisma.Datasource,
   ) {
     super({
       datasources: { database },
@@ -62,7 +54,7 @@ class PrismaService
 /**
  * Create Prisma client provider.
  */
-const provider: ClassProvider<PrismaClient> = {
+const provider: NestJS_Common.ClassProvider<PrismaClient> = {
   provide: PrismaClient,
   useClass: PrismaService,
 };
@@ -70,7 +62,7 @@ const provider: ClassProvider<PrismaClient> = {
 /**
  * Prisma module.
  */
-@Module({
+@NestJS_Common.Module({
   imports: [LoggerModule, ConfigModule.forFeature(databaseConfig)],
   providers: [provider],
   exports: [provider],

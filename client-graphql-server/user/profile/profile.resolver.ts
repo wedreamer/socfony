@@ -1,11 +1,11 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { NestJS_GraphQL } from '~deps';
 import { AuthDecorator, HasTokenExpiredType, UserDecorator } from '~auth';
 import { nanoIdGenerator } from '~core';
 import { PrismaClient, User } from '~prisma';
 import { UpdateUserProfileInput } from './dto';
 import { UserProfileEntity } from './entities';
 
-@Resolver((of) => UserProfileEntity)
+@NestJS_GraphQL.Resolver((of) => UserProfileEntity)
 export class UserProfileResolver {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -14,13 +14,13 @@ export class UserProfileResolver {
    * @param viewer HTTP endpoint authorization user
    * @param data User profile update input data.
    */
-  @Mutation((returns) => UserProfileEntity, {
+  @NestJS_GraphQL.Mutation((returns) => UserProfileEntity, {
     description: 'Update user profile',
   })
   @AuthDecorator({ hasAuthorization: true, type: HasTokenExpiredType.AUTH })
   updateUserProfile(
     @UserDecorator() viewer: User,
-    @Args({
+    @NestJS_GraphQL.Args({
       name: 'data',
       type: () => UpdateUserProfileInput,
       description: 'User profile update input data',

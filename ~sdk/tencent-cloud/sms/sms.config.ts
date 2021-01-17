@@ -1,4 +1,4 @@
-import { registerAs } from '@nestjs/config';
+import { NestJS_Config } from '~deps';
 import { SendSmsRequest } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sms/v20190711/sms_models';
 
 export type TencentCloudSmsConfig = Pick<
@@ -6,7 +6,7 @@ export type TencentCloudSmsConfig = Pick<
   'SmsSdkAppid' | 'Sign' | 'ExtendCode' | 'SenderId'
 >;
 
-export const tencentCloudSmsConfig = registerAs(
+export const tencentCloudSmsConfig = NestJS_Config.registerAs(
   'tencent-cloud:sms/base',
   function (): TencentCloudSmsConfig {
     return {
@@ -17,27 +17,3 @@ export const tencentCloudSmsConfig = registerAs(
     };
   },
 );
-/*
-
-authorization: {
-            expiredIn: Number.parseInt(
-              process.env.TENCENT_CLOUD_SMS_AUTHORIZATION_EXPIRED_IN,
-            ),
-            china: {
-              templateId:
-                process.env.TENCENT_CLOUD_SMS_AUTHORIZATION_CHINA_TEMPLATE_ID,
-              veriables: process.env.TENCENT_CLOUD_SMS_AUTHORIZATION_CHINA_VERIABLES.split(
-                ',',
-              ),
-            },
-            other: {
-              templateId:
-                process.env.TENCENT_CLOUD_SMS_AUTHORIZATION_OTHER_TEMPLATE_ID,
-              veriables: process.env.TENCENT_CLOUD_SMS_AUTHORIZATION_OTHER_VERIABLES.split(
-                ',',
-              ),
-            },
-          },
-
-
-*/

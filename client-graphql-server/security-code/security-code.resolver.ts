@@ -1,5 +1,4 @@
-import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { NestJS_Common, NestJS_GraphQL } from '~deps';
 import { AuthGuard, UserDecorator } from '~auth';
 import { UNAUTHORIZED } from '~constant';
 import { Prisma, User } from '~prisma';
@@ -9,7 +8,7 @@ import { SendSecurityCodeInput } from './dto';
 /**
  * Security code sender resolver.
  */
-@Resolver()
+@NestJS_GraphQL.Resolver()
 export class SecurityCodeResolver {
   constructor(private readonly securityService: SecurityCodeService) {}
 
@@ -18,13 +17,13 @@ export class SecurityCodeResolver {
    * @param data Send security code input.
    * @param userPromise The HTTP endpoint `Authorization` code bount user Prisma query client.
    */
-  @Mutation((returns) => Boolean, {
+  @NestJS_GraphQL.Mutation((returns) => Boolean, {
     nullable: true,
     description: 'Send security code.',
   })
-  @UseGuards(AuthGuard)
+  @NestJS_Common.UseGuards(AuthGuard)
   async sendSecurityCode(
-    @Args({
+    @NestJS_GraphQL.Args({
       name: 'data',
       type: () => SendSecurityCodeInput,
     })

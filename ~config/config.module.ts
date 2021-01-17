@@ -1,5 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import { ConfigModule as _ } from '@nestjs/config';
+import { NestJS_Common, NestJS_Config } from '~deps';
 import {
   ConfigFactory,
   ConfigModuleOptions as _Options,
@@ -13,16 +12,18 @@ const globalOptions: _Options = {
 
 export type ConfigModuleOptions = Pick<_Options, 'isGlobal' | 'load'>;
 
-@Module({
-  imports: [_],
-  exports: [_],
+@NestJS_Common.Module({
+  imports: [NestJS_Config.ConfigModule],
+  exports: [NestJS_Config.ConfigModule],
 })
 export class ConfigModule {
   static forRoot(options?: ConfigModuleOptions) {
-    return _.forRoot(Object.assign({}, globalOptions, options));
+    return NestJS_Config.ConfigModule.forRoot(
+      Object.assign({}, globalOptions, options),
+    );
   }
 
-  static forFeature(config: ConfigFactory): DynamicModule {
-    return _.forFeature(config);
+  static forFeature(config: ConfigFactory): NestJS_Common.DynamicModule {
+    return NestJS_Config.ConfigModule.forFeature(config);
   }
 }

@@ -1,10 +1,10 @@
-import { registerAs } from '@nestjs/config';
+import { NestJS_Config } from '~deps';
 import { Prisma } from '~prisma';
 
 /**
  * The application database configuration.
  */
-export const databaseConfig = registerAs(
+export const databaseConfig = NestJS_Config.registerAs(
   'database',
   function (): Prisma.Datasource {
     return {

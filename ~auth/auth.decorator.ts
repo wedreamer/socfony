@@ -1,10 +1,4 @@
-import {
-  applyDecorators,
-  createParamDecorator,
-  ExecutionContext,
-  SetMetadata,
-  UseGuards,
-} from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { AppContext } from '~core';
 import { AuthGuard } from './auth.guard';
 import {
@@ -25,36 +19,35 @@ export interface AuthDecoratorOptions {
  * @param param.type validate token type.
  */
 export function AuthDecorator(options: AuthDecoratorOptions) {
-  return applyDecorators(
-    SetMetadata(
+  return NestJS_Common.applyDecorators(
+    NestJS_Common.SetMetadata(
       AUTH_METADATA_HAS_AUTHORIZATION,
       options?.hasAuthorization || true,
     ),
-    SetMetadata(
+    NestJS_Common.SetMetadata(
       AUTH_METADATA_HAS_AUTHORIZATION_TYPE,
       options?.type || HasTokenExpiredType.AUTH,
     ),
-    UseGuards(AuthGuard),
+    NestJS_Common.UseGuards(AuthGuard),
   );
 }
 
 /**
  * Get HTTP endpoint `Authorization` token Prisma client decorator.
  */
-export const AuthorizationTokenDecorator = createParamDecorator(function (
-  _: any,
-  context: ExecutionContext,
-) {
-  const { authorizationToken } = AppContext.resolve(context);
-  return authorizationToken;
-});
+export const AuthorizationTokenDecorator = NestJS_Common.createParamDecorator(
+  function (_: any, context: NestJS_Common.ExecutionContext) {
+    const { authorizationToken } = AppContext.resolve(context);
+    return authorizationToken;
+  },
+);
 
 /**
  * Get HTTP endpoint `Authorization` token bound user Prisma client decorator.
  */
-export const UserDecorator = createParamDecorator(function (
+export const UserDecorator = NestJS_Common.createParamDecorator(function (
   _: any,
-  context: ExecutionContext,
+  context: NestJS_Common.ExecutionContext,
 ) {
   const { user } = AppContext.resolve(context);
   return user;

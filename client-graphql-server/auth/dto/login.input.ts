@@ -1,4 +1,4 @@
-import { Field, InputType, registerEnumType } from '@nestjs/graphql';
+import { NestJS_GraphQL } from '~deps';
 import { UserWhereUniqueInput } from '../../user';
 import { Prisma } from '~prisma';
 
@@ -11,7 +11,7 @@ export enum LoginType {
 }
 
 // Register enum to GraphQL schema.
-registerEnumType(LoginType, {
+NestJS_GraphQL.registerEnumType(LoginType, {
   name: 'LoginType',
   description: 'User login type',
 });
@@ -19,14 +19,14 @@ registerEnumType(LoginType, {
 /**
  * User create authorization login input.
  */
-@InputType({
+@NestJS_GraphQL.InputType({
   description: 'User create authorization login input.',
 })
 export class LoginInput {
   /**
    * Login user where unique input.
    */
-  @Field((type) => UserWhereUniqueInput, {
+  @NestJS_GraphQL.Field((type) => UserWhereUniqueInput, {
     description: 'User where unique input',
   })
   account: Prisma.UserWhereUniqueInput;
@@ -34,7 +34,7 @@ export class LoginInput {
   /**
    * User login type.
    */
-  @Field((type) => LoginType, {
+  @NestJS_GraphQL.Field((type) => LoginType, {
     description: 'User login type.',
   })
   type: LoginType;
@@ -42,7 +42,7 @@ export class LoginInput {
   /**
    * User login password or security code
    */
-  @Field((type) => String, {
+  @NestJS_GraphQL.Field((type) => String, {
     description: 'User login password or security code',
   })
   encrypted: string;

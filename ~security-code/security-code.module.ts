@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { NestJS_Common } from '~deps';
 import { ConfigModule } from '~config';
 import { PrismaModule } from '~prisma';
 import { TencentCloudShortMessageServiceModule } from '~sdk/tencent-cloud';
@@ -8,7 +8,7 @@ import { SecurityCodeService } from './security-code.service';
 /**
  * Sceurity code module.
  */
-@Module({
+@NestJS_Common.Module({
   imports: [
     PrismaModule,
     TencentCloudShortMessageServiceModule,

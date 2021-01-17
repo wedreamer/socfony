@@ -1,4 +1,4 @@
-import { createUnionType } from '@nestjs/graphql';
+import { NestJS_GraphQL } from '~deps';
 import { User } from '~prisma';
 import { UserEntity } from './user.entity';
 import { ViewerEntity } from './viewer.entity';
@@ -20,7 +20,7 @@ async function resolveType(value: User, context: AppContext) {
 /**
  * User union type.
  */
-export const UserUnion = createUnionType({
+export const UserUnion = NestJS_GraphQL.createUnionType({
   name: 'userUnion',
   types: () => [UserEntity, ViewerEntity],
   resolveType,

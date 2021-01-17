@@ -1,4 +1,4 @@
-import { ConfigType, registerAs } from '@nestjs/config';
+import { NestJS_Config } from '~deps';
 
 /**
  * `NODE_ENV` enum.
@@ -11,7 +11,7 @@ export enum NodeEnv {
 /**
  * The application configuration.
  */
-export const coreConfig = registerAs('core', function () {
+export const coreConfig = NestJS_Config.registerAs('core', function () {
   const mode: NodeEnv =
     (process.env.NODE_ENV as NodeEnv) || NodeEnv.DEVELOPMENT;
   return {
@@ -23,4 +23,4 @@ export const coreConfig = registerAs('core', function () {
 /**
  * The application configuration type.
  */
-export type CoreConfig = ConfigType<typeof coreConfig>;
+export type CoreConfig = NestJS_Config.ConfigType<typeof coreConfig>;
