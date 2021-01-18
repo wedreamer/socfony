@@ -1,5 +1,5 @@
 import { Request as ExpressRequest } from 'express';
-import { AppContext } from 'server-kernel/core/app.context';
+import { AppContext } from '../../core';
 
 export interface Request
   extends Pick<AppContext, 'authorizationToken' | 'user'>,

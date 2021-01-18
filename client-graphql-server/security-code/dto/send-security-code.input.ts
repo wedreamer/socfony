@@ -1,5 +1,4 @@
-import { NestJS } from '~deps';
-import { SecurityCode } from 'server-kernel/prisma';
+import { NestJS, Kernel } from '~deps';
 
 /**
  * Send security code input.
@@ -8,7 +7,7 @@ import { SecurityCode } from 'server-kernel/prisma';
   description: 'Send security code input.',
 })
 export class SendSecurityCodeInput
-  implements Pick<SecurityCode, 'validateSender' | 'account'> {
+  implements Pick<Kernel.Prisma.SecurityCode, 'validateSender' | 'account'> {
   /**
    * Need send security code account.
    */

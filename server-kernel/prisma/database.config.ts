@@ -1,5 +1,5 @@
 import { NestJS } from '~deps';
-import { Prisma } from 'server-kernel/prisma';
+import { Prisma } from './client';
 
 /**
  * The application database configuration.

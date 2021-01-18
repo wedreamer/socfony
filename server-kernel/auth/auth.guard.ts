@@ -1,5 +1,5 @@
 import { NestJS } from '~deps';
-import { AppContext, AppContextService, Request } from 'server-kernel/core';
+import { AppContext, AppContextService, Request } from '../core';
 import { AuthService } from './auth.service';
 import {
   AUTH_METADATA_HAS_AUTHORIZATION,

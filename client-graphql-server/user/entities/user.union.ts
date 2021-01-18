@@ -1,15 +1,16 @@
-import { NestJS } from '~deps';
-import { User } from 'server-kernel/prisma';
+import { NestJS, Kernel } from '~deps';
 import { UserEntity } from './user.entity';
 import { ViewerEntity } from './viewer.entity';
-import { AppContext } from 'server-kernel/core';
 
 /**
  * resolve `UserUnion` real type
  * @param value User object.
  * @param context Application context.
  */
-async function resolveType(value: User, context: AppContext) {
+async function resolveType(
+  value: Kernel.Prisma.User,
+  context: Kernel.Core.AppContext,
+) {
   if (context.user && context.user.id == value.id) {
     return ViewerEntity;
   }

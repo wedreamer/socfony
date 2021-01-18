@@ -1,6 +1,5 @@
-import { NestJS } from '~deps';
+import { NestJS, Kernel } from '~deps';
 import { ViewerEntity } from '../../user';
-import { Prisma, User } from 'server-kernel/prisma';
 
 /**
  * HTTP endpoint authorization entity.
@@ -10,7 +9,7 @@ import { Prisma, User } from 'server-kernel/prisma';
 })
 export class AuthorizationTokenEntity
   implements
-    Prisma.AuthorizationTokenGetPayload<{
+    Kernel.Prisma.Prisma.AuthorizationTokenGetPayload<{
       include: {
         user: false;
       };
@@ -29,7 +28,7 @@ export class AuthorizationTokenEntity
   @NestJS.GraphQL.Field((type) => ViewerEntity, {
     description: 'Logged Viewer entity',
   })
-  user: User;
+  user: Kernel.Prisma.User;
 
   /**
    * User API endpoit authorization token.

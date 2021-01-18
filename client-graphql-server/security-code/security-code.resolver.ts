@@ -1,8 +1,5 @@
-import { NestJS } from '~deps';
-import { AuthGuard, UserDecorator } from 'server-kernel/auth';
+import { NestJS, Kernel } from '~deps';
 import { UNAUTHORIZED } from '~constant';
-import { Prisma, User } from 'server-kernel/prisma';
-import { SecurityCodeService } from 'server-kernel/security-code';
 import { SendSecurityCodeInput } from './dto';
 
 /**
@@ -10,7 +7,9 @@ import { SendSecurityCodeInput } from './dto';
  */
 @NestJS.GraphQL.Resolver()
 export class SecurityCodeResolver {
-  constructor(private readonly securityService: SecurityCodeService) {}
+  constructor(
+    private readonly securityService: Kernel.SecurityCode.SecurityCodeService,
+  ) {}
 
   /**
    * Send security code.
@@ -21,14 +20,17 @@ export class SecurityCodeResolver {
     nullable: true,
     description: 'Send security code.',
   })
-  @NestJS.Common.UseGuards(AuthGuard)
+  @Kernel.Auth.AuthDecorator({
+    hasAuthorization: false,
+    type: Kernel.Auth.HasTokenExpiredType.AUTH,
+  })
   async sendSecurityCode(
     @NestJS.GraphQL.Args({
       name: 'data',
       type: () => SendSecurityCodeInput,
     })
-    data: Prisma.SecurityCodeCreateInput,
-    @UserDecorator() user?: User,
+    data: Kernel.Prisma.Prisma.SecurityCodeCreateInput,
+    @Kernel.Auth.UserDecorator() user?: Kernel.Prisma.User,
   ) {
     if (data.validateSender && !user) {
       throw new Error(UNAUTHORIZED);

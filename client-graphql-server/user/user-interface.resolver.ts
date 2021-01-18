@@ -1,5 +1,4 @@
-import { NestJS } from '~deps';
-import { User } from 'server-kernel/prisma';
+import { NestJS, Kernel } from '~deps';
 import { UserInterface } from './entities';
 import { UserProfileEntity, UserProfileService } from './profile';
 
@@ -8,7 +7,7 @@ export class UserInterfaceResolver {
   constructor(private readonly userProfileService: UserProfileService) {}
 
   @NestJS.GraphQL.ResolveField((returns) => UserProfileEntity)
-  profile(@NestJS.GraphQL.Parent() parent: User) {
+  profile(@NestJS.GraphQL.Parent() parent: Kernel.Prisma.User) {
     return this.userProfileService.resolveProfile(parent);
   }
 }

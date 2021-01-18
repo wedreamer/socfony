@@ -1,24 +1,25 @@
-import { NestJS } from '~deps';
-import { ConfigModule } from 'server-kernel/config';
-import { AppContextService, CoreConfig, coreConfig, CoreModule } from 'server-kernel/core';
-import { LoggerModule } from 'server-kernel/logger';
+import { NestJS, Kernel } from '~deps';
 import { AppConfig, appConfig } from './app.config';
 import { AuthModule } from './auth';
 import { SecurityCodeModule } from './security-code';
 
 @NestJS.Common.Module({
   imports: [
-    ConfigModule.forRoot({
+    Kernel.Config.ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig],
     }),
     NestJS.GraphQL.GraphQLModule.forRootAsync({
-      imports: [CoreModule],
-      inject: [coreConfig.KEY, appConfig.KEY, AppContextService],
+      imports: [Kernel.Core.CoreModule],
+      inject: [
+        Kernel.Core.coreConfig.KEY,
+        appConfig.KEY,
+        Kernel.Core.AppContextService,
+      ],
       useFactory(
-        coreConfig: CoreConfig,
+        coreConfig: Kernel.Core.CoreConfig,
         appConfig: AppConfig,
-        appContextService: AppContextService,
+        appContextService: Kernel.Core.AppContextService,
       ) {
         return {
           autoSchemaFile: true,
@@ -32,7 +33,7 @@ import { SecurityCodeModule } from './security-code';
         };
       },
     }),
-    LoggerModule,
+    Kernel.Logger.LoggerModule,
     AuthModule,
     SecurityCodeModule,
   ],

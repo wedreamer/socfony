@@ -1,5 +1,4 @@
-import { NestJS } from '~deps';
-import { User } from 'server-kernel/prisma';
+import { NestJS, Kernel } from '~deps';
 import { UserInterface } from './user.interface';
 
 /**
@@ -11,7 +10,7 @@ import { UserInterface } from './user.interface';
 })
 export class ViewerEntity
   extends UserInterface
-  implements Omit<User, 'password'> {
+  implements Omit<Kernel.Prisma.User, 'password'> {
   /**
    * User bound E-Mail address.
    */

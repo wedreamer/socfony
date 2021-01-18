@@ -1,5 +1,5 @@
 import { NestJS } from '~deps';
-import { alphabetNanoIdGenerator } from 'server-kernel/core';
+import { alphabetNanoIdGenerator } from '../../../core';
 import { TencentCloudStsService } from '../sts';
 import { TencentCloudCosConfig, tencentCloudCosConfig } from './cos.config';
 

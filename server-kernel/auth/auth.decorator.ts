@@ -1,5 +1,5 @@
 import { NestJS } from '~deps';
-import { AppContext } from 'server-kernel/core';
+import { AppContext } from '../core';
 import { AuthGuard } from './auth.guard';
 import {
   AUTH_METADATA_HAS_AUTHORIZATION,

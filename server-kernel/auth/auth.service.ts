@@ -1,8 +1,8 @@
 import { NestJS } from '~deps';
 import dayjs from 'dayjs';
 import bcrypt from 'bcrypt';
-import { nanoIdGenerator } from 'server-kernel/core';
-import { AuthorizationToken, Prisma, PrismaClient, User } from 'server-kernel/prisma';
+import { nanoIdGenerator } from '../core';
+import { AuthorizationToken, Prisma, PrismaClient, User } from '../prisma';
 import {
   AUTH_TOKEN_DEFAULT_EXPORED_IN,
   AUTH_TOKEN_DEFAULT_EXPORED_UNIT,
@@ -19,7 +19,7 @@ import {
   USER_NOT_SET_PASSWORD,
   USER_PASSWORD_NOT_COMPARE,
 } from '~constant';
-import { SecurityCodeService } from 'server-kernel/security-code';
+import { SecurityCodeService } from '../security-code';
 
 @NestJS.Common.Injectable()
 export class AuthService {

@@ -1,6 +1,5 @@
-import { NestJS } from '~deps';
+import { NestJS, Kernel } from '~deps';
 import { UserWhereUniqueInput } from '../../user';
-import { Prisma } from 'server-kernel/prisma';
 
 /**
  * User create Authorization login type.
@@ -29,7 +28,7 @@ export class LoginInput {
   @NestJS.GraphQL.Field((type) => UserWhereUniqueInput, {
     description: 'User where unique input',
   })
-  account: Prisma.UserWhereUniqueInput;
+  account: Kernel.Prisma.Prisma.UserWhereUniqueInput;
 
   /**
    * User login type.

@@ -1,7 +1,7 @@
 import { NestJS } from '~deps';
-import { CoreModule } from 'server-kernel/core';
-import { PrismaModule } from 'server-kernel/prisma';
-import { SecurityCodeModule } from 'server-kernel/security-code/security-code.module';
+import { CoreModule } from '../core';
+import { PrismaModule } from '../prisma';
+import { SecurityCodeModule } from '../security-code';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 

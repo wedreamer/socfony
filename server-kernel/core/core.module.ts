@@ -1,5 +1,5 @@
 import { NestJS } from '~deps';
-import { PrismaModule } from 'server-kernel/prisma';
+import { PrismaModule } from '../prisma';
 import { AppContextService } from './app-context.service';
 import { coreConfig } from './core.config';
 

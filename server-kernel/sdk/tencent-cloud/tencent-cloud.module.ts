@@ -1,5 +1,5 @@
 import { NestJS } from '~deps';
-import { ConfigModule } from 'server-kernel/config';
+import { ConfigModule } from '../../config';
 import { tencentCloudConfig } from './tencent-cloud.config';
 
 const config = ConfigModule.forFeature(tencentCloudConfig);

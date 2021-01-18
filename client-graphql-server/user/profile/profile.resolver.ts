@@ -1,13 +1,10 @@
-import { NestJS } from '~deps';
-import { AuthDecorator, HasTokenExpiredType, UserDecorator } from 'server-kernel/auth';
-import { nanoIdGenerator } from 'server-kernel/core';
-import { PrismaClient, User } from 'server-kernel/prisma';
+import { NestJS, Kernel } from '~deps';
 import { UpdateUserProfileInput } from './dto';
 import { UserProfileEntity } from './entities';
 
 @NestJS.GraphQL.Resolver((of) => UserProfileEntity)
 export class UserProfileResolver {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: Kernel.Prisma.PrismaClient) {}
 
   /**
    * Update user profile data.
@@ -17,9 +14,12 @@ export class UserProfileResolver {
   @NestJS.GraphQL.Mutation((returns) => UserProfileEntity, {
     description: 'Update user profile',
   })
-  @AuthDecorator({ hasAuthorization: true, type: HasTokenExpiredType.AUTH })
+  @Kernel.Auth.AuthDecorator({
+    hasAuthorization: true,
+    type: Kernel.Auth.HasTokenExpiredType.AUTH,
+  })
   updateUserProfile(
-    @UserDecorator() viewer: User,
+    @Kernel.Auth.UserDecorator() viewer: Kernel.Prisma.User,
     @NestJS.GraphQL.Args({
       name: 'data',
       type: () => UpdateUserProfileInput,
@@ -31,7 +31,7 @@ export class UserProfileResolver {
       where: { userId: viewer.id },
       create: Object.assign({}, data, {
         userId: viewer.id,
-        id: nanoIdGenerator(32),
+        id: Kernel.Core.nanoIdGenerator(32),
       }),
       update: data,
     });

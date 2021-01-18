@@ -1,7 +1,4 @@
-import { NestJS } from '~deps';
-import { AuthDecorator, HasTokenExpiredType } from 'server-kernel/auth';
-import { nanoIdGenerator } from 'server-kernel/core';
-import { TencentCloudCosService } from 'server-kernel/sdk/tencent-cloud';
+import { NestJS, Kernel } from '~deps';
 import { CosAuthorizationEntity } from './entities';
 
 // 暂时设置浏览器通用支持的格式
@@ -30,7 +27,9 @@ NestJS.GraphQL.registerEnumType(AllowUploadFileType, {
  */
 @NestJS.GraphQL.Resolver((of) => CosAuthorizationEntity)
 export class CosAuthorizationResolver {
-  constructor(private readonly cosService: TencentCloudCosService) {}
+  constructor(
+    private readonly cosService: Kernel.SDK.TencentCloud.TencentCloudCosService,
+  ) {}
 
   /**
    * Create Tencent Cloud COS temporary read credential.
@@ -38,9 +37,9 @@ export class CosAuthorizationResolver {
   @NestJS.GraphQL.Mutation((returns) => CosAuthorizationEntity, {
     description: 'Create Tencent Cloud COS temporary read credential.',
   })
-  @AuthDecorator({
+  @Kernel.Auth.AuthDecorator({
     hasAuthorization: true,
-    type: HasTokenExpiredType.AUTH,
+    type: Kernel.Auth.HasTokenExpiredType.AUTH,
   })
   async createCosTemporaryReadCredential(): Promise<CosAuthorizationEntity> {
     const response = await this.cosService.createTemporaryReadCredential();
@@ -52,9 +51,9 @@ export class CosAuthorizationResolver {
    * @param type Create Tencent Cloud COS write credential allow upload file type.
    */
   @NestJS.GraphQL.Mutation((returns) => CosAuthorizationEntity)
-  @AuthDecorator({
+  @Kernel.Auth.AuthDecorator({
     hasAuthorization: true,
-    type: HasTokenExpiredType.AUTH,
+    type: Kernel.Auth.HasTokenExpiredType.AUTH,
   })
   async createCosTemporaryWriteCredential(
     @NestJS.GraphQL.Args({
@@ -63,7 +62,7 @@ export class CosAuthorizationResolver {
     })
     type: AllowUploadFileType,
   ): Promise<CosAuthorizationEntity> {
-    const resource = nanoIdGenerator(64) + type;
+    const resource = Kernel.Core.nanoIdGenerator(64) + type;
     const response = await this.cosService.createTemporaryWriteCredential(
       resource,
     );

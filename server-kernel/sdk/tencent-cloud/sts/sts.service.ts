@@ -1,5 +1,4 @@
-import { NestJS } from '~deps';
-import { Client } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sts/v20180813/sts_client';
+import { NestJS, TencentCloud } from '~deps';
 import {
   TencentCloudConfig,
   tencentCloudConfig,
@@ -19,8 +18,8 @@ export class TencentCloudStsService {
    * Create STS client for region.
    * @param region server region.
    */
-  createClient(region: string = 'ap-guangzhou'): Client {
-    return new Client({
+  createClient(region: string = 'ap-guangzhou'): TencentCloud.STS.Client {
+    return new TencentCloud.STS.Client({
       region,
       credential: this.tencentCloudConfig,
       profile: {

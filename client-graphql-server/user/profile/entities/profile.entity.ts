@@ -1,8 +1,7 @@
-import { NestJS } from '~deps';
-import { UserProfile } from 'server-kernel/prisma';
+import { NestJS, Kernel } from '~deps';
 
 @NestJS.GraphQL.ObjectType()
-export class UserProfileEntity implements UserProfile {
+export class UserProfileEntity implements Kernel.Prisma.UserProfile {
   @NestJS.GraphQL.Field((type) => NestJS.GraphQL.ID, {
     description: 'User profile ID',
   })

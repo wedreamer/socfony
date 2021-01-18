@@ -1,5 +1,5 @@
 import { NestJS } from '~deps';
-import { ConfigModule } from 'server-kernel/config';
+import { ConfigModule } from '../../../config';
 import { TencentCloudStsModule } from '../sts';
 import { tencentCloudCosConfig } from './cos.config';
 import { TencentCloudCosService } from './cos.service';

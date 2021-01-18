@@ -1,5 +1,5 @@
 import { NestJS } from '~deps';
-import { AuthorizationToken, PrismaClient, User } from 'server-kernel/prisma';
+import { AuthorizationToken, PrismaClient, User } from '../prisma';
 import { AppContext } from './app.context';
 import { Request } from './express';
 

@@ -1,7 +1,4 @@
-import { NestJS } from '~deps';
-import { Client } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sms/v20190711/sms_client';
-import { SendSmsRequest } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sms/v20190711/sms_models';
-import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interface';
+import { NestJS, TencentCloud } from '~deps';
 import {
   TencentCloudConfig,
   tencentCloudConfig,
@@ -24,14 +21,13 @@ export class TencentCloudShortMessageService {
    * Create Tencent Cloud SMS client.
    */
   createClient() {
-    console.log(this.getClientOptions());
-    return new Client(this.getClientOptions());
+    return new TencentCloud.SMS.Client(this.getClientOptions());
   }
 
   /**
    * Get Tencent Cloud SMS client options.
    */
-  getClientOptions(): ClientConfig {
+  getClientOptions(): TencentCloud.Common.ClientConfig {
     return {
       credential: this.tencentCloudConfig,
       region: 'ap-guangzhou',
@@ -47,7 +43,7 @@ export class TencentCloudShortMessageService {
    * Get Tencent Cloud SMS send options.
    */
   getShortMessageServiceOptions(): Pick<
-    SendSmsRequest,
+    TencentCloud.SMS.SendSmsRequest,
     'SmsSdkAppid' | 'Sign' | 'ExtendCode' | 'SenderId'
   > {
     return this.tencentCloudSmsConfig;
@@ -59,7 +55,7 @@ export class TencentCloudShortMessageService {
    */
   async send(
     params: Pick<
-      SendSmsRequest,
+      TencentCloud.SMS.SendSmsRequest,
       'PhoneNumberSet' | 'TemplateID' | 'TemplateParamSet' | 'SessionContext'
     >,
   ) {

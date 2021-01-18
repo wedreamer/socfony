@@ -1,20 +1,13 @@
-import { NestJS } from '~deps';
+import { NestJS, Kernel } from '~deps';
 import { ViewerEntity } from '../user';
-import {
-  AuthDecorator,
-  AuthorizationTokenDecorator,
-  AuthService,
-  HasTokenExpiredType,
-} from 'server-kernel/auth';
-import { AuthorizationToken, PrismaClient } from 'server-kernel/prisma';
 import { LoginInput, LoginType } from './dto';
 import { AuthorizationTokenEntity } from './entities';
 
 @NestJS.GraphQL.Resolver((of) => AuthorizationTokenEntity)
 export class AuthResolver {
   constructor(
-    private readonly authService: AuthService,
-    private readonly prisma: PrismaClient,
+    private readonly authService: Kernel.Auth.AuthService,
+    private readonly prisma: Kernel.Prisma.PrismaClient,
   ) {}
 
   /**
@@ -22,7 +15,10 @@ export class AuthResolver {
    * @param authorizationToken parent object.
    */
   @NestJS.GraphQL.ResolveField((returns) => ViewerEntity)
-  user(@NestJS.GraphQL.Parent() authorizationToken: AuthorizationToken) {
+  user(
+    @NestJS.GraphQL.Parent()
+    authorizationToken: Kernel.Prisma.AuthorizationToken,
+  ) {
     return this.prisma.user.findUnique({
       where: { id: authorizationToken.userId },
     });
@@ -57,10 +53,13 @@ export class AuthResolver {
   @NestJS.GraphQL.Query((returns) => AuthorizationTokenEntity, {
     description: 'Query HTTP endpoint authorization token entity.',
   })
-  @AuthDecorator({ hasAuthorization: true, type: HasTokenExpiredType.AUTH })
+  @Kernel.Auth.AuthDecorator({
+    hasAuthorization: true,
+    type: Kernel.Auth.HasTokenExpiredType.AUTH,
+  })
   authorization(
-    @AuthorizationTokenDecorator()
-    token: AuthorizationToken,
+    @Kernel.Auth.AuthorizationTokenDecorator()
+    token: Kernel.Prisma.AuthorizationToken,
   ) {
     return token;
   }
@@ -72,10 +71,13 @@ export class AuthResolver {
   @NestJS.GraphQL.Mutation((returns) => AuthorizationTokenEntity, {
     description: 'Refresh HTTP endpoint authorization token entity.',
   })
-  @AuthDecorator({ hasAuthorization: true, type: HasTokenExpiredType.REFRESH })
+  @Kernel.Auth.AuthDecorator({
+    hasAuthorization: true,
+    type: Kernel.Auth.HasTokenExpiredType.REFRESH,
+  })
   refreshAuthorization(
-    @AuthorizationTokenDecorator()
-    token: AuthorizationToken,
+    @Kernel.Auth.AuthorizationTokenDecorator()
+    token: Kernel.Prisma.AuthorizationToken,
   ) {
     return this.authService.refreshAuthorizationToken(token);
   }

@@ -1,5 +1,4 @@
-import { NestJS } from '~deps';
-import { GetFederationTokenResponse } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sts/v20180813/sts_models';
+import { NestJS, TencentCloud } from '~deps';
 
 /**
  * Tencent Cloud COS endpoint authorization entity.
@@ -53,7 +52,9 @@ export class CosAuthorizationEntity {
    * Create a `CosAuthorizationEntity` using response.
    * @param response Tencent Cloud STS federation token response.
    */
-  static create(response: GetFederationTokenResponse): CosAuthorizationEntity {
+  static create(
+    response: TencentCloud.STS.GetFederationTokenResponse,
+  ): CosAuthorizationEntity {
     const value = new CosAuthorizationEntity();
     value.token = response.Credentials.Token;
     value.secretId = response.Credentials.TmpSecretId;

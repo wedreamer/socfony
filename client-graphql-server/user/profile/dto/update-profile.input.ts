@@ -1,9 +1,12 @@
-import { NestJS } from '~deps';
-import { Prisma } from 'server-kernel/prisma';
+import { NestJS, Kernel } from '~deps';
 
 @NestJS.GraphQL.InputType()
 export class UpdateUserProfileInput
-  implements Omit<Prisma.UserProfileUpdateInput, 'id' | 'updatedAt' | 'user'> {
+  implements
+    Omit<
+      Kernel.Prisma.Prisma.UserProfileUpdateInput,
+      'id' | 'updatedAt' | 'user'
+    > {
   @NestJS.GraphQL.Field((type) => String, {
     description: 'User name.',
     nullable: true,

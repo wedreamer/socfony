@@ -1,5 +1,4 @@
-import { NestJS } from '~deps';
-import { Prisma, UserProfile } from 'server-kernel/prisma';
+import { NestJS, Kernel } from '~deps';
 import { UserProfileEntity } from '../profile';
 
 /**
@@ -11,7 +10,7 @@ import { UserProfileEntity } from '../profile';
 export class UserInterface
   implements
     Omit<
-      Prisma.UserGetPayload<{
+      Kernel.Prisma.Prisma.UserGetPayload<{
         include: {
           profile: true;
         };
@@ -49,5 +48,5 @@ export class UserInterface
   @NestJS.GraphQL.Field((type) => UserProfileEntity, {
     description: 'The user profile',
   })
-  profile: UserProfile;
+  profile: Kernel.Prisma.UserProfile;
 }

@@ -1,7 +1,7 @@
 import { NestJS } from '~deps';
-import { nanoIdGenerator, numberNanoIdGenerator } from 'server-kernel/core';
-import { Prisma, PrismaClient, SecurityCode } from 'server-kernel/prisma';
-import { TencentCloudShortMessageService } from 'server-kernel/sdk/tencent-cloud';
+import { nanoIdGenerator, numberNanoIdGenerator } from '../core';
+import { Prisma, PrismaClient, SecurityCode } from '../prisma';
+import { TencentCloudShortMessageService } from '../sdk/tencent-cloud';
 import {
   securityCodeSmsConfig,
   SecurityCodeSmsConfig,

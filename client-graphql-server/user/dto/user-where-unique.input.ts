@@ -1,5 +1,4 @@
-import { NestJS } from '~deps';
-import { Prisma } from 'server-kernel/prisma';
+import { NestJS, Kernel } from '~deps';
 
 /**
  * User wherer unique input
@@ -7,7 +6,8 @@ import { Prisma } from 'server-kernel/prisma';
 @NestJS.GraphQL.InputType({
   description: 'User wherer unique input',
 })
-export class UserWhereUniqueInput implements Prisma.UserWhereUniqueInput {
+export class UserWhereUniqueInput
+  implements Kernel.Prisma.Prisma.UserWhereUniqueInput {
   /**
    * User ID.
    */

@@ -1,7 +1,7 @@
 import { NestJS } from '~deps';
 import { Prisma, PrismaClient } from './client';
-import { ConfigModule } from 'server-kernel/config';
-import { LoggerModule } from 'server-kernel/logger';
+import { ConfigModule } from '../config';
+import { LoggerModule } from '../logger';
 import { databaseConfig } from './database.config';
 import { PrismaLoggerMiddleware } from './middleware';
 

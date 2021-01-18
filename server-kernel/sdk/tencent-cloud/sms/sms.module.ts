@@ -1,5 +1,5 @@
 import { NestJS } from '~deps';
-import { ConfigModule } from 'server-kernel/config';
+import { ConfigModule } from '../../../config';
 import { TencentCloudModule } from '../tencent-cloud.module';
 import { tencentCloudSmsConfig } from './sms.config';
 import { TencentCloudShortMessageService } from './sms.service';

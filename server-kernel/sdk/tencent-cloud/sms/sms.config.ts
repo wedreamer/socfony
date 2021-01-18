@@ -1,8 +1,7 @@
-import { NestJS } from '~deps';
-import { SendSmsRequest } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sms/v20190711/sms_models';
+import { NestJS, TencentCloud } from '~deps';
 
 export type TencentCloudSmsConfig = Pick<
-  SendSmsRequest,
+  TencentCloud.SMS.SendSmsRequest,
   'SmsSdkAppid' | 'Sign' | 'ExtendCode' | 'SenderId'
 >;
 
