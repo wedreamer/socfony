@@ -1,5 +1,4 @@
-import { NestJS, dayjs } from '~deps';
-import bcrypt from 'bcrypt';
+import { NestJS, dayjs, Bcrypt } from '~deps';
 import { nanoIdGenerator } from '../core';
 import { AuthorizationToken, Prisma, PrismaClient, User } from '../prisma';
 import {
@@ -108,7 +107,7 @@ export class AuthService {
       throw new Error(!user ? USER_NOT_FOUND : USER_NOT_SET_PASSWORD);
     }
 
-    const hasMatch = await bcrypt.compare(password, user.password);
+    const hasMatch = await Bcrypt.compare(password, user.password);
     if (hasMatch) {
       return await this.createAuthorizationTokenForUser(user);
     }

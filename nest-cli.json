@@ -3,7 +3,7 @@
     "sourceRoot": ".",
     "monorepo": true,
     "compilerOptions": {
-        "webpack": false
+        "webpack": true
     },
     "generateOptions": {
         "spec": false
