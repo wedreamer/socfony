@@ -1,6 +1,7 @@
-import { NestJS, dayjs, Bcrypt } from '~deps';
-import { nanoIdGenerator } from '../core';
-import { AuthorizationToken, Prisma, PrismaClient, User } from '../prisma';
+import dayjs from 'dayjs';
+import bcrypt from 'bcrypt';
+import { ID } from '@socfony/kernel';
+import { AuthorizationToken, Prisma, PrismaClient, User } from '@socfony/prisma';
 import {
   AUTH_TOKEN_DEFAULT_EXPORED_IN,
   AUTH_TOKEN_DEFAULT_EXPORED_UNIT,
@@ -16,10 +17,11 @@ import {
   USER_NOT_FOUND,
   USER_NOT_SET_PASSWORD,
   USER_PASSWORD_NOT_COMPARE,
-} from '~constant';
-import { SecurityCodeService } from '../security-code';
+} from '@socfony/error-code';
+import { SecurityCodeService } from '@socfony/security-code';
+import { Injectable } from '@nestjs/common';
 
-@NestJS.Common.Injectable()
+@Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaClient,
@@ -82,7 +84,7 @@ export class AuthService {
     return await this.prisma.authorizationToken.create({
       data: {
         userId: typeof user === 'string' ? user : user.id,
-        token: nanoIdGenerator(128),
+        token: ID.generator(128),
         expiredAt: dayjs()
           .add(setting.expiredIn.value, setting.expiredIn.unit)
           .toDate(),
@@ -107,7 +109,7 @@ export class AuthService {
       throw new Error(!user ? USER_NOT_FOUND : USER_NOT_SET_PASSWORD);
     }
 
-    const hasMatch = await Bcrypt.compare(password, user.password);
+    const hasMatch = await bcrypt.compare(password, user.password);
     if (hasMatch) {
       return await this.createAuthorizationTokenForUser(user);
     }
@@ -136,7 +138,7 @@ export class AuthService {
         data: {
           email,
           phone,
-          id: nanoIdGenerator(32),
+          id: ID.generator(32),
         },
       });
     }
@@ -162,7 +164,7 @@ export class AuthService {
       return await this.prisma.authorizationToken.update({
         where: { token: authorizationToken.token },
         data: {
-          token: nanoIdGenerator(128),
+          token: ID.generator(128),
           expiredAt: dayjs()
             .add(setting.expiredIn.value, setting.expiredIn.unit)
             .toDate(),

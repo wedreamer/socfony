@@ -1,4 +1,4 @@
-import { dayjs } from '~deps';
+import { UnitType } from 'dayjs';
 
 /**
  * 认证Token有效期
@@ -9,7 +9,7 @@ export interface AuthorizationTokenValidityPeriod {
    */
   expiredIn: {
     value: number;
-    unit: dayjs.UnitType;
+    unit: UnitType;
   };
 
   /**
@@ -17,6 +17,6 @@ export interface AuthorizationTokenValidityPeriod {
    */
   refreshExpiredIn: {
     value: number;
-    unit: dayjs.UnitType;
+    unit: UnitType;
   };
 }

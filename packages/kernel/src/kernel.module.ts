@@ -1,4 +1,8 @@
-export * from './context';
-export * from './id.helper';
-export * from './kernel.module';
-export * from './lib';
+import { Module } from "@nestjs/common";
+import { Context } from "./context";
+
+@Module({
+    providers: [Context],
+    exports: [Context],
+})
+export class KernelModule {}
