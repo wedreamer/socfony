@@ -1,21 +1,19 @@
-import { Injectable } from "@nestjs/common";
-import { TencentCloudStsService } from "@socfony/tencent-cloud-sts";
+import { Injectable } from '@nestjs/common';
+import { TencentCloudStsService } from '@socfony/tencent-cloud-sts';
 import { ID } from '@socfony/kernel';
 
 @Injectable()
 export class TencentCloudCosService {
-    constructor(
-        private readonly sts: TencentCloudStsService,
-    ) {}
+  constructor(private readonly sts: TencentCloudStsService) {}
 
-    get options() {
-        return {
-            bucket: process.env.TENCENT_CLOUD_COS_BUCKET,
-            region: process.env.TENCENT_CLOUD_COS_REGION,
-        }
-    }
+  get options() {
+    return {
+      bucket: process.env.TENCENT_CLOUD_COS_BUCKET,
+      region: process.env.TENCENT_CLOUD_COS_REGION,
+    };
+  }
 
-    /**
+  /**
    * get temporary credential duration seconds.
    */
   get temporaryCredentialDurationSeconds() {

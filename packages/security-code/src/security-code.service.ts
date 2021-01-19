@@ -1,38 +1,22 @@
-import { NestJS } from '~deps';
-import { nanoIdGenerator, numberNanoIdGenerator } from '../core';
-import { Prisma, PrismaClient, SecurityCode } from '../prisma';
-import { TencentCloudShortMessageService } from '../sdk/tencent-cloud';
-import {
-  securityCodeSmsConfig,
-  SecurityCodeSmsConfig,
-} from './security-code.config';
+import { Injectable } from '@nestjs/common';
+import { ID } from '@socfony/kernel';
+import { PrismaClient, Prisma, SecurityCode } from '@socfony/prisma';
+import { TencentCloudSmsService } from '@socfony/tencent-cloud-sms';
+import { china, other, expiredIn } from './security-code-sms.config';
 
-/**
- * Security code service.
- */
-@NestJS.Common.Injectable()
+@Injectable()
 export class SecurityCodeService {
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly smsService: TencentCloudShortMessageService,
-    @NestJS.Common.Inject(securityCodeSmsConfig.KEY)
-    private readonly smsConfig: SecurityCodeSmsConfig,
+    private readonly sms: TencentCloudSmsService,
   ) {}
 
   /**
    * Get phone send template options.
    * @param hasChina If `true` get China options.
    */
-  getPhoneSecurityCodeOptions(
-    hasChina: boolean,
-  ): {
-    templateId: string;
-    veriables: string[];
-    expiredIn: number;
-  } {
-    const { [hasChina ? 'china' : 'other']: value, expiredIn } = this.smsConfig;
-
-    return Object.assign({}, value, { expiredIn });
+  getOptions(hasChina: boolean) {
+    return Object.assign({}, hasChina ? china : other, { expiredIn });
   }
 
   /**
@@ -48,8 +32,8 @@ export class SecurityCodeService {
     const security = await this.prisma.securityCode.create({
       data: {
         ...data,
-        id: nanoIdGenerator(32),
-        code: numberNanoIdGenerator(6),
+        id: ID.generator(32),
+        code: ID.numeralGenerator(6),
       },
     });
     this._sendSecurityCodeForTencentCloud(security);
@@ -74,7 +58,6 @@ export class SecurityCodeService {
    */
   async validateSecurity(security: SecurityCode) {
     if (!security || security.disabledAt) return true;
-    const { expiredIn } = this.smsConfig;
     const value = (Date.now() - security.createdAt.getTime()) / 1000;
     return value > expiredIn;
   }
@@ -96,9 +79,7 @@ export class SecurityCodeService {
    * @param security security code object.
    */
   private async _sendSecurityCodeForTencentCloud(security: SecurityCode) {
-    const setting = this.getPhoneSecurityCodeOptions(
-      security.account.startsWith('+86'),
-    );
+    const setting = this.getOptions(security.account.startsWith('+86'));
     console.log(setting);
     const params = setting.veriables.map((value) =>
       value
@@ -107,7 +88,7 @@ export class SecurityCodeService {
     );
     let result: any;
     try {
-      result = await this.smsService.send({
+      result = await this.sms.send({
         PhoneNumberSet: [security.account],
         TemplateID: setting.templateId,
         TemplateParamSet: params,
