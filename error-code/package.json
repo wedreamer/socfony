@@ -1,0 +1,35 @@
+{
+  "name": "@socfony/error-code",
+  "version": "0.0.0",
+  "description": "Socfony - Error codes",
+  "keywords": [
+    "socfony",
+    "error"
+  ],
+  "author": {
+    "name": "Socfony",
+    "url": "https://github.com/socfony"
+  },
+  "homepage": "https://socfony.com",
+  "license": "BSD-3-Clause",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "lib": "dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/socfony/socfony.git"
+  },
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "bugs": {
+    "url": "https://github.com/socfony/socfony/issues"
+  }
+}
