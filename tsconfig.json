@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "module": "None",
+      "module": "CommonJS",
       "target": "ES2017",
       "moduleResolution": "Node",
       "declaration": true,
@@ -10,7 +10,8 @@
       "allowSyntheticDefaultImports": true,
       "sourceMap": true,
       "outDir": "./dist",
-      "baseUrl": "./",
+      "baseUrl": "./src",
       "incremental": true,
-    }
+    },
+    "exclude": ["node_modules", "dist"]
 }
