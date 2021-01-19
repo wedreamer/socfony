@@ -44,6 +44,6 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"**/*.ts\"",
-    "serve": "nest start --watch"
+    "start": "nest start --watch"
   }
 }

@@ -9,11 +9,11 @@
         "spec": false
     },
     "projects": {
-        "client-graphql-server": {
+        "client-server": {
             "type": "application",
-            "root": "client-graphql-server",
+            "root": "client-server",
             "entryFile": "main",
-            "sourceRoot": "client-graphql-server",
+            "sourceRoot": "client-server",
             "compilerOptions": {
                 "tsConfigPath": "tsconfig.build.json"
             }
