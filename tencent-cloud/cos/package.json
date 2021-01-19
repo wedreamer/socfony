@@ -1,10 +1,10 @@
 {
-  "name": "@socfony/tencent-cloud-sts",
+  "name": "@socfony/tencent-cloud-cos",
   "version": "0.0.0",
-  "description": "Socfony - Tencent Cloud STS module.",
+  "description": "Socfony - Tencent Cloud COS module.",
   "keywords": [
     "socfony",
-    "sts"
+    "cos"
   ],
   "author": {
     "name": "Socfony",
@@ -43,7 +43,7 @@
     "rxjs": "^6.6.3"
   },
   "dependencies": {
-    "@socfony/tencent-cloud-common": "^0.0.0",
-    "tencentcloud-sdk-nodejs": "^4.0.52"
+    "@socfony/kernel": "^0.0.0",
+    "@socfony/tencent-cloud-sts": "^0.0.0"
   }
 }
