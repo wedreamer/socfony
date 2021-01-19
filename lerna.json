@@ -1,13 +1,14 @@
 {
   "packages": [
     "packages/*",
+    "tencent-cloud/*",
     "error-code"
   ],
   "version": "0.0.0",
   "command": {
     "publish": {
       "ignoreChanges": ["ignored-file", "*.md"],
-      "message": "chore(release): publish"
+      "message": "chore(release): publish %s"
     },
     "bootstrap": {
       "npmClientArgs": ["--no-package-lock"]
