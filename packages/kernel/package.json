@@ -1,11 +1,10 @@
 {
-  "name": "@socfony/prisma",
+  "name": "@socfony/kernel",
   "version": "0.0.0",
-  "description": "Socfony - Prisma NextJS module.",
+  "description": "Socfony - Kernel module.",
   "keywords": [
     "socfony",
-    "prisma",
-    "nextjs"
+    "kernel"
   ],
   "author": {
     "name": "Socfony",
@@ -14,7 +13,6 @@
   "homepage": "https://socfony.com",
   "license": "BSD-3-Clause",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "directories": {
     "lib": "dist"
   },
@@ -40,10 +38,13 @@
   },
   "devDependencies": {
     "@nestjs/common": "^7.6.5",
+    "@types/express": "^4.17.11",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.3"
   },
   "dependencies": {
-    "@prisma/client": "^2.14.0"
+    "@socfony/prisma": "^0.0.0",
+    "express": "^4.17.1",
+    "nanoid": "^3.1.20"
   }
 }
