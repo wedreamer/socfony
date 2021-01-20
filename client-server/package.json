@@ -26,7 +26,7 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc --build tsconfig.json",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "APP_PORT=3000 nest start --watch"
   },
