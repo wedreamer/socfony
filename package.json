@@ -16,7 +16,28 @@
     "url": "https://github.com/socfony/socfony/issues"
   },
   "homepage": "https://socfony.com",
+  "dependencies": {
+    "@nestjs/common": "^7.6.5",
+    "@nestjs/core": "^7.6.5",
+    "@nestjs/graphql": "^7.9.5",
+    "@nestjs/platform-express": "^7.6.5",
+    "@prisma/client": "^2.15.0",
+    "apollo-server-express": "^2.19.2",
+    "bcrypt": "^5.0.0",
+    "dayjs": "^1.10.3",
+    "dotenv": "^8.2.0",
+    "graphql": "^15.4.0",
+    "graphql-tools": "^7.0.2",
+    "nanoid": "^3.1.20",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^6.6.3",
+    "tencentcloud-sdk-nodejs": "^4.0.53"
+  },
   "devDependencies": {
+    "@nestjs/cli": "^7.5.4",
+    "@nestjs/schematics": "^7.2.6",
+    "@prisma/cli": "^2.15.0",
+    "@types/node": "^14.14.22",
     "lerna": "^3.22.1",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
