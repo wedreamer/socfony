@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "packages": [
     "packages/*",
     "tencent-cloud/*",
@@ -8,11 +8,16 @@
   ],
   "command": {
     "publish": {
-      "ignoreChanges": ["ignored-file", "*.md"],
+      "ignoreChanges": [
+        "ignored-file",
+        "*.md"
+      ],
       "message": "chore(release): publish %s"
     },
     "bootstrap": {
-      "npmClientArgs": ["--no-package-lock"]
+      "npmClientArgs": [
+        "--no-package-lock"
+      ]
     }
   }
 }
