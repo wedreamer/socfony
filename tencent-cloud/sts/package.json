@@ -1,6 +1,6 @@
 {
   "name": "@socfony/tencent-cloud-sts",
-  "version": "0.0.1-alpha.0",
+  "version": "0.0.1",
   "description": "Socfony - Tencent Cloud STS module.",
   "keywords": [
     "socfony",
@@ -47,7 +47,7 @@
     "rxjs": "^6.6.3"
   },
   "dependencies": {
-    "@socfony/tencent-cloud-common": "^0.0.1-alpha.0",
+    "@socfony/tencent-cloud-common": "^0.0.1",
     "tencentcloud-sdk-nodejs": "^4.0.52"
   }
 }
