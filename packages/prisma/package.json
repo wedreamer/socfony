@@ -19,7 +19,8 @@
     "lib": "dist"
   },
   "files": [
-    "dist"
+    "dist",
+    "schema.prisma"
   ],
   "repository": {
     "type": "git",
