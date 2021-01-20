@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
-import bcrypt from 'bcrypt';
+import * as dayjs from 'dayjs';
+import * as bcrypt from 'bcrypt';
 import { ID } from '@socfony/kernel';
 import {
   AuthorizationToken,

@@ -27,7 +27,7 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc",
+    "build": "tsc --build tsconfig.json",
     "format": "prettier --write \"src/**/*.ts\""
   },
   "bugs": {

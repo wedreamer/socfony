@@ -19,10 +19,7 @@ export interface AuthDecoratorOptions {
  */
 export function Authorization(options: AuthDecoratorOptions) {
   return applyDecorators(
-    SetMetadata(
-      AUTH_METADATA_HAS_AUTHORIZATION,
-      options?.hasAuthorization || true,
-    ),
+    SetMetadata(AUTH_METADATA_HAS_AUTHORIZATION, options?.hasAuthorization),
     SetMetadata(
       AUTH_METADATA_HAS_AUTHORIZATION_TYPE,
       options?.type || HasTokenExpiredType.AUTH,

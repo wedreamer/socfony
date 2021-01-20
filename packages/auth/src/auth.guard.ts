@@ -8,14 +8,19 @@ import {
 } from './constants';
 import { HasTokenExpiredType } from './enums';
 import { Request } from 'express';
+import { UNAUTHORIZED } from '@socfony/error-code';
 
 @Injectable()
 export class AuthGuard {
   constructor(
-    private readonly reflector: Reflector,
-    private readonly context: Context,
-    private readonly authService: AuthService,
+    protected readonly reflector: Reflector,
+    protected readonly context: Context,
+    protected readonly authService: AuthService,
   ) {}
+
+  resolveContext(_context: ExecutionContext): Context {
+    return this.context;
+  }
 
   initializeContext(context: ExecutionContext) {
     if (context.getType() === 'http') {
@@ -50,12 +55,22 @@ export class AuthGuard {
     // get `Authorization` token validate type
     const type = this.getHasAuthorizationType(context);
 
-    return this.canActivelyTokenHandler(type || HasTokenExpiredType.AUTH);
+    if (
+      !this.canActivelyTokenHandler(context, type || HasTokenExpiredType.AUTH)
+    ) {
+      throw new Error(UNAUTHORIZED);
+    }
+
+    return true;
   }
 
-  private canActivelyTokenHandler(type: HasTokenExpiredType): boolean {
-    const { authorizationToken, user } = this.context;
+  canActivelyTokenHandler(
+    context: ExecutionContext,
+    type: HasTokenExpiredType,
+  ): boolean {
+    const { authorizationToken, user } = this.resolveContext(context);
+    const has = !this.authService.hasTokenExpired(authorizationToken, type);
 
-    return user && this.authService.hasTokenExpired(authorizationToken, type);
+    return user && has;
   }
 }

@@ -1,10 +1,11 @@
 {
+  "version": "0.0.0",
   "packages": [
     "packages/*",
     "tencent-cloud/*",
+    "client-server",
     "error-code"
   ],
-  "version": "0.0.0",
   "command": {
     "publish": {
       "ignoreChanges": ["ignored-file", "*.md"],

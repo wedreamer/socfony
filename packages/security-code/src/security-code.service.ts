@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ID } from '@socfony/kernel';
 import { PrismaClient, Prisma, SecurityCode } from '@socfony/prisma';
 import { TencentCloudSmsService } from '@socfony/tencent-cloud-sms';
-import { china, other, expiredIn } from './security-code-sms.config';
 
 @Injectable()
 export class SecurityCodeService {
@@ -15,8 +14,33 @@ export class SecurityCodeService {
    * Get phone send template options.
    * @param hasChina If `true` get China options.
    */
-  getOptions(hasChina: boolean) {
+  getOptionsSms(hasChina: boolean) {
+    const { china, other, expiredIn } = this.getOptions();
     return Object.assign({}, hasChina ? china : other, { expiredIn });
+  }
+
+  getOptions() {
+    return {
+      expiredIn: Number.parseInt(
+        process.env.TENCENT_CLOUD_SMS_AUTHORIZATION_EXPIRED_IN || '300',
+      ),
+
+      china: {
+        templateId:
+          process.env.TENCENT_CLOUD_SMS_AUTHORIZATION_CHINA_TEMPLATE_ID,
+        veriables: process.env.TENCENT_CLOUD_SMS_AUTHORIZATION_CHINA_VERIABLES.split(
+          ',',
+        ),
+      },
+
+      other: {
+        templateId:
+          process.env.TENCENT_CLOUD_SMS_AUTHORIZATION_OTHER_TEMPLATE_ID,
+        veriables: process.env.TENCENT_CLOUD_SMS_AUTHORIZATION_OTHER_VERIABLES.split(
+          ',',
+        ),
+      },
+    };
   }
 
   /**
@@ -58,6 +82,7 @@ export class SecurityCodeService {
    */
   async validateSecurity(security: SecurityCode) {
     if (!security || security.disabledAt) return true;
+    const { expiredIn } = this.getOptions();
     const value = (Date.now() - security.createdAt.getTime()) / 1000;
     return value > expiredIn;
   }
@@ -79,8 +104,7 @@ export class SecurityCodeService {
    * @param security security code object.
    */
   private async _sendSecurityCodeForTencentCloud(security: SecurityCode) {
-    const setting = this.getOptions(security.account.startsWith('+86'));
-    console.log(setting);
+    const setting = this.getOptionsSms(security.account.startsWith('+86'));
     const params = setting.veriables.map((value) =>
       value
         .replace('#code#', security.code)
