@@ -20,9 +20,13 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/socfony/socfony.git"
+    "url": "git+https://github.com/socfony/socfony.git",
+    "directory": "tencent-cloud/sms"
   },
   "scripts": {
     "prebuild": "rimraf dist",

@@ -22,9 +22,13 @@
     "dist",
     "schema.prisma"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/socfony/socfony.git"
+    "url": "git+https://github.com/socfony/socfony.git",
+    "directory": "packages/prisma"
   },
   "scripts": {
     "prebuild": "rimraf dist",

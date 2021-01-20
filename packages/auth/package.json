@@ -21,9 +21,13 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/socfony/socfony.git"
+    "url": "git+https://github.com/socfony/socfony.git",
+    "directory": "packages/auth"
   },
   "scripts": {
     "prebuild": "rimraf dist",
