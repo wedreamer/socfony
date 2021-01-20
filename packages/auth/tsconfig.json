@@ -4,5 +4,6 @@
     "resolveJsonModule": true,
     "outDir": "./dist",
     "baseUrl": "./src"
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }

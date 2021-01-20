@@ -19,9 +19,7 @@ export class AuthGuard {
 
   initializeContext(context: ExecutionContext) {
     if (context.getType() === 'http') {
-      this.context.create(
-        context.switchToHttp().getRequest<Request>(),
-      );
+      this.context.create(context.switchToHttp().getRequest<Request>());
     }
   }
 
@@ -52,14 +50,10 @@ export class AuthGuard {
     // get `Authorization` token validate type
     const type = this.getHasAuthorizationType(context);
 
-    return this.canActivelyTokenHandler(
-      type || HasTokenExpiredType.AUTH,
-    );
+    return this.canActivelyTokenHandler(type || HasTokenExpiredType.AUTH);
   }
 
-  private canActivelyTokenHandler(
-    type: HasTokenExpiredType,
-  ): boolean {
+  private canActivelyTokenHandler(type: HasTokenExpiredType): boolean {
     const { authorizationToken, user } = this.context;
 
     return user && this.authService.hasTokenExpired(authorizationToken, type);

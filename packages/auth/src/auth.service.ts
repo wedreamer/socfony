@@ -1,7 +1,12 @@
 import dayjs from 'dayjs';
 import bcrypt from 'bcrypt';
 import { ID } from '@socfony/kernel';
-import { AuthorizationToken, Prisma, PrismaClient, User } from '@socfony/prisma';
+import {
+  AuthorizationToken,
+  Prisma,
+  PrismaClient,
+  User,
+} from '@socfony/prisma';
 import {
   AUTH_TOKEN_DEFAULT_EXPORED_IN,
   AUTH_TOKEN_DEFAULT_EXPORED_UNIT,
