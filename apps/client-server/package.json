@@ -30,9 +30,8 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "start": "APP_PORT=3000 nest start --watch"
+    "build": "tsc --build tsconfig.app.json",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "bugs": {
     "url": "https://github.com/socfony/socfony/issues"

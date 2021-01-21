@@ -31,7 +31,7 @@ export class Context {
       this.getHttpAuthorization(request),
     );
     this.user = await this.getAuthorizationUser(this.authorizationToken);
-    
+
     // @ts-ignore
     return (this.request.context = this);
   }

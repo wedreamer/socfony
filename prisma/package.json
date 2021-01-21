@@ -32,7 +32,7 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc --build tsconfig.json",
+    "build": "tsc --build tsconfig.lib.json",
     "format": "prettier --write \"src/**/*.ts\""
   },
   "bugs": {

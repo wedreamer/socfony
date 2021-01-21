@@ -6,13 +6,13 @@ Socfony is a full-stack open source software that builds full-platform applicati
 
 | Project | Description |
 |---------|-------------|
-| [@socfony/client-server](./client-server) | The client GraphQL APIs implementation program. |
-| [@socfony/error-code](./error-code) | Error codes package. |
-| [@socfony/auth](./packages/auth) | User login and HTTP authentication module. |
-| [@socfony/kernel](./packages/kernel) | Kernel and context modules of back-end applications. |
-| [@socfony/prisma](./packages/prisma) | The database module of the back-end application, bound with [Prisma](https://www.prisma.io/). |
-| [@socfony/security-code](./packages/security-code) | User security code module of the back-end application for user security authentication. |
-| [@socfony/tencent-cloud-*](./tencent-cloud) | Tencent Cloud services module for backend application. |
+| [@socfony/client-server](./apps/client-server) | The client GraphQL APIs implementation program. |
+| [@socfony/error-code](./libs/error-code) | Error codes package. |
+| [@socfony/auth](./libs/auth) | User login and HTTP authentication module. |
+| [@socfony/kernel](./libs/kernel) | Kernel and context modules of back-end applications. |
+| [@socfony/prisma](./libs/prisma) | The database module of the back-end application, bound with [Prisma](https://www.prisma.io/). |
+| [@socfony/security-code](./libs/security-code) | User security code module of the back-end application for user security authentication. |
+| [@socfony/tencent-cloud-*](./libs) | Tencent Cloud services module for backend application. |
 
 ## Repository
 
