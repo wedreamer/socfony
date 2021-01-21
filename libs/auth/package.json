@@ -1,6 +1,6 @@
 {
   "name": "@socfony/auth",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Socfony - Authorization module.",
   "keywords": [
     "socfony",
@@ -52,10 +52,10 @@
   },
   "dependencies": {
     "@nestjs/core": "^7.6.5",
-    "@socfony/error-code": "^0.0.3",
-    "@socfony/kernel": "^0.0.3",
-    "@socfony/prisma": "^0.0.3",
-    "@socfony/security-code": "^0.0.3",
+    "@socfony/error-code": "^0.0.4",
+    "@socfony/kernel": "^0.0.4",
+    "@socfony/prisma": "^0.0.4",
+    "@socfony/security-code": "^0.0.4",
     "bcrypt": "^5.0.0",
     "dayjs": "^1.10.3",
     "express": "^4.17.1"

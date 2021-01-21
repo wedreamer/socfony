@@ -1,6 +1,6 @@
 {
   "name": "@socfony/tencent-cloud-cos",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Socfony - Tencent Cloud COS module.",
   "keywords": [
     "socfony",
@@ -48,7 +48,7 @@
     "rxjs": "^6.6.3"
   },
   "dependencies": {
-    "@socfony/kernel": "^0.0.3",
-    "@socfony/tencent-cloud-sts": "^0.0.3"
+    "@socfony/kernel": "^0.0.4",
+    "@socfony/tencent-cloud-sts": "^0.0.4"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@socfony/security-code",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Socfony - Security code module.",
   "keywords": [
     "socfony",
@@ -48,8 +48,8 @@
     "rxjs": "^6.6.3"
   },
   "dependencies": {
-    "@socfony/kernel": "^0.0.3",
-    "@socfony/prisma": "^0.0.3",
-    "@socfony/tencent-cloud-sms": "^0.0.3"
+    "@socfony/kernel": "^0.0.4",
+    "@socfony/prisma": "^0.0.4",
+    "@socfony/tencent-cloud-sms": "^0.0.4"
   }
 }
