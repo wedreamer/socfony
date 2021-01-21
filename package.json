@@ -1,7 +1,6 @@
 {
   "private": true,
   "name": "socfony",
-  "version": "0.0.0",
   "description": "Socfony is an open source social application, quickly build your own social application.",
   "repository": {
     "type": "git",
@@ -30,7 +29,7 @@
     "build": "lerna run build",
     "publish": "lerna publish --force-publish",
     "preinstall": "node scripts/install-before",
-    "postinstall": "node scripts/install-after",
+    "postinstall": "lerna bootstrap && node scripts/install-after",
     "format": "lerna run format",
     "start": "rimraf apps/client-server/dist && APP_PORT=3000 nest start --watch client-server"
   },
