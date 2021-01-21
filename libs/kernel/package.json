@@ -1,6 +1,6 @@
 {
   "name": "@socfony/kernel",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Socfony - Kernel module.",
   "keywords": [
     "socfony",
@@ -48,7 +48,7 @@
     "rxjs": "^6.6.3"
   },
   "dependencies": {
-    "@socfony/prisma": "^0.0.1",
+    "@socfony/prisma": "^0.0.3",
     "express": "^4.17.1",
     "nanoid": "^3.1.20"
   }

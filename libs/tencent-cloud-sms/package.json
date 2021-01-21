@@ -1,6 +1,6 @@
 {
   "name": "@socfony/tencent-cloud-sms",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Socfony - Tencent Cloud SMS module.",
   "keywords": [
     "socfony",
@@ -47,7 +47,7 @@
     "rxjs": "^6.6.3"
   },
   "dependencies": {
-    "@socfony/tencent-cloud-common": "^0.0.2",
+    "@socfony/tencent-cloud-common": "^0.0.3",
     "tencentcloud-sdk-nodejs": "^4.0.52"
   }
 }
