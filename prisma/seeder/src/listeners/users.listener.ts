@@ -4,6 +4,7 @@ import { PrismaClient, User } from "@prisma/client";
 import { nanoid } from "nanoid";
 import { pbkdf2Sync } from 'crypto';
 import { logger, SEEDER } from "../const";
+import { PrismaService } from "src/prisma.service";
 
 function sha256(str: string, salt: string): string {
   return pbkdf2Sync(str, salt, 10000, 64, 'sha256').toString('hex');
@@ -21,7 +22,7 @@ const defaultUser: Pick<User, 'id' | 'email' | 'password' | 'name'> = {
 
 @Injectable()
 export class UsersListener {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   /**
    * Create default user
