@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { nanoid } from "nanoid";
 import { pbkdf2Sync } from 'crypto';
 import { logger, SEEDER } from "../const";
